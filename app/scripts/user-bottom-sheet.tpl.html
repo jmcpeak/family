@@ -1,0 +1,41 @@
+<md-bottom-sheet class="md-list md-has-header">
+    <md-content> <!-- scrollable -->
+        <md-subheader>Comment Actions</md-subheader>
+        <md-list>
+            <div layout layout-sm="column">
+                <md-item>
+                    <md-item-content>
+                        <md-input-container>
+                            <label>First Name</label>
+                            <input required name="firstName" ng-model="user.firstName">
+
+                            <div ng-messages="userForm.firstName.$error" ng-messages-include="error-messages"></div>
+                        </md-input-container>
+                    </md-item-content>
+                </md-item>
+
+                <md-item>
+                    <md-item-content>
+                        <md-input-container>
+                            <label>Last Name</label>
+                            <input required name="lastName" ng-model="user.lastName">
+
+                            <div ng-messages="userForm.lastName.$error" ng-messages-include="error-messages"></div>
+                        </md-input-container>
+                    </md-item-content>
+                </md-item>
+            </div>
+        </md-list>
+    </md-content>
+</md-bottom-sheet>
+
+<!--<md-list>-->
+<!--<md-item ng-repeat="item in items">-->
+<!--<md-button class="md-grid-item-content" aria-label="{{item.name}}" ng-click="listItemClick($index)">-->
+<!--<div class="md-icon-container">-->
+<!--<md-icon md-svg-src="{{getRemove()}}" class="s36" alt="Delete"></md-icon>-->
+<!--</div>-->
+<!--<p class="md-grid-text"> {{ item.name }} </p>-->
+<!--</md-button>-->
+<!--</md-item>-->
+<!--</md-list>-->
