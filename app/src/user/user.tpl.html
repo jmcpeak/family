@@ -83,12 +83,13 @@
 
                 </section>
 
-                <!--<md-divider md-inset></md-divider>-->
-                <!--<md-toolbar class="md-theme-light">-->
-                    <!--<h1 class="md-toolbar-tools">-->
-                        <!--<span>Inset</span>-->
-                    <!--</h1>-->
-                <!--</md-toolbar>-->
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h3>
+                            <span>Spouse</span>
+                        </h3>
+                    </div>
+                </md-toolbar>
 
                 <section aria-label="Spouse">
 
@@ -166,6 +167,61 @@
                     </div>
 
                 </section>
+
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h3>
+                            <span>Address</span>
+                        </h3>
+                    </div>
+                </md-toolbar>
+
+                <section aria-label="Address">
+
+                    <div layout="row" layout-sm="column" aria-label="Address">
+                        <jm-input label="Address"
+                                  field="addressL1"
+                                  user="user"
+                                  required="true"
+                                  type="text">
+                        </jm-input>
+                        <jm-input label="Address Line 2"
+                                  field="addressL2"
+                                  user="user"
+                                  required="false"
+                                  type="text">
+                        </jm-input>
+                        <jm-input label="City"
+                                  field="city"
+                                  user="user"
+                                  required="true"
+                                  type="text">
+                        </jm-input>
+                    </div>
+
+                    <div layout="row" layout-sm="column" aria-label="Zip, etc">
+                        <jm-input label="State"
+                                  field="state"
+                                  user="user"
+                                  required="true"
+                                  type="text">
+                        </jm-input>
+                        <jm-input label="Zipcode"
+                                  field="zipcode"
+                                  user="user"
+                                  required="true"
+                                  type="text">
+                        </jm-input>
+                        <jm-input label="Country"
+                                  field="country"
+                                  user="user"
+                                  required="false"
+                                  type="text">
+                        </jm-input>
+                    </div>
+
+                </section>
+
             </md-list>
         </ng-form>
     </md-content>
