@@ -1,20 +1,10 @@
 'use strict';
 /* jslint -W117 */
 
-var dynamodb;
-var endpoint;
+var dynamoDB;
 
-angular
-    .module('familyApp', [
-        'ngAnimate',
-        'ngCookies',
-        'ngResource',
-        'ngRoute',
-        'ngSanitize',
-        'ngTouch',
-        'ngMaterial',
-        'ngMessages'
-    ])
+angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'ngMaterial',
+    'ngMessages', 'jmDB'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
@@ -24,20 +14,59 @@ angular
             secretAccessKey: 'w1cas6GZ2OupsxHkj6Dw/P4b1pXO1TE/8JuUKiVM'
         });
 
-        dynamodb = new AWS.DynamoDB({region: 'us-west-2'});
+        dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         var params = {
-            ExclusiveStartTableName: 'STRING_VALUE',
-            Limit: 0
+            TableName: "test",
+            Key: {
+                id: {
+                    S: '1'
+                }
+            }
         };
 
-        dynamodb.listTables(params, function (err, data) {
+        var retVal = dynamoDB.getItem(params, function (err, data) {
             if (err) {
                 console.log(err, err.stack); // an error occurred
             } else {
                 console.log(data);           // successful response
             }
         });
+
+        retVal = dynamoDB.scan({TableName: "test"}, function (err, data) {
+            if (err) {
+                console.log(err, err.stack); // an error occurred
+            } else {
+                console.log(data);           // successful response
+
+                var foo = new ArrayConverter(data.Items);
+
+                console.log(foo);
+            }
+        });
+
+        console.log(retVal);
+
+        //retVal = dynamodb.scan({
+        //    TableName: 'temp',
+        //    Limit: 100
+        //}, function (err, data) {
+        //    if (err) {
+        //        console.log(err);
+        //    } else {
+        //        console.log(data);
+        //    }
+        //});
+        //
+        //console.log(retVal);
+
+        //dynamodb.putItem({TableName: 'test', Item: {id: '1', firstName: 'Jason', lastName: 'McPeak'}}, function (err, data) {
+        //    if (err) {
+        //        console.log(err, err.stack); // an error occurred
+        //    } else {
+        //        console.log(data);           // successful response
+        //    }
+        //});
 
         //endpoint = AWS.Endpoint();
 
@@ -256,3 +285,95 @@ angular
             }
         };
     });
+
+/**
+ * Created by ejf3 on 12/27/13.
+ */
+var ArrayConverter = function (data_in) {
+    var data_out = [];
+    if (!data_in)
+        return data_out;
+
+    for (var i = 0; i < data_in.length; i++)
+        data_out.push(ObjectConverter(data_in[i]));
+    return data_out;
+};
+
+var ObjectConverter = function (data_in) {
+    var data_out = {}
+    if (!data_in)
+        return data_out;
+
+    Object.keys(data_in).forEach(function (key) {
+        var val = data_in[key];
+        if (!!val["S"]) {
+            data_out[key] = val["S"];
+        } else if (!!val["N"]) {
+            data_out[key] = parseInt(val["N"]);
+        } else if (!!val["B"]) {
+            data_out[key] = (val["B"].toLowerCase() == "true")
+        } else if (!!val["SS"]) {
+            data_out[key] = val["SS"];
+        } else if (!!val["NS"]) {
+            var val_arr = [];
+            for (var j = 0; j < val["NS"].length; j++) {
+                val_arr.push(parseInt(val["NS"][j]));
+            }
+            data_out[key] = val_arr;
+        } else if (!!val["BS"]) {
+            var val_arr = [];
+            for (var j = 0; j < val["BS"].length; j++) {
+                val_arr.push((val["BS"][j].toLowerCase() == "true"));
+            }
+            data_out[key] = val_arr;
+        }
+    });
+
+    return data_out;
+};
+
+var ConvertFromJson = function (data_in) {
+    var data_out = {};
+    if (!data_in)
+        return data_out;
+
+    Object.keys(data_in).forEach(function (key) {
+        var subObj = {};
+        var val = data_in[key];
+        // if
+        if (!(typeof val === 'undefined' || (!!!val && typeof val !== 'boolean')))
+            subObj = null;
+
+        if (typeof val === 'boolean')
+            subObj = {"B": val.toString()};
+        else if (typeof val === 'string')
+            subObj = {"S": val.toString()};
+        else if (typeof val === 'number')
+            subObj = {"N": val.toString()};
+        else if (typeof val === 'object') {
+            if (Array.isArray(val) && val.length >= 1) {
+                var subObjKey = null;
+                if (typeof val[0] === 'boolean')
+                    subObjKey = "BS";
+                else if (typeof val[0] === 'string')
+                    subObjKey = "SS";
+                else if (typeof val[0] === 'number')
+                    subObjKey = "NS";
+
+                if (!!subObjKey) {
+                    var subObjArr = [];
+                    for (var i = 0; i < val.length; i++) {
+                        subObjArr.push(val.toString());
+                    }
+                    subObj[subObjKey] = subObjArr;
+                }
+            }
+        } else
+            subObj = null;
+
+        if (!!subObj)
+            data_out[key] = subObj;
+    });
+
+    return data_out;
+};
