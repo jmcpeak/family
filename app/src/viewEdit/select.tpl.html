@@ -1,0 +1,16 @@
+<md-item>
+    <md-item-content>
+        <!--<input name="{{field}}"-->
+        <!--type="{{type}}"-->
+        <!--placeholder="{{placeholder}}"-->
+        <!--ng-model="user[field]"-->
+        <!--ng-required="required === 'true'"-->
+        <!--ng-disabled="disabled === 'true'">-->
+
+        <md-select ng-model="someModel" placeholder="Mother">
+            <md-option ng-value="opt" ng-repeat="opt in neighborhoods2">{{ opt }}</md-option>
+        </md-select>
+
+        <div ng-messages="form[field].$error" ng-messages-include="error-messages"></div>
+    </md-item-content>
+</md-item>

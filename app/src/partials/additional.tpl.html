@@ -1,4 +1,4 @@
-<section  aria-label="Additional">
+<section aria-label="Additional">
     <div layout="row" layout-sm="column" aria-label="Additional names">
         <jm-input label="Middle Name"
                   field="middleName"
@@ -29,12 +29,21 @@
                   type="text">
         </jm-input>
 
-        <jm-textarea class=""
-                     label="Hobbies, Interests, etc."
+        <jm-input label="Facebook"
+                  field="facebook"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Hobbies">
+        <jm-textarea label="Hobbies, Interests, etc."
                      field="hobbies"
                      user="user"
                      required="false"
                      type="text">
         </jm-textarea>
     </div>
+
 </section>

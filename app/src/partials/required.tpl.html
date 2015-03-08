@@ -1,4 +1,17 @@
 <section aria-label="Member">
+    <div layout="row" layout-sm="column" aria-label="Parents">
+        <jm-select label="Mother"
+                  field="mother"
+                  user="user"
+                  required="true">
+        </jm-select>
+        <jm-select label="Father"
+                  field="father"
+                  user="user"
+                  required="true">
+        </jm-select>
+    </div>
+
     <div layout="row" layout-sm="column" aria-label="Names">
         <jm-input label="First Name"
                   field="firstName"
@@ -19,7 +32,7 @@
         </jm-switch>
     </div>
 
-    <div layout layout-sm="column" aria-label="Email and Gender">
+    <div layout="row" layout-sm="column" aria-label="Email and Gender">
         <jm-input label="E-mail"
                   field="email"
                   user="user"

@@ -1,3 +1,9 @@
 md-dialog {
     font-size: 1.4em
 }
+
+/*md-input-container > md-select {*/
+    /*flex: 1;*/
+    /*order: 2;*/
+    /*margin: 0;*/
+/*}*/

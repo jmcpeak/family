@@ -53,4 +53,19 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 scope.form = controls[0];
             }
         };
+    })
+
+    .directive("jmSelect", function () {
+        return {
+            scope: {
+                field: '@',
+                disabled: '@',
+                user: '='
+            },
+            require: ['^form'],
+            templateUrl: 'src/viewEdit/select.tpl.html',
+            link: function (scope, element, attrs, controls) {
+                scope.form = controls[0];
+            }
+        };
     });
