@@ -1,0 +1,15 @@
+<md-item>
+    <md-item-content>
+        <md-input-container>
+            <label>{{label}}</label>
+            <input name="{{field}}"
+                   type="{{type}}"
+                   placeholder="{{placeholder}}"
+                   ng-model="user[field]"
+                   ng-required="required === 'true'"
+                   ng-disabled="disabled === 'true'">
+
+            <div ng-messages="form[field].$error" ng-messages-include="error-messages"></div>
+        </md-input-container>
+    </md-item-content>
+</md-item>

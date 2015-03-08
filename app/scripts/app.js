@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'ngMaterial',
-    'ngMessages', 'jmDB', 'jmViewEdit', 'jmList'])
+    'ngMessages', 'jmViewEdit', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
@@ -22,11 +22,13 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('blue')
-            .warnPalette('yellow');//.backgroundPalette('light-green');
+            .warnPalette('pink');//.backgroundPalette('light-green');
 
         // Configure a dark theme with primary foreground yellow
         $mdThemingProvider.theme('docs-dark', 'default')
-            .primaryPalette('yellow')
+            .primaryPalette('green')
+            .accentPalette('blue')
+            .warnPalette('pink')
             .dark();
     })
 

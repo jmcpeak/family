@@ -15,7 +15,7 @@ angular.module('jmDB', [])
         var tableName = 'test';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
-        this.queryMain = function () {
+        this.queryAll = function () {
             var deferred = $q.defer();
 
             dynamoDB.scan({TableName: tableName}, function (err, data) {
@@ -29,24 +29,27 @@ angular.module('jmDB', [])
             return deferred.promise;
         };
 
-        this.getItem = function () {
+        this.getUser = function (id) {
+            var deferred = $q.defer();
+
             var params = {
-                TableName: "test",
+                TableName: tableName,
                 Key: {
                     id: {
-                        S: '1'
+                        S: id.toString()
                     }
                 }
             };
 
             dynamoDB.getItem(params, function (err, data) {
                 if (err) {
-                    console.log(err, err.stack); // an error occurred
+                    deferred.reject(err);
                 } else {
-                    console.log(data);           // successful response
+                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
                 }
             });
 
+            return deferred.promise;
         };
     })
 

@@ -7,14 +7,14 @@
     </div>
 </md-toolbar>
 <md-subheader hide-gt-sm class="md-accent">
-    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>200</b> family members in database
+    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>
 <md-content class="md-padding">
     <md-list>
         <md-item ng-repeat="user in users" class="md-whiteframe-z1">
-            <md-item-content ng-click="showUser($event)">
+            <md-item-content ng-click="showUser($event, user)">
                 <div class="md-tile-left">
-                    <img ng-src="//material.angularjs.org/img/list/60.jpeg" class="face" alt="{{item.who}}">
+                    <img ng-src="{{user.face}}" class="face" alt="{{item.who}}">
                     <!--<md-button class="md-fab md-warn" aria-label="Edit">-->
                         <!--<md-icon md-svg-src="{{getAdd()}}" class="s36"></md-icon>-->
                     <!--</md-button>-->
@@ -22,7 +22,7 @@
                 <div class="md-tile-content">
                     <h3>{{user.who}}</h3>
                     <h4>{{user.where}}</h4>
-                    <h4>{{user.notes}}</h4>
+                    <h4>{{user.email}}</h4>
                 </div>
             </md-item-content>
             <md-divider inset></md-divider>
@@ -30,5 +30,5 @@
     </md-list>
 </md-content>
 <md-subheader hide-sm class="md-accent">
-    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>200</b> family members in database
+    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>

@@ -14,6 +14,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="src/user/user.css">
     <!-- endbuild -->
 </head>
 <body ng-app="jmFamily" style="overflow-y: hidden;">
@@ -55,8 +56,9 @@
 <!-- endbuild -->
 
 <script type="text/ng-template" id="error-messages">
-    <div ng-message="required">This field is required</div>
+    <div ng-message="required">Required</div>
     <div ng-message="minlength">This field is too short</div>
+    <div ng-message="email">Use a real e-mail address</div>
 </script>
 
 </body>

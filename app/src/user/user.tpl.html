@@ -1,170 +1,74 @@
-<md-dialog aria-label="View / Edit your information" md-theme="docs-dark" style="font-size:1.4em">
-
-    <!--<md-toolbar md-scroll-shrink>-->
-        <!--<div class="md-toolbar-tools">-->
-            <!--<h1>-->
-                <!--<span>Information</span>-->
-            <!--</h1>-->
-            <!--<span flex></span>-->
-        <!--</div>-->
-    <!--</md-toolbar>-->
+<md-dialog aria-label="View / Edit your information">
 
     <jm-floating-mobile-delete-button></jm-floating-mobile-delete-button>
     <jm-floating-desktop-delete-button></jm-floating-desktop-delete-button>
 
-    <!--<md-autocomplete-->
-    <!--ng-disabled="isDisabled"-->
-    <!--md-no-cache="noCache"-->
-    <!--md-selected-item="selectedItem"-->
-    <!--md-search-text="searchText"-->
-    <!--md-items="var item in querySearch(searchText)"-->
-    <!--md-item-text="display"-->
-    <!--placeholder="Who is your Mother?">-->
-    <!--<span md-highlight-text="searchText">{{item.display}}</span>-->
-    <!--</md-autocomplete>-->
-
-    <md-content>    <!--md-theme="docs-dark"-->
-        {{endpoint}}
-        <form name="userForm">
+    <md-content class="md-padding">
+        <ng-form name="userForm">
             <md-list>
-
-                <md-subheader class="md-accent">
-                    Tell us about yourself
-                </md-subheader>
-
-
-                <div layout layout-sm="column">
-                    <md-item>
-                        <md-item-content>
-                            <md-input-container>
-                                <label>First Name</label>
-                                <input required name="firstName" ng-model="user.firstName">
-
-                                <div ng-messages="userForm.firstName.$error"
-                                     ng-messages-include="error-messages"></div>
-                            </md-input-container>
-                        </md-item-content>
-                    </md-item>
-                    <md-input-container>
-                        <label>Last Name</label>
-                        <input required name="lastName" ng-model="user.lastName">
-
-                        <div ng-messages="userForm.lastName.$error" ng-messages-include="error-messages"></div>
-                    </md-input-container>
-                    <md-input-container>
-                        <md-switch class="md-primary" name="gender" ng-model="user.gender" aria-label="Gender">
-                            {{(user.gender) ? 'Male' : 'Female'}}
-                        </md-switch>
-                        <div ng-messages="userForm.gender.$error" ng-messages-include="error-messages"></div>
-                    </md-input-container>
+                <div layout layout-sm="column" aria-label="Names">
+                    <jm-input label="First Name"
+                              field="firstName"
+                              user="user"
+                              required="true"
+                              type="text">
+                    </jm-input>
+                    <jm-input label="Middle Name"
+                              field="middleName"
+                              user="user"
+                              required="false"
+                              type="text">
+                    </jm-input>
+                    <jm-input label="Last Name"
+                              field="lastName"
+                              user="user"
+                              required="true"
+                              type="text">
+                    </jm-input>
                 </div>
 
-                <div layout layout-sm="column">
-                    <md-input-container>
-                        <label>Nickname</label>
-                        <input name="nickName" ng-model="user.nickName">
-
-                        <div ng-messages="userForm.nickName.$error" ng-messages-include="error-messages"></div>
-                    </md-input-container>
-                    <md-input-container>
-                        <label>Middle Name</label>
-                        <input name="middleName" ng-model="user.middleName">
-
-                        <div ng-messages="userForm.middleName.$error" ng-messages-include="error-messages"></div>
-                    </md-input-container>
-                    <md-input-container>
-                        <label>Maiden Name</label>
-                        <input name="maidenName" ng-model="user.maidenName">
-
-                        <div ng-messages="userForm.maidenName.$error" ng-messages-include="error-messages"></div>
-                    </md-input-container>
-
-                    <md-input-container>
-                        <label>Suffix ("Jr", "Senior")</label>
-                        <input name="suffixName" ng-model="user.suffixName">
-
-                        <div ng-messages="userForm.suffixNameName.$error"
-                             ng-messages-include="error-messages"></div>
-                    </md-input-container>
+                <div layout layout-sm="column" aria-label="Additional names">
+                    <jm-input label="Maiden Name"
+                              field="maidenName"
+                              user="user"
+                              required="false"
+                              type="text">
+                    </jm-input>
+                    <jm-input label="Nickname"
+                              field="nickName"
+                              user="user"
+                              required="false"
+                              type="text">
+                    </jm-input>
+                    <!-- TODO placeholder="'Jr.', 'Senior', or 'III'" -->
+                    <jm-input label="Suffix"
+                              field="suffixName"
+                              user="user"
+                              required="false"
+                              type="text">
+                    </jm-input>
                 </div>
 
-                <div layout-sm="column">
-                    <md-input-container>
-                        <label>Occupation or Hobbies</label>
-                        <textarea rows="3" cols="400" name="ocupationHobbies"
-                                  ng-model="user.ocupationHobbies"></textarea>
-
-                        <div ng-messages="userForm.ocupationHobbies.$error"
-                             ng-messages-include="error-messages"></div>
-                    </md-input-container>
+                <div layout layout-sm="column" aria-label="Email, Address Gender">
+                    <jm-input label="E-mail"
+                              field="email"
+                              user="user"
+                              required="true"
+                              type="email">
+                    </jm-input>
+                    <jm-input label="Address"
+                              field="address"
+                              user="user"
+                              required="true"
+                              type="text">
+                    </jm-input>
+                    <jm-switch label="Gender"
+                               field="gender"
+                               user="user"
+                               required="true">
+                    </jm-switch>
                 </div>
-
-                <section aria-label="Your Spouse">
-                    <md-subheader class="md-accent">
-                        Tell us about your spouse
-                    </md-subheader>
-                    <div layout layout-sm="column">
-                        <md-input-container>
-                            <label>First Name</label>
-                            <input required name="firstName" ng-model="user.firstName">
-
-                            <div ng-messages="userForm.firstName.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                        <md-input-container>
-                            <label>Last Name</label>
-                            <input required name="lastName" ng-model="user.lastName">
-
-                            <div ng-messages="userForm.lastName.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                        <md-input-container>
-                            <md-switch class="md-primary" name="gender" ng-model="user.gender" aria-label="Gender">
-                                {{(user.gender) ? 'Male' : 'Female'}}
-                            </md-switch>
-                            <div ng-messages="userForm.gender.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                    </div>
-
-                    <div layout layout-sm="column">
-                        <md-input-container>
-                            <label>Nickname</label>
-                            <input name="nickName" ng-model="user.nickName">
-
-                            <div ng-messages="userForm.nickName.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                        <md-input-container>
-                            <label>Middle Name</label>
-                            <input name="middleName" ng-model="user.middleName">
-
-                            <div ng-messages="userForm.middleName.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                        <md-input-container>
-                            <label>Maiden Name</label>
-                            <input name="maidenName" ng-model="user.maidenName">
-
-                            <div ng-messages="userForm.maidenName.$error" ng-messages-include="error-messages"></div>
-                        </md-input-container>
-
-                        <md-input-container>
-                            <label>Suffix ("Jr", "Senior")</label>
-                            <input name="suffixName" ng-model="user.suffixName">
-
-                            <div ng-messages="userForm.suffixNameName.$error"
-                                 ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                    </div>
-
-                    <div layout-sm="column">
-                        <md-input-container>
-                            <label>Occupation or Hobbies</label>
-                        <textarea rows="3" cols="400" name="ocupationHobbies"
-                                  ng-model="user.ocupationHobbies"></textarea>
-
-                            <div ng-messages="userForm.ocupationHobbies.$error"
-                                 ng-messages-include="error-messages"></div>
-                        </md-input-container>
-                    </div>
-                </section>
             </md-list>
-        </form>
+        </ng-form>
     </md-content>
 </md-dialog>
