@@ -1,9 +1,9 @@
-angular.module('viewEdit', [])
+angular.module('jmViewEdit', [])
 
     .directive("jmViewEdit", function () {
         return {
             scope: true,
-            templateUrl: 'views/viewEdit.tpl.html',
+            templateUrl: 'src/viewEdit/viewEdit.tpl.html',
             controller: function () {
             }
         };
