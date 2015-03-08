@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="src/user/user.css">
     <!-- endbuild -->
 </head>
-<body ng-app="jmFamily" style="overflow-y: hidden;">
+<body ng-app="jmFamily" layout="column">
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
@@ -59,6 +59,8 @@
     <div ng-message="required">Required</div>
     <div ng-message="minlength">This field is too short</div>
     <div ng-message="email">Use a real e-mail address</div>
+    <div ng-message="number">Use a real phone number</div>
+    <div ng-message="tel">Use a phone number</div>
 </script>
 
 </body>

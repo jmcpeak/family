@@ -2,9 +2,40 @@
 
 angular.module('jmUser', ['jmDB'])
 
-    .controller("jmUserController", function ($scope, jmDB, locals) {
+    .controller("jmUserController", function ($scope, $location, jmDB, locals) {
 
-        $scope.disabled = false;
+        $scope.tabs = ['required', 'spouse', 'address', 'dates and places', 'children'];
+        $scope.selectedIndex = 0;
+
+        $scope.next = function() {
+            $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2) ;
+        };
+        $scope.previous = function() {
+            $scope.selectedIndex = Math.max($scope.selectedIndex - 1, 0);
+        };
+
+        $scope.switch = function (index) {
+            switch (index) {
+                case 0:
+                    $location.path('/required');
+                    break;
+                case 1:
+                    $location.path('/spouse');
+                    break;
+                case 2:
+                    $location.path('/address');
+                    break;
+                case 3:
+                    $location.path('/datesAndPlaces');
+                    break;
+                case 4:
+                    $location.path('/children');
+                    break;
+                default :
+                    $location.path('/required');
+                    break;
+            }
+        };
 
         jmDB.getUser(locals.id).then(function (data) {
             $scope.user = data;

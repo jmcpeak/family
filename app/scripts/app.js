@@ -7,22 +7,42 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
 
         $routeProvider
             .when('/', {
-                templateUrl: 'views/main.html',
-                controller: 'MainCtrl'
+                templateUrl: 'src/views/main.html',
+                controller: 'jmPartialController'
             })
-            .when('/about', {
-                templateUrl: 'views/about.html',
-                controller: 'AboutCtrl'
+            .when('/required', {
+                templateUrl: 'src/partials/required.tpl.html',
+                controller: 'jmPartialController'
             })
+            .when('/spouse', {
+                templateUrl: 'src/partials/spouse.tpl.html',
+                controller: 'jmPartialController'
+            })
+            .when('/address', {
+                templateUrl: 'src/partials/address.tpl.html',
+                controller: 'jmPartialController'
+            })
+            .when('/datesAndPlaces', {
+                templateUrl: 'src/partials/datesAndPlaces.tpl.html',
+                controller: 'jmPartialController'
+            })
+            .when('/children', {
+                templateUrl: 'src/partials/children.tpl.html',
+                controller: 'jmPartialController'
+            })
+
             .otherwise({
                 redirectTo: '/'
             });
 
         // Update the theme colors to use themes on font-icons
+        // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
+        // yellow, amber, orange, deep-orange, brown, grey, blue-grey
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('blue')
-            .warnPalette('pink');//.backgroundPalette('light-green');
+            .warnPalette('pink');
+            //.backgroundPalette('teal');
 
         // Configure a dark theme with primary foreground yellow
         $mdThemingProvider.theme('docs-dark', 'default')
@@ -30,6 +50,10 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
             .accentPalette('blue')
             .warnPalette('pink')
             .dark();
+    })
+
+    .controller("jmPartialController", function ($scope) {
+
     })
 
     .directive("jmFloatingDesktopButtons", function () {

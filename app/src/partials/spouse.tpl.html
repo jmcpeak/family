@@ -1,0 +1,76 @@
+<section aria-label="Spouse">
+
+    <div layout="row" layout-sm="column" aria-label="Spouse Names">
+        <jm-input label="Spouse First Name"
+                  field="firstNameSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+        <jm-input label="Spouse Middle Name"
+                  field="middleNameSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+        <jm-input label="Spouse Last Name"
+                  field="lastNameSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout layout-sm="column" aria-label="Spouse Email, Address Gender">
+        <jm-input label="Spouse E-mail"
+                  field="emailSpouse"
+                  user="user"
+                  required="false"
+                  type="email">
+        </jm-input>
+        <jm-input label="Spouse Address"
+                  field="addressSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+        <jm-switch label="Spouse Gender"
+                   field="genderSpouse"
+                   user="user"
+                   required="true">
+        </jm-switch>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Additional names">
+        <jm-input label="Spouse Maiden Name"
+                  field="maidenNameSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+        <jm-input label="Spouse Nickname"
+                  field="nickNameSpouse"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+        <!-- TODO placeholder="'Jr.', 'Senior', or 'III'" -->
+        <jm-input label="Spouse Suffix"
+                  field="suffixName"
+                  user="user"
+                  required="false"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Hobbies">
+        <jm-textarea class=""
+                     label="Spouse Hobbies, Interests, etc."
+                     field="hobbiesSpouse"
+                     user="user"
+                     required="false"
+                     type="text">
+        </jm-textarea>
+    </div>
+
+</section>
