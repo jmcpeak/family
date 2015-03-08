@@ -21,6 +21,25 @@ angular.module('jmViewEdit', ['ngMaterial'])
         };
     })
 
+    .directive("jmTextarea", function () {
+        return {
+            scope: {
+                label: '@',
+                field: '@',
+                disabled: '@',
+                required: '@',
+                type: '@',
+                placeholder: '@',
+                user: '='
+            },
+            require: ['^form'],
+            templateUrl: 'src/viewEdit/textarea.tpl.html',
+            link: function (scope, element, attrs, controls) {
+                scope.form = controls[0];
+            }
+        };
+    })
+
     .directive("jmSwitch", function () {
         return {
             scope: {
