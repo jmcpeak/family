@@ -18,8 +18,8 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
                 templateUrl: 'src/partials/spouse.tpl.html',
                 controller: 'jmPartialController'
             })
-            .when('/address', {
-                templateUrl: 'src/partials/address.tpl.html',
+            .when('/additional', {
+                templateUrl: 'src/partials/additional.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/datesAndPlaces', {

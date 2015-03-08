@@ -4,7 +4,7 @@ angular.module('jmUser', ['jmDB'])
 
     .controller("jmUserController", function ($scope, $location, jmDB, locals) {
 
-        $scope.tabs = ['required', 'spouse', 'address', 'dates and places', 'children'];
+        $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedIndex = 0;
 
         $scope.next = function() {
@@ -20,10 +20,10 @@ angular.module('jmUser', ['jmDB'])
                     $location.path('/required');
                     break;
                 case 1:
-                    $location.path('/spouse');
+                    $location.path('/additional');
                     break;
                 case 2:
-                    $location.path('/address');
+                    $location.path('/spouse');
                     break;
                 case 3:
                     $location.path('/datesAndPlaces');
