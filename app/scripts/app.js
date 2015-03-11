@@ -37,7 +37,7 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
 
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
-        // yellow, amber, orange, deep-orange, brown, grey, blue-grey no more
+        // yellow, amber, orange, deep-orange, brown, grey, blue-grey
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('blue')
