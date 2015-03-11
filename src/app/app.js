@@ -1,33 +1,35 @@
 'use strict';
 
-angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'ngMaterial',
+angular.module('jmFamily', [
+    //replace:templates-app,
+    'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'ngMaterial',
     'ngMessages', 'jmViewEdit', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
         $routeProvider
             .when('/', {
-                templateUrl: 'src/views/main.html',
+                templateUrl: 'partials/required.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/required', {
-                templateUrl: 'src/partials/required.tpl.html',
+                templateUrl: 'partials/required.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/spouse', {
-                templateUrl: 'src/partials/spouse.tpl.html',
+                templateUrl: 'partials/spouse.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/additional', {
-                templateUrl: 'src/partials/additional.tpl.html',
+                templateUrl: 'partials/additional.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/datesAndPlaces', {
-                templateUrl: 'src/partials/datesAndPlaces.tpl.html',
+                templateUrl: 'partials/datesAndPlaces.tpl.html',
                 controller: 'jmPartialController'
             })
             .when('/children', {
-                templateUrl: 'src/partials/children.tpl.html',
+                templateUrl: 'partials/children.tpl.html',
                 controller: 'jmPartialController'
             })
 
@@ -59,7 +61,7 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
     .directive("jmFloatingDesktopButtons", function () {
         return {
             scope: true,
-            templateUrl: 'scripts/floatingButtons.tpl.html',
+            templateUrl: 'floatingButtons.tpl.html',
             controller: 'jmFloatingButtonController'
         };
     })
@@ -67,7 +69,7 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
     .directive("jmFloatingMobileAddButton", function () {
         return {
             scope: true,
-            templateUrl: 'scripts/floatingMobileButton.tpl.html',
+            templateUrl: 'floatingMobileButton.tpl.html',
             controller: 'jmFloatingButtonController'
         };
     })
@@ -75,7 +77,7 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
     .directive("jmFloatingMobileDeleteButton", function () {
         return {
             scope: true,
-            templateUrl: 'scripts/floatingMobileDeleteButton.tpl.html',
+            templateUrl: 'floatingMobileDeleteButton.tpl.html',
             controller: 'jmFloatingButtonController'
         };
     })
@@ -83,7 +85,7 @@ angular.module('jmFamily', ['ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', '
     .directive("jmFloatingDesktopDeleteButton", function () {
         return {
             scope: true,
-            templateUrl: 'scripts/floatingDesktopDeleteButton.tpl.html',
+            templateUrl: 'floatingDesktopDeleteButton.tpl.html',
             controller: 'jmFloatingButtonController'
         };
     })

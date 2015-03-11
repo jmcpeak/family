@@ -14,7 +14,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'src/viewEdit/input.tpl.html',
+            templateUrl: 'viewEdit/input.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -33,7 +33,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'src/viewEdit/textarea.tpl.html',
+            templateUrl: 'viewEdit/textarea.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -48,7 +48,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'src/viewEdit/switch.tpl.html',
+            templateUrl: 'viewEdit/switch.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -63,7 +63,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'src/viewEdit/select.tpl.html',
+            templateUrl: 'viewEdit/select.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }

@@ -5,7 +5,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit', 'jmDB'])
     .directive("jmList", function () {
         return {
             scope: true,
-            templateUrl: 'src/list/list.tpl.html',
+            templateUrl: 'list/list.tpl.html',
             controller: function ($scope, $mdDialog, jmDB) {
                 var promise = jmDB.queryAll();
 
@@ -15,7 +15,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit', 'jmDB'])
                         var name = users[i].firstName + ' ' + users[i].lastName;
                         $scope.users.push({
                             id: users[i].id,
-                            face: 'images/cat.jpeg',
+                            //face: '',
                             who: name,
                             where: users[i].address,
                             email: users[i].email
@@ -33,7 +33,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit', 'jmDB'])
 
                     $mdDialog.show({
                         controller: 'jmUserController',
-                        templateUrl: 'src/user/user.tpl.html',
+                        templateUrl: 'user/user.tpl.html',
                         targetEvent: event,
                         locals: user
                     });

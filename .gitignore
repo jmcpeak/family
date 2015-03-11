@@ -1,5 +1,8 @@
-node_modules
-dist
-.tmp
-.sass-cache
+.idea
 bower_components
+node_modules
+jmFamily*.css
+.tmp
+dist
+coverage
+test/logs
