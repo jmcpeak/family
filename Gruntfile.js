@@ -172,7 +172,7 @@ module.exports = function (grunt) {
                 }
             },
             less: {
-                files: ['<%= yeoman.app %>/**/*.less'],
+                files: ['<%= yeoman.src %>/**/*.less'],
                 tasks: ['fileblocks:less', 'less:compile']
             },
             gruntfile: {
@@ -184,8 +184,8 @@ module.exports = function (grunt) {
             options: {
                 port: 9000,
                 // Change this to '0.0.0.0' to access the server from outside.
-                hostname: '0.0.0.0',
-                open: false
+                hostname: 'localhost',
+                open: true
             },
             dev: {
                 options: {
