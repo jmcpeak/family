@@ -6,3 +6,4 @@ jmFamily*.css
 dist
 coverage
 test/logs
+atlassian-ide-plugin.xml
