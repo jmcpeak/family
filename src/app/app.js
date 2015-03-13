@@ -118,7 +118,7 @@ angular.module('jmFamily', [
     })
 
     .service('jmDB', function ($q, jmDBUtils) {
-        var tableName = 'test';
+        var tableName = 'test1';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         this.queryAll = function () {
