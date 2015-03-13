@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit', 'jmDB'])
+angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
 
     .directive("jmList", function () {
         return {

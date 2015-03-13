@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmUser', ['jmDB'])
+angular.module('jmUser', [])
 
     .controller("jmUserController", function ($scope, $location, jmDB, locals) {
 

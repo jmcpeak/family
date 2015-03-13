@@ -202,7 +202,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    hostname: '0.0.0.0',
+                    hostname: 'localhost',
                     middleware: function (connect) {
                         return [
                             restMock,
