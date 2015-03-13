@@ -5,10 +5,7 @@ angular.module('jmDB', [])
 
     .config(function () {
         AWS.config.region = 'us-west-2';
-        AWS.config.update({
-            accessKeyId: 'AKIAIVDNGMPTDA7FTXQA',
-            secretAccessKey: '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'
-        });
+        AWS.config.update({});
     })
 
     .service('jmDB', function ($q, jmDBUtils) {
