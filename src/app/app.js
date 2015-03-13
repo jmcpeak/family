@@ -59,6 +59,32 @@ angular.module('jmFamily', [
             .dark();
     })
 
+    .controller("jmFloatingButtonController", function ($scope) {
+
+        $scope.items = [
+            {name: 'Share', icon: 'share'},
+            {name: 'Upload', icon: 'upload'},
+            {name: 'Copy', icon: 'copy'},
+            {name: 'Print this page', icon: 'print'}
+        ];
+
+        $scope.getAdd = function () {
+            return 'bower_components/material-design-icons/content/svg/production/ic_add_24px.svg';
+        };
+
+        $scope.getEmail = function () {
+            return 'bower_components/material-design-icons/communication/svg/production/ic_email_24px.svg';
+        };
+
+        $scope.getPrint = function () {
+            return 'bower_components/material-design-icons/action/svg/production/ic_print_24px.svg';
+        };
+
+        $scope.getRemove = function () {
+            return 'bower_components/material-design-icons/action/svg/production/ic_delete_24px.svg';
+        };
+    })
+
     .directive("jmFloatingDesktopButtons", function () {
         return {
             scope: true,
@@ -88,32 +114,6 @@ angular.module('jmFamily', [
             scope: true,
             templateUrl: 'floatingDesktopDeleteButton.tpl.html',
             controller: 'jmFloatingButtonController'
-        };
-    })
-
-    .controller("jmFloatingButtonController", function ($scope) {
-
-        $scope.items = [
-            {name: 'Share', icon: 'share'},
-            {name: 'Upload', icon: 'upload'},
-            {name: 'Copy', icon: 'copy'},
-            {name: 'Print this page', icon: 'print'}
-        ];
-
-        $scope.getAdd = function () {
-            return 'bower_components/material-design-icons/content/svg/production/ic_add_24px.svg';
-        };
-
-        $scope.getEmail = function () {
-            return 'bower_components/material-design-icons/communication/svg/production/ic_email_24px.svg';
-        };
-
-        $scope.getPrint = function () {
-            return 'bower_components/material-design-icons/action/svg/production/ic_print_24px.svg';
-        };
-
-        $scope.getRemove = function () {
-            return 'bower_components/material-design-icons/action/svg/production/ic_delete_24px.svg';
         };
     })
 
