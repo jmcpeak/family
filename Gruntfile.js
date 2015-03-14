@@ -423,13 +423,14 @@ module.exports = function (grunt) {
                         cwd: 'bower_components/bootstrap',
                         src: 'fonts/*',
                         dest: '<%= yeoman.dist %>'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/material-design-icons',
-                        src: '**/svg/production/*',
-                        dest:'<%= yeoman.dist %>/material-design-icons'
                     }]
+                    //,
+                    //{
+                    //    expand: true,
+                    //    cwd: 'bower_components/material-design-icons',
+                    //    src: '**/svg/production/*',
+                    //    dest:'<%= yeoman.dist %>/material-design-icons'
+                    //}]
             }
         },
 
