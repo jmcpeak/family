@@ -1,20 +1,35 @@
-<md-toolbar md-scroll-shrink>
-    <div class="md-toolbar-tools">
-        <h1>
-            <span>{{name}} Family Database</span>
-        </h1>
-        <span flex></span>
-    </div>
-</md-toolbar>
-<md-subheader hide-gt-sm class="md-accent">
-    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
-</md-subheader>
-<md-content class="md-padding">
+<!--<md-toolbar md-scroll-shrink>-->
+    <!--<div class="md-toolbar-tools">-->
+        <!--<h1>-->
+            <!--<span>{{name}} Family Database</span>-->
+        <!--</h1>-->
+        <!--<span flex></span>-->
+    <!--</div>-->
+<!--</md-toolbar>-->
+<!--<md-subheader hide-gt-sm class="md-accent">-->
+    <!--Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database-->
+<!--</md-subheader>-->
+
+
+<!--<md-content flex ng-controller="myController">-->
+<!--<md-list>-->
+<!--<md-item ng-repeat="item in items">-->
+<!--<md-item-content>-->
+<!--<div class="md-tile-content">-->
+<!--{{item}}-->
+<!--</div>-->
+<!--</md-item-content>-->
+<!--<md-divider></md-divider>-->
+<!--</md-item>-->
+<!--</md-list>-->
+<!--</md-content>-->
+
+<md-content flex>
     <md-list>
         <md-item ng-repeat="user in users" class="md-whiteframe-z1">
             <md-item-content ng-click="showUser($event, user)">
                 <div class="md-tile-left">
-                    <img src="/assets/cat.jpeg" class="face" alt="{{item.who}}">
+                    <!--<img src="/assets/cat.jpeg" class="face" alt="{{item.who}}">-->
                     <!--<md-button class="md-fab md-warn" aria-label="Edit">-->
                         <!--<md-icon md-svg-src="/assets/ic_add_24px.svg" class="s36"></md-icon>-->
                     <!--</md-button>-->

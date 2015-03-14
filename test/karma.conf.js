@@ -32,6 +32,7 @@ module.exports = function(config) {
             'bower_components/angular-aria/angular-aria.js',
             'bower_components/angular-material/angular-material.js',
             'bower_components/aws-sdk-js/dist/aws-sdk.js',
+            'bower_components/angular-hamburglar/dist/hamburglar.min.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
             // endbower

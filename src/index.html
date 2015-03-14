@@ -22,13 +22,70 @@
     <!-- endfileblock -->
     <!-- endbuild -->
 </head>
-<body ng-app="jmFamily" layout="column">
+<body ng-app="jmFamily" layout="column" layout-fill> <!--  layout="column" layout-fill-->
 
+<md-toolbar ng-controller="jmListController" md-scroll-shrink md-shrink-speed-factor="0.25">
+    <div class="md-toolbar-tools">
+        <md-button class="md-fab md-primary jm-flat" aria-label="Menu" ng-click="open()">
+            <md-icon md-svg-src="/assets/ic_menu_24px.svg" class="s36" alt="Add"></md-icon>
+        </md-button>
+        <h3>
+            <span>{{name}} Family Database</span>
+        </h3>
+    </div>
+</md-toolbar>
 
-<jm-floating-desktop-buttons hide-sm></jm-floating-desktop-buttons>
-<jm-floating-mobile-add-button hide-gt-sm></jm-floating-mobile-add-button>
-<jm-list></jm-list>
+<!--<md-subheader hide-sm class="md-accent"> &lt;!&ndash; hide-gt-sm&ndash;&gt;-->
+<!--Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database-->
+<!--</md-subheader>-->
 
+<!-- MENU - Can't move into directive - even with replace: true - it doesn't work -->
+<section layout="row" flex ng-controller="jmListController">
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-swipe-left="close()">
+        <md-toolbar class="md-tall jm-menu-background">
+            <h4 class="md-toolbar-tools">McPeak Family</h4>
+        </md-toolbar>
+        <md-content class="md-padding">
+            <md-list>
+                <md-item ng-repeat="menu in menus">
+                    <md-item-content>
+                        <md-button class="jm-menu-button" ng-href="{{menu.link}}" target="jm-menu-frame">
+                            <h3 class="jm-menu-button-text">{{menu.label}}</h3>
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+            </md-list>
+        </md-content>
+    </md-sidenav>
+</section>
+
+<md-content ng-controller="jmListController" style="height: 600px;">
+    <md-list>
+        <md-card ng-repeat="user in users" ng-click="showUser($event, user)" md-swipe-left="showDelete = !showDelete">
+            <md-item-content>
+                <div class="md-tile-left" style="padding-left: 10px">
+                    <md-button class="md-fab md-accent" aria-label="User Initials">
+                        <h2 class="centerInitialsInButton">{{user.initials | uppercase }}</h2>
+                    </md-button>
+                </div>
+                <div class="md-tile-content" style="padding-left: 30px">
+                    <h3>{{user.who}}</h3>
+
+                    <h3>{{user.where}}</h3>
+
+                    <h3>{{user.email}}</h3>
+                </div>
+                <div class="md-tile-right">
+                    <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove" ng-show="showDelete"
+                               ng-click="showDelete = !showDelete">Remove
+                    </md-button>
+                </div>
+            </md-item-content>
+        </md-card>
+    </md-list>
+</md-content>
+
+<jm-add-button/>
 
 <!-- build:js(.) js/vendor.js -->
 <!-- bower:js -->

@@ -1,6 +1,12 @@
 'use strict';
 
-angular.module('jmUser', [])
+angular.module('jmUser', ['ngMaterial'])
+
+    .directive("jmAddButton", function () {
+        return {
+            templateUrl: 'user/button.tpl.html'
+        };
+    })
 
     .controller("jmUserController", function ($scope, $location, jmDB, locals) {
 

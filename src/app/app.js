@@ -3,8 +3,7 @@
 
 angular.module('jmFamily', [
     //replace:templates-app,
-    'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'ngMaterial',
-    'ngMessages', 'jmViewEdit', 'jmList'])
+    'ngMaterial', 'ngTouch', 'ngRoute', 'ngMessages', 'ngResource', 'ngAnimate', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
@@ -51,7 +50,6 @@ angular.module('jmFamily', [
                 templateUrl: 'partials/children.tpl.html',
                 controller: 'jmPartialController'
             })
-
             .otherwise({
                 redirectTo: '/'
             });
@@ -59,63 +57,63 @@ angular.module('jmFamily', [
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
-        $mdThemingProvider.theme('default')
-            .primaryPalette('green')
-            .accentPalette('blue')
-            .warnPalette('pink');
-        //.backgroundPalette('teal');
-
-        // Configure a dark theme with primary foreground yellow
-        $mdThemingProvider.theme('docs-dark', 'default')
-            .primaryPalette('green')
-            .accentPalette('blue')
-            .warnPalette('pink')
-            .dark();
+        //$mdThemingProvider.theme('default')
+        //    .primaryPalette('green')
+        //    .accentPalette('blue')
+        //    .warnPalette('pink');
+        ////.backgroundPalette('teal');
+        //
+        //// Configure a dark theme with primary foreground yellow
+        //$mdThemingProvider.theme('docs-dark', 'default')
+        //    .primaryPalette('green')
+        //    .accentPalette('blue')
+        //    .warnPalette('pink')
+        //    .dark();
     })
 
     .controller("jmPartialController", function () {})
 
-    .controller("jmFloatingButtonController", function ($scope) {
-
-        $scope.items = [
-            {name: 'Share', icon: 'share'},
-            {name: 'Upload', icon: 'upload'},
-            {name: 'Copy', icon: 'copy'},
-            {name: 'Print this page', icon: 'print'}
-        ];
-    })
-
-    .directive("jmFloatingDesktopButtons", function () {
-        return {
-            scope: true,
-            templateUrl: 'floatingButtons.tpl.html',
-            controller: 'jmFloatingButtonController'
-        };
-    })
-
-    .directive("jmFloatingMobileAddButton", function () {
-        return {
-            scope: true,
-            templateUrl: 'floatingMobileButton.tpl.html',
-            controller: 'jmFloatingButtonController'
-        };
-    })
-
-    .directive("jmFloatingMobileDeleteButton", function () {
-        return {
-            scope: true,
-            templateUrl: 'floatingMobileDeleteButton.tpl.html',
-            controller: 'jmFloatingButtonController'
-        };
-    })
-
-    .directive("jmFloatingDesktopDeleteButton", function () {
-        return {
-            scope: true,
-            templateUrl: 'floatingDesktopDeleteButton.tpl.html',
-            controller: 'jmFloatingButtonController'
-        };
-    })
+    //.controller("jmFloatingButtonController", function ($scope) {
+    //
+    //    $scope.items = [
+    //        {name: 'Share', icon: 'share'},
+    //        {name: 'Upload', icon: 'upload'},
+    //        {name: 'Copy', icon: 'copy'},
+    //        {name: 'Print this page', icon: 'print'}
+    //    ];
+    //})
+    //
+    //.directive("jmFloatingDesktopButtons", function () {
+    //    return {
+    //        scope: true,
+    //        templateUrl: 'floatingButtons.tpl.html',
+    //        controller: 'jmFloatingButtonController'
+    //    };
+    //})
+    //
+    //.directive("jmFloatingMobileAddButton", function () {
+    //    return {
+    //        scope: true,
+    //        templateUrl: 'floatingMobileButton.tpl.html',
+    //        controller: 'jmFloatingButtonController'
+    //    };
+    //})
+    //
+    //.directive("jmFloatingMobileDeleteButton", function () {
+    //    return {
+    //        scope: true,
+    //        templateUrl: 'floatingMobileDeleteButton.tpl.html',
+    //        controller: 'jmFloatingButtonController'
+    //    };
+    //})
+    //
+    //.directive("jmFloatingDesktopDeleteButton", function () {
+    //    return {
+    //        scope: true,
+    //        templateUrl: 'floatingDesktopDeleteButton.tpl.html',
+    //        controller: 'jmFloatingButtonController'
+    //    };
+    //})
 
     .service('jmDB', function ($q, jmDBUtils) {
         var tableName = 'test';
