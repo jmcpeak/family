@@ -13,10 +13,10 @@ angular.module('jmUser', ['ngMaterial'])
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedIndex = 0;
 
-        $scope.next = function() {
-            $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2) ;
+        $scope.next = function () {
+            $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2);
         };
-        $scope.previous = function() {
+        $scope.previous = function () {
             $scope.selectedIndex = Math.max($scope.selectedIndex - 1, 0);
         };
 

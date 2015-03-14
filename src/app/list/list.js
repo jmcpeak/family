@@ -11,7 +11,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
 
     .controller("jmListController", function ($scope, $mdDialog, $mdSidenav, jmDB) {
         var promise = jmDB.queryAll();
-        var showDelete = false;
 
         promise.then(function (users) {
             $scope.count = users.length;
@@ -64,5 +63,12 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
             {link: 'https://github.com/jmcpeak/family', label: 'Code'},
             {link: 'https://travis-ci.org/jmcpeak/family', label: 'Builds'}
         ];
+
+        $scope.add = function (event) {
+            $mdDialog.show({
+                template: '<md-dialog aria-label="Add" style="width: 30%; height: 30%;"><md-content layout-padding flex>Add User</md-content></md-dialog>',
+                targetEvent: event
+            });
+        };
 
     });

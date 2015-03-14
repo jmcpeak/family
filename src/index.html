@@ -9,8 +9,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -25,10 +25,18 @@
 <body ng-app="jmFamily" layout="column" layout-fill ng-controller="jmListController">
 <!--  layout="column" layout-fill-->
 
-<md-toolbar md-scroll-shrink md-shrink-speed-factor="0.25">
+<script type="text/ng-template" id="error-messages">
+    <div ng-message="required">Required</div>
+    <div ng-message="minlength">This field is too short</div>
+    <div ng-message="email">Use a real e-mail address</div>
+    <div ng-message="number">Use a real phone number</div>
+    <div ng-message="tel">Use a phone number</div>
+</script>
+
+<md-toolbar md-scroll-shrink>
     <div class="md-toolbar-tools">
         <md-button class="md-fab md-primary jm-flat" aria-label="Menu" ng-click="open()">
-            <md-icon md-svg-src="/assets/ic_menu_24px.svg" class="s36" alt="Add"></md-icon>
+            <md-icon md-svg-src="/assets/ic_menu_24px.svg" alt="Add"></md-icon>
         </md-button>
         <h3>
             <span>{{name}} Family Database</span>
@@ -62,10 +70,10 @@
 
 <md-content style="height: 600px;">
     <md-list>
-        <md-card ng-repeat="user in users" ng-click="showUser($event, user)" md-swipe-left="showDelete = !showDelete">
+        <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete">
             <md-item-content>
                 <div class="md-tile-left" style="padding-left: 10px">
-                    <md-button class="md-fab md-accent" aria-label="User Initials">
+                    <md-button class="md-fab md-accent" aria-label="User Initials" ng-click="showUser($event, user)">
                         <h2 class="centerInitialsInButton">{{user.initials | uppercase }}</h2>
                     </md-button>
                 </div>
@@ -118,13 +126,6 @@
 <!-- endfileblock -->
 <!-- endbuild -->
 
-<script type="text/ng-template" id="error-messages">
-    <div ng-message="required">Required</div>
-    <div ng-message="minlength">This field is too short</div>
-    <div ng-message="email">Use a real e-mail address</div>
-    <div ng-message="number">Use a real phone number</div>
-    <div ng-message="tel">Use a phone number</div>
-</script>
 
 </body>
 </html>
