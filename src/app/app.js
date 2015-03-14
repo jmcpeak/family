@@ -20,9 +20,9 @@ angular.module('jmFamily', [
         // login
         AWS.config.credentials.get(function (err) {
             if (err) {
-                console.error(err);
+                //console.error(err);
             } else {
-                console.info("Cognito Identity Id:", AWS.config.credentials.identityId);
+                //console.info("Cognito Identity Id:", AWS.config.credentials.identityId);
             }
         });
 
