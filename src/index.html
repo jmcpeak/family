@@ -9,8 +9,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -22,9 +22,10 @@
     <!-- endfileblock -->
     <!-- endbuild -->
 </head>
-<body ng-app="jmFamily" layout="column" layout-fill> <!--  layout="column" layout-fill-->
+<body ng-app="jmFamily" layout="column" layout-fill ng-controller="jmListController">
+<!--  layout="column" layout-fill-->
 
-<md-toolbar ng-controller="jmListController" md-scroll-shrink md-shrink-speed-factor="0.25">
+<md-toolbar md-scroll-shrink md-shrink-speed-factor="0.25">
     <div class="md-toolbar-tools">
         <md-button class="md-fab md-primary jm-flat" aria-label="Menu" ng-click="open()">
             <md-icon md-svg-src="/assets/ic_menu_24px.svg" class="s36" alt="Add"></md-icon>
@@ -40,7 +41,7 @@
 <!--</md-subheader>-->
 
 <!-- MENU - Can't move into directive - even with replace: true - it doesn't work -->
-<section layout="row" flex ng-controller="jmListController">
+<section layout="row" flex>
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-swipe-left="close()">
         <md-toolbar class="md-tall jm-menu-background">
             <h4 class="md-toolbar-tools">McPeak Family</h4>
@@ -59,7 +60,7 @@
     </md-sidenav>
 </section>
 
-<md-content ng-controller="jmListController" style="height: 600px;">
+<md-content style="height: 600px;">
     <md-list>
         <md-card ng-repeat="user in users" ng-click="showUser($event, user)" md-swipe-left="showDelete = !showDelete">
             <md-item-content>
