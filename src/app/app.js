@@ -8,9 +8,23 @@ angular.module('jmFamily', [
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
-        AWS.config.region = 'us-west-2';
-        AWS.config.update({});
-        /* jshint +W117 */
+        // Initialize the Amazon Cognito credentials provider
+        AWS.config.region = 'us-east-1';
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+            AccountId: '754934490052',
+            IdentityPoolId: 'us-east-1:0531f9e8-90fb-442c-9488-066f62d9a150',
+            RoleArn: 'arn:aws:iam::754934490052:role/Cognito_mcpeakfamilyUnauth_DefaultRole',
+            RoleSessionName: 'web'
+        });
+
+        // login
+        AWS.config.credentials.get(function (err) {
+            if (err) {
+                console.error(err);
+            } else {
+                console.info("Cognito Identity Id:", AWS.config.credentials.identityId);
+            }
+        });
 
         $routeProvider
             .when('/', {
@@ -58,6 +72,8 @@ angular.module('jmFamily', [
             .warnPalette('pink')
             .dark();
     })
+
+    .controller("jmPartialController", function () {})
 
     .controller("jmFloatingButtonController", function ($scope) {
 
