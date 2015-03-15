@@ -14,7 +14,22 @@ angular.module('jmUser', ['ngMaterial'])
         };
     })
 
-    .controller("jmUserController", function ($scope, $location, jmDB, locals) {
+    .directive("jmUser", function () {
+        return {
+            templateUrl: 'user/user.tpl.html',
+            controller: 'jmUserController'
+        };
+    })
+
+    .directive("jmDialog", function () {
+        return {
+            templateUrl: 'user/dialog.tpl.html'
+        };
+    })
+
+    .controller("jmUserController", function ($scope, $location, jmDB) {
+
+        var locals = {id: '1'};
 
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedIndex = 0;

@@ -1,18 +1,12 @@
-<md-dialog aria-label="View / Edit your information" style="width: 60%; height: 100%;">
-
-    <!--<jm-floating-mobile-delete-button></jm-floating-mobile-delete-button>-->
-    <!--<jm-floating-desktop-delete-button></jm-floating-desktop-delete-button>-->
-
-    <md-tabs md-selected="selectedIndex">
-        <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="switch($index)">
-            <ng-form name="userForm">
-                <md-list>
-                    <div ng-view
-                         md-swipe-left="next()"
-                         md-swipe-right="previous()">
-                    </div>
-                </md-list>
-            </ng-form>
-        </md-tab>
-    </md-tabs>
-</md-dialog>
+<md-tabs md-selected="selectedIndex" layout="column" style="background-color: lightgreen">
+    <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="switch($index)">
+        <ng-form name="userForm">
+            <md-list>
+                <div ng-view
+                     md-swipe-left="next()"
+                     md-swipe-right="previous()">
+                </div>
+            </md-list>
+        </ng-form>
+    </md-tab>
+</md-tabs>

@@ -9,8 +9,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -22,8 +22,7 @@
     <!-- endfileblock -->
     <!-- endbuild -->
 </head>
-<body ng-app="jmFamily" layout="column" layout-fill ng-controller="jmListController">
-<!--  layout="column" layout-fill-->
+<body ng-app="jmFamily" layout="column" layout-fill>
 
 <script type="text/ng-template" id="error-messages">
     <div ng-message="required">Required</div>
@@ -33,14 +32,19 @@
     <div ng-message="tel">Use a phone number</div>
 </script>
 
-<md-toolbar hide-gt-sm md-scroll-shrink><jm-toolbar/></md-toolbar>
-<md-toolbar hide-sm><jm-toolbar/></md-toolbar>
+<!-- Can't move into directive - even with replace: true - it doesn't work -->
+<md-toolbar hide-gt-sm md-scroll-shrink>
+    <jm-toolbar/>
+</md-toolbar>
+<md-toolbar hide-sm>
+    <jm-toolbar/>
+</md-toolbar>
 
 <md-subheader hide-sm class="md-accent"> <!-- hide-gt-sm-->
     Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>
 
-<!-- MENU - Can't move into directive - even with replace: true - it doesn't work -->
+<!-- Can't move into directive - even with replace: true - it doesn't work -->
 <section layout="row" flex>
     <md-sidenav class="md-sidenav-left" md-component-id="left" md-swipe-left="close()">
         <md-toolbar class="md-tall jm-menu-background">
@@ -60,33 +64,12 @@
     </md-sidenav>
 </section>
 
-<md-content ng-style="{'height' : height}">
-    <md-list>
-        <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete">
-            <md-item-content>
-                <div class="md-tile-left" style="padding-left: 10px">
-                    <md-button class="md-fab md-accent" aria-label="User Initials" ng-click="showUser($event, user)">
-                        <h2 class="centerInitialsInButton">{{user.initials | uppercase }}</h2>
-                    </md-button>
-                </div>
-                <div class="md-tile-content" style="padding-left: 30px">
-                    <h3>{{user.who}}</h3>
-
-                    <h3>{{user.where}}</h3>
-
-                    <h3>{{user.email}}</h3>
-                </div>
-                <div class="md-tile-right">
-                    <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove" ng-show="showDelete"
-                               ng-click="showDelete = !showDelete">Remove
-                    </md-button>
-                </div>
-            </md-item-content>
-        </md-card>
-    </md-list>
+<md-content layout="row" layout-sm="column">
+    <jm-list flex></jm-list>
+    <jm-user flex hide-sm></jm-user>
 </md-content>
 
-<jm-add-button hide-gt-md />
+<jm-add-button hide-gt-md/>
 
 <!-- build:js(.) js/vendor.js -->
 <!-- bower:js -->
