@@ -323,7 +323,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= yeoman.dist %>/js/**/*.js',
                     '<%= yeoman.dist %>/styles/**/*.css',
-                    '<%= yeoman.dist %>/assets/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+                    '<%= yeoman.dist %>/assets/{,*/}*.{png,jpg,jpeg,gif,webp}',
                     '<%= yeoman.dist %>/fonts/*'
                 ]
             }
@@ -348,49 +348,8 @@ module.exports = function (grunt) {
             dist: {}
         },
 
-        //imagemin: {
-        //  dist: {
-        //    files: [{
-        //      expand: true,
-        //      cwd: '<%= yeoman.app %>/images',
-        //      src: '{,*/}*.{png,jpg,jpeg,gif}',
-        //      dest: '<%= yeoman.dist %>/images'
-        //    }]
-        //  }
-        //},
-        //
-        //svgmin: {
-        //  dist: {
-        //    files: [{
-        //      expand: true,
-        //      cwd: '<%= yeoman.app %>/images',
-        //      src: '{,*/}*.svg',
-        //      dest: '<%= yeoman.dist %>/images'
-        //    }]
-        //  }
-        //},
-
-        // htmlmin: {
-        //   dist: {
-        //     options: {
-        //       collapseWhitespace: true,
-        //       conservativeCollapse: true,
-        //       collapseBooleanAttributes: true,
-        //       removeCommentsFromCDATA: true,
-        //       removeOptionalTags: true
-        //     },
-        //     files: [{
-        //       expand: true,
-        //       cwd: '<%= yeoman.dist %>',
-        //       src: ['*.html', 'views/{,*/}*.html'],
-        //       dest: '<%= yeoman.dist %>'
-        //     }]
-        //   }
-        // },
-
         // ng-annotate tries to make the code safe for minification automatically
         // by using the Angular long form for dependency injection.
-
 
         // Replace Google CDN references
         cdnify: {
@@ -424,13 +383,6 @@ module.exports = function (grunt) {
                         src: 'fonts/*',
                         dest: '<%= yeoman.dist %>'
                     }]
-                    //,
-                    //{
-                    //    expand: true,
-                    //    cwd: 'bower_components/material-design-icons',
-                    //    src: '**/svg/production/*',
-                    //    dest:'<%= yeoman.dist %>/material-design-icons'
-                    //}]
             }
         },
 
@@ -444,8 +396,7 @@ module.exports = function (grunt) {
             ],
             dist: [
                 'copy:styles',
-                'imagemin',
-                'svgmin'
+                'imagemin'
             ]
         },
 

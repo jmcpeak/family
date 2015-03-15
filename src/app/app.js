@@ -57,63 +57,41 @@ angular.module('jmFamily', [
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
-        //$mdThemingProvider.theme('default')
-        //    .primaryPalette('green')
-        //    .accentPalette('blue')
-        //    .warnPalette('pink');
-        ////.backgroundPalette('teal');
-        //
-        //// Configure a dark theme with primary foreground yellow
-        //$mdThemingProvider.theme('docs-dark', 'default')
-        //    .primaryPalette('green')
-        //    .accentPalette('blue')
-        //    .warnPalette('pink')
-        //    .dark();
+        $mdThemingProvider.theme('default')
+            .primaryPalette('green')
+            .accentPalette('blue')
+            .warnPalette('pink');
+        //.backgroundPalette('teal');
+
+        // Configure a dark theme with primary foreground yellow
+        $mdThemingProvider.theme('docs-dark', 'default')
+            .primaryPalette('green')
+            .accentPalette('blue')
+            .warnPalette('pink')
+            .dark();
     })
 
+    .config(['$mdIconProvider', function($mdIconProvider) {
+        $mdIconProvider
+            .iconSet('action', '/assets/action-icons.svg', 24)
+            .iconSet('alert', '/assets/alert-icons.svg', 24)
+            .iconSet('av', '/assets/av-icons.svg', 24)
+            .iconSet('communication', '/assets/communication-icons.svg', 24)
+            .iconSet('content', '/assets/content-icons.svg', 24)
+            .iconSet('device', '/assets/device-icons.svg', 24)
+            .iconSet('editor', '/assets/editor-icons.svg', 24)
+            .iconSet('file', '/assets/file-icons.svg', 24)
+            .iconSet('hardware', '/assets/hardware-icons.svg', 24)
+            .iconSet('icons', '/assets/icons-icons.svg', 24)
+            .iconSet('image', '/assets/image-icons.svg', 24)
+            .iconSet('maps', '/assets/maps-icons.svg', 24)
+            .iconSet('navigation', '/assets/navigation-icons.svg', 24)
+            .iconSet('notification', '/assets/notification-icons.svg', 24)
+            .iconSet('social', '/assets/social-icons.svg', 24)
+            .iconSet('toggle', '/assets/toggle-icons.svg', 24);
+    }])
+    
     .controller("jmPartialController", function () {})
-
-    //.controller("jmFloatingButtonController", function ($scope) {
-    //
-    //    $scope.items = [
-    //        {name: 'Share', icon: 'share'},
-    //        {name: 'Upload', icon: 'upload'},
-    //        {name: 'Copy', icon: 'copy'},
-    //        {name: 'Print this page', icon: 'print'}
-    //    ];
-    //})
-    //
-    //.directive("jmFloatingDesktopButtons", function () {
-    //    return {
-    //        scope: true,
-    //        templateUrl: 'floatingButtons.tpl.html',
-    //        controller: 'jmFloatingButtonController'
-    //    };
-    //})
-    //
-    //.directive("jmFloatingMobileAddButton", function () {
-    //    return {
-    //        scope: true,
-    //        templateUrl: 'floatingMobileButton.tpl.html',
-    //        controller: 'jmFloatingButtonController'
-    //    };
-    //})
-    //
-    //.directive("jmFloatingMobileDeleteButton", function () {
-    //    return {
-    //        scope: true,
-    //        templateUrl: 'floatingMobileDeleteButton.tpl.html',
-    //        controller: 'jmFloatingButtonController'
-    //    };
-    //})
-    //
-    //.directive("jmFloatingDesktopDeleteButton", function () {
-    //    return {
-    //        scope: true,
-    //        templateUrl: 'floatingDesktopDeleteButton.tpl.html',
-    //        controller: 'jmFloatingButtonController'
-    //    };
-    //})
 
     .service('jmDB', function ($q, jmDBUtils) {
         var tableName = 'test';
