@@ -8,6 +8,12 @@ angular.module('jmUser', ['ngMaterial'])
         };
     })
 
+    .directive("jmAddButtonDesktop", function () {
+        return {
+            templateUrl: 'user/buttonDesktop.tpl.html'
+        };
+    })
+
     .controller("jmUserController", function ($scope, $location, jmDB, locals) {
 
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
