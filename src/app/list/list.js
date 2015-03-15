@@ -9,6 +9,14 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
         };
     })
 
+    .directive("jmToolbar", function () {
+        return {
+            replace: true,
+            templateUrl: 'list/toolbar.tpl.html',
+            controller: 'jmListController'
+        };
+    })
+
     .controller("jmListController", function ($scope, $mdDialog, $mdSidenav, jmDB) {
         var promise = jmDB.queryAll();
 
@@ -32,6 +40,8 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
         $scope.count = '';
         $scope.lastUpdate = new Date();
         $scope.name = 'McPeak';
+
+        $scope.height = 'auto';
 
         $scope.showUser = function (event, user) {
 
