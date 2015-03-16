@@ -94,7 +94,7 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: '<%= yeoman.src %>/less/app.less',
+                        src: '<%= yeoman.src %>/app/app.less',
                         blocks: {
                             'imports': {
                                 src: ['../app/**/*.less'],

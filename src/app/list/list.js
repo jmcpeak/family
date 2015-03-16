@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmList', ['ngMaterial', 'jmUser', 'jmViewEdit'])
+angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
     .directive("jmToolbar", function () {
         return {

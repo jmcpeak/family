@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmViewEdit', ['ngMaterial'])
+angular.module('jmInput', ['ngMaterial'])
 
     .directive("jmInput", function () {
         return {
@@ -14,7 +14,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'viewEdit/input.tpl.html',
+            templateUrl: 'input/input.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -33,7 +33,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'viewEdit/textarea.tpl.html',
+            templateUrl: 'input/textarea.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -48,7 +48,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'viewEdit/switch.tpl.html',
+            templateUrl: 'input/switch.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -63,7 +63,7 @@ angular.module('jmViewEdit', ['ngMaterial'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'viewEdit/select.tpl.html',
+            templateUrl: 'input/select.tpl.html',
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }

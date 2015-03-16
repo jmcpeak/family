@@ -1,6 +1,6 @@
 <md-list>
     <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)"
-            ng-style="user.id === selectedUser.id && {'box-shadow': 'none', 'background-color': '#fafad2'}">
+            ng-style="user.id === selectedUser.id && {'background-color': '#fafad2'}"> <!-- 'box-shadow': 'none', -->
         <md-item-content>
             <div class="md-tile-left" style="padding-left: 10px">
                 <md-button class="md-fab md-accent" aria-label="User Initials">
@@ -12,7 +12,7 @@
 
                 <h3>{{user.address}}</h3>
 
-                <h3>{{user.email}}</h3>
+                <h3><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.email}}</a></h3>
             </div>
             <div class="md-tile-right">
                 <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove" ng-show="showDelete"
