@@ -32,7 +32,6 @@
     <div ng-message="tel">Use a phone number</div>
 </script>
 
-<!-- Can't move into directive - even with replace: true - it doesn't work -->
 <md-toolbar hide-gt-sm md-scroll-shrink>
     <jm-toolbar/>
 </md-toolbar>
@@ -40,11 +39,10 @@
     <jm-toolbar/>
 </md-toolbar>
 
-<md-subheader hide-sm class="md-accent"> <!-- hide-gt-sm-->
+<md-subheader hide-sm class="md-accent">
     Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>
 
-<!-- Can't move into directive - even with replace: true - it doesn't work -->
 <section layout="row" flex>
     <md-sidenav class="md-sidenav-left" md-component-id="left" md-swipe-left="close()">
         <md-toolbar class="md-tall jm-menu-background">
@@ -65,7 +63,8 @@
 </section>
 
 <md-content layout="row" layout-sm="column">
-    <jm-list flex></jm-list>
+    <jm-list flex="33" hide-sm></jm-list>
+    <jm-list flex hide-gt-sm></jm-list>
     <jm-user flex hide-sm></jm-user>
 </md-content>
 

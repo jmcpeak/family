@@ -1,11 +1,8 @@
-<md-tabs md-selected="selectedIndex" layout="column" style="background-color: lightgreen">
-    <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="switch($index)">
+<md-tabs md-selected="selectedIndex" ng-show="selectedUser" style="background-color: #fafad2;">
+    <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
         <ng-form name="userForm">
             <md-list>
-                <div ng-view
-                     md-swipe-left="next()"
-                     md-swipe-right="previous()">
-                </div>
+                <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
             </md-list>
         </ng-form>
     </md-tab>
