@@ -1,9 +1,15 @@
-<md-tabs md-selected="selectedIndex" ng-show="selectedUser">
-    <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
-        <ng-form name="userForm">
-            <md-list>
-                <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
-            </md-list>
-        </ng-form>
-    </md-tab>
-</md-tabs>
+<div ng-show="selectedUser">
+    <ng-form name="userForm">
+        <md-tabs md-selected="selectedIndex">
+            <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
+                <md-list>
+                    <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
+                </md-list>
+            </md-tab>
+        </md-tabs>
+        <md-button ng-disabled="userForm.$pristine || userForm.$invalid" class="md-primary md-fab md-fab-top-right" aria-label="Add"
+                   ng-click="putItem($event)">
+            <md-icon md-svg-src="file:cloud_upload"></md-icon>
+        </md-button>
+    </ng-form>
+</div>

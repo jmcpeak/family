@@ -5,12 +5,26 @@ angular.module('jmUser', ['ngMaterial'])
     .directive("jmUser", function () {
         return {
             templateUrl: 'user/user.tpl.html',
-            controller: function ($scope, $location, $mdDialog) {
+            controller: function ($scope, $location, $mdDialog, jmDB) {
                 $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
                 $scope.selectedIndex = 0;
 
-                $scope.update = function (user) {
-                    $scope.selectedUser = user;
+                $scope.putItem = function () {
+                    var promise = jmDB.putItem($scope.selectedUser);
+
+                    promise.then(function () {
+                        $scope.userForm.$setPristine();
+
+                        $mdDialog.alert({
+                            title: 'Success!',
+                            content: 'Successfully Updated'
+                        });
+                    }, function (reason) {
+                        $mdDialog.alert({
+                            title: 'There was a problem saving...',
+                            content: reason
+                        });
+                    });
                 };
 
                 $scope.add = function (event) {
