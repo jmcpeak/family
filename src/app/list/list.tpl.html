@@ -1,9 +1,9 @@
 <md-list>
-    <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)"
-            ng-style="user.id === selectedUser.id && {'background-color': '#fafad2'}"> <!-- 'box-shadow': 'none', -->
+    <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)">
+            <!-- ng-style="user.id === selectedUser.id && {'background-color': '#fafad2'}" 'box-shadow': 'none', -->
         <md-item-content>
             <div class="md-tile-left" style="padding-left: 10px">
-                <md-button class="md-fab md-accent" aria-label="User Initials">
+                <md-button class="md-primary md-fab" aria-label="User Initials">
                     <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase }}</h2>
                 </md-button>
             </div>

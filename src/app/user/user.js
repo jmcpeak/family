@@ -5,38 +5,29 @@ angular.module('jmUser', ['ngMaterial'])
     .directive("jmUser", function () {
         return {
             templateUrl: 'user/user.tpl.html',
-            controller: function ($scope, $location, $timeout, $mdDialog, jmDB) {
+            controller: function ($scope, $location, $timeout, $mdDialog, $mdToast, jmDB) {
                 $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
                 $scope.selectedIndex = 0;
 
-                $scope.putItem = function (event) {
+                $scope.putItem = function () {
                     var promise = jmDB.putItem($scope.selectedUser);
 
+                    var toast = function (msg, error) {
+                        $scope.userForm.$setPristine();
+                        var errorClass = (error) ? 'class="error"' : undefined;
+
+                        $mdToast.show({
+                            template: '<md-toast ' + errorClass + '><span flex><b>' + msg + '</b></span></md-toast>',
+                            hideDelay: 2000,
+                            position: 'top right'
+                        });
+                    };
                     promise.then(
                         function () {
-                            $scope.userForm.$setPristine();
-
-                            $mdDialog.show(
-                                $mdDialog.alert()
-                                    .title('Success')
-                                    .ok('OK')
-                                    .targetEvent(event)
-                            );
-
-                            $timeout(function () {
-                                $mdDialog.cancel();
-                            }, 3000);
-
+                            toast('Saved');
                         },
-                        function (reason) {
-                            $mdDialog.show(
-                                $mdDialog.alert()
-                                    .title('There was a problem saving...')
-                                    .content(reason.message)
-                                    .theme('error')
-                                    .ok('OK')
-                                    .targetEvent(event)
-                            );
+                        function () {
+                            toast('There was a problem saving...', true);
                         });
                 };
 

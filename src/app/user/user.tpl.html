@@ -7,9 +7,9 @@
                 </md-list>
             </md-tab>
         </md-tabs>
-        <md-button ng-disabled="userForm.$pristine || userForm.$invalid" class="md-primary md-fab md-fab-top-right" aria-label="Add"
-                   ng-click="putItem($event)">
-            <md-icon md-svg-src="file:cloud_upload"></md-icon>
+        <md-button class="md-accent md-raised jm-top-right" aria-label="Add"
+                   ng-click="putItem()" ng-disabled="userForm.$pristine || userForm.$invalid">
+            <md-icon md-svg-src="file:cloud_upload" style="margin-bottom: 3px;"></md-icon> Save
         </md-button>
     </ng-form>
 </div>
