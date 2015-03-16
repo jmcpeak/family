@@ -63,6 +63,9 @@ angular.module('jmFamily', [
             .warnPalette('pink');
         //.backgroundPalette('teal');
 
+        $mdThemingProvider.theme('error')
+            .backgroundPalette('red');
+
         // Configure a dark theme with primary foreground yellow
         $mdThemingProvider.theme('docs-dark', 'default')
             .primaryPalette('green')

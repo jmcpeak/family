@@ -5,26 +5,43 @@ angular.module('jmUser', ['ngMaterial'])
     .directive("jmUser", function () {
         return {
             templateUrl: 'user/user.tpl.html',
-            controller: function ($scope, $location, $mdDialog, jmDB) {
+            controller: function ($scope, $location, $timeout, $mdDialog, jmDB) {
                 $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
                 $scope.selectedIndex = 0;
 
-                $scope.putItem = function () {
+                $scope.putItem = function (event) {
                     var promise = jmDB.putItem($scope.selectedUser);
 
-                    promise.then(function () {
-                        $scope.userForm.$setPristine();
+                    promise.then(
+                        function () {
+                            $scope.userForm.$setPristine();
 
-                        $mdDialog.alert({
-                            title: 'Success!',
-                            content: 'Successfully Updated'
+                            $mdDialog.show(
+                                $mdDialog.alert()
+                                    .title('Success')
+                                    .ok('OK')
+                                    .targetEvent(event)
+                            );
+
+                            $timeout(function () {
+                                $mdDialog.cancel();
+                            }, 3000);
+
+                        },
+                        function (reason) {
+                            $mdDialog.show(
+                                $mdDialog.alert()
+                                    .title('There was a problem saving...')
+                                    .content(reason.message)
+                                    .theme('error')
+                                    .ok('OK')
+                                    .targetEvent(event)
+                            );
                         });
-                    }, function (reason) {
-                        $mdDialog.alert({
-                            title: 'There was a problem saving...',
-                            content: reason
-                        });
-                    });
+                };
+
+                $scope.update = function (user) {
+                    $scope.selectedUser = user;
                 };
 
                 $scope.add = function (event) {
