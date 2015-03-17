@@ -11,5 +11,9 @@
                    ng-click="putItem()" ng-disabled="isDisabled()">
             <md-icon md-svg-src="file:cloud_upload" style="margin-bottom: 3px;"></md-icon> Save
         </md-button>
+        <md-button class="md-warn md-raised jm-bottom-right" aria-label="Delete" ng-click="deleteItem($event)">
+            <md-tooltip md-direction="top" md-delay="500">Remove</md-tooltip>
+            <md-icon md-svg-src="action:delete"></md-icon>
+        </md-button>
     </ng-form>
 </div>

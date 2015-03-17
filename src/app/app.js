@@ -138,6 +138,29 @@ angular.module('jmFamily', [
             return deferred.promise;
         };
 
+        this.deleteItem = function (user) {
+            var deferred = $q.defer();
+
+            var params = {
+                TableName: tableName,
+                Key: {
+                    id: {
+                        S: user.id.toString()
+                    }
+                }
+            };
+
+            dynamoDB.deleteItem(params, function (err, data) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
+                }
+            });
+
+            return deferred.promise;
+        };
+
         this.getUser = function (id) {
             var deferred = $q.defer();
 
