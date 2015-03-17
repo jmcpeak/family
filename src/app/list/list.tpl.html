@@ -1,5 +1,5 @@
 <md-list>
-    <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)">
+    <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)" id="user-{{user.id}}">
             <!-- ng-style="user.id === selectedUser.id && {'background-color': '#fafad2'}" 'box-shadow': 'none', -->
         <md-item-content>
             <div class="md-tile-left" style="padding-left: 10px">

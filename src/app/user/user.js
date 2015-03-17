@@ -32,6 +32,12 @@ angular.module('jmUser', ['ngMaterial'])
                         function () {
                             jmDB.deleteItem($scope.selectedUser).then(
                                 function () {
+                                    angular.element('#user-' + $scope.selectedUser.id).remove();
+
+                                    $scope.$apply(
+                                        $scope.selectedUser = $scope.users[0]
+                                    );
+
                                     toast('Removed');
                                 },
                                 function () {
