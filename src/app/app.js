@@ -74,7 +74,7 @@ angular.module('jmFamily', [
             .dark();
     })
 
-    .config(['$mdIconProvider', function($mdIconProvider) {
+    .config(['$mdIconProvider', function ($mdIconProvider) {
         $mdIconProvider
             .iconSet('action', '/assets/action-icons.svg', 24)
             .iconSet('alert', '/assets/alert-icons.svg', 24)
@@ -93,8 +93,9 @@ angular.module('jmFamily', [
             .iconSet('social', '/assets/social-icons.svg', 24)
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
-    
-    .controller("jmPartialController", function () {})
+
+    .controller("jmPartialController", function () {
+    })
 
     .service('jmDB', function ($q, jmDBUtils) {
         var tableName = 'test';
