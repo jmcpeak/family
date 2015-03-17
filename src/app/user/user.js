@@ -9,19 +9,42 @@ angular.module('jmUser', ['ngMaterial'])
                 $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
                 $scope.selectedIndex = 0;
 
+                var toast = function (msg, error) {
+                    $scope.userForm.$setPristine();
+                    var errorClass = (error) ? 'class="error"' : undefined;
+
+                    $mdToast.show({
+                        template: '<md-toast ' + errorClass + '><span flex><b>' + msg + '</b></span></md-toast>',
+                        hideDelay: 2000,
+                        position: 'top right'
+                    });
+                };
+
+                $scope.deleteItem = function (event) {
+
+                    $mdDialog.show($mdDialog.confirm()
+                        .title('Are you sure?')
+                        .content('All the data and this entry will be removed.')
+                        .ariaLabel('Remove')
+                        .ok('Remove')
+                        .cancel('Cancel')
+                        .targetEvent(event)).then(
+                        function () {
+                            jmDB.deleteItem($scope.selectedUser).then(
+                                function () {
+                                    toast('Removed');
+                                },
+                                function () {
+                                    toast('There was a problem removing...', true);
+                                });
+                        }, function () {
+                            $scope.alert = 'You decided to keep your debt.';
+                        });
+                };
+
                 $scope.putItem = function () {
                     var promise = jmDB.putItem($scope.selectedUser);
 
-                    var toast = function (msg, error) {
-                        $scope.userForm.$setPristine();
-                        var errorClass = (error) ? 'class="error"' : undefined;
-
-                        $mdToast.show({
-                            template: '<md-toast ' + errorClass + '><span flex><b>' + msg + '</b></span></md-toast>',
-                            hideDelay: 2000,
-                            position: 'top right'
-                        });
-                    };
                     promise.then(
                         function () {
                             toast('Saved');
