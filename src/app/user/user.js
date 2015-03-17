@@ -73,6 +73,10 @@ angular.module('jmUser', ['ngMaterial'])
                             break;
                     }
                 };
+
+                $scope.isDisabled = function () {
+                    return $scope.userForm.$pristine || $scope.userForm.$invalid;
+                };
             }
         };
     })

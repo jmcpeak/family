@@ -231,7 +231,8 @@ angular.module('jmFamily', [
                     subObj = {"B": val.toString()};
                 }
                 else if (typeof val === 'string') {
-                    subObj = {"S": val.toString()};
+                    var value = val.toString();
+                    subObj = (value === '') ? {"NULL": true} : {"S": value};
                 }
                 else if (typeof val === 'number') {
                     subObj = {"N": val.toString()};
