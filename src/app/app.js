@@ -192,8 +192,8 @@ angular.module('jmFamily', [
                     data_out[key] = val.S;
                 } else if (!!val.N) {
                     data_out[key] = parseInt(val.N);
-                } else if (!!val.B) {
-                    data_out[key] = (val.B.toLowerCase() === 'true');
+                } else if (!!val.BOOL) {
+                    data_out[key] = (val.BOOL);
                 } else if (!!val.SS) {
                     data_out[key] = val.SS;
                 } else if (!!val.NS) {
@@ -229,7 +229,7 @@ angular.module('jmFamily', [
                 }
 
                 if (typeof val === 'boolean') {
-                    subObj = {"B": val.toString()};
+                    subObj = {"BOOL": val};
                 }
                 else if (typeof val === 'string') {
                     var value = val.toString();
