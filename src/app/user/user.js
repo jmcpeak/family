@@ -33,7 +33,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         $scope.deleteItem = function (event) {
 
             $mdDialog.show($mdDialog.confirm()
-                .title('Are you sure?')
+                .title('Remove ' + $scope.selectedUser.firstName + ' ' + $scope.selectedUser.lastName + ' - are you sure?')
                 .content('All the data and the entry itself will be removed')
                 .ok('Remove')
                 .cancel('Cancel')
