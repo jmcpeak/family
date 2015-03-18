@@ -41,8 +41,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 function () {
                     jmDB.deleteItem($scope.selectedUser).then(
                         function () {
-                            angular.element('#user-' + $scope.selectedUser.id).remove();
+                            $scope.$apply(function () {
+                                angular.element('#user-' + $scope.selectedUser.id).remove();
+                            });
                             $scope.$root.$emit('userRemoved');
+                            $scope[$scope.formName].$setPristine();
                             toast('Removed');
                         },
                         function () {
@@ -85,6 +88,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             });
         };
 
+        $scope.isDisabled = function () {
+            //return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
+        };
+
         $scope.next = function () {
             $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2);
         };
@@ -114,10 +121,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     $location.path('/required');
                     break;
             }
-        };
-
-        $scope.isDisabled = function () {
-            //return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
         };
     })
 
