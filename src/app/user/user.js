@@ -81,9 +81,9 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $mdDialog.show({
                 controller: 'jmDialogController',
                 templateUrl: 'user/dialog.tpl.html',
-                targetEvent: event
-            }).then(function () {
-            }, function () {
+                targetEvent: event,
+                clickOutsideToClose: false
+            }).then(undefined, function () {
                 $scope.addUser = false;
             });
         };

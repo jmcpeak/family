@@ -73,5 +73,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
         $scope.close = function () {
             $mdSidenav('left').close();
+            // unselect button
         };
     });
