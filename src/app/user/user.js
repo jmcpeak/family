@@ -88,10 +88,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             });
         };
 
-        $scope.isDisabled = function () {
-            //return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
-        };
-
         $scope.next = function () {
             $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2);
         };

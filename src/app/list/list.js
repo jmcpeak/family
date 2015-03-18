@@ -2,23 +2,17 @@
 
 angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
-    .directive("jmToolbar", function () {
-        return {
-            scope: true,
-            templateUrl: 'list/toolbar.tpl.html'
-        };
-    })
-
     .directive("jmList", function () {
         return {
             scope: true,
             templateUrl: 'list/list.tpl.html',
-            controller: function ($scope, $mdSidenav, jmDB) {
+            controller: function ($scope, jmDB) {
                 $scope.users = [];
                 $scope.count = '';
                 $scope.lastUpdate = new Date();
                 $scope.name = 'McPeak';
                 $scope.height = 'auto';
+                $scope.showDelete = false;
 
                 var findUser = function (id) {
                     for (var i in $scope.users) {
@@ -53,24 +47,31 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     $scope.$root.$emit('selectUser', user);
                 };
 
-                $scope.open = function () {
-                    $mdSidenav('left').open();
-                };
-
-                $scope.close = function () {
-                    $mdSidenav('left').close();
-                };
-
-                $scope.showDelete = false;
-
-                $scope.menus = [
-                    {link: 'https://github.com/jmcpeak/family/issues', label: 'Log an Issue'},
-                    {link: 'https://github.com/jmcpeak/family', label: 'See the code'},
-                    {link: 'https://travis-ci.org/jmcpeak/family', label: 'View Builds'}
-                ];
-
                 $scope.refresh();
             }
         };
-    });
+    })
 
+    .directive("jmToolbar", function () {
+        return {
+            scope: true,
+            templateUrl: 'list/toolbar.tpl.html',
+            controller: 'jmToolbarController'
+        };
+    })
+
+    .controller("jmToolbarController", function ($scope, $mdSidenav) {
+        $scope.menus = [
+            {link: 'https://github.com/jmcpeak/family/issues', label: 'Log an Issue'},
+            {link: 'https://github.com/jmcpeak/family', label: 'See the code'},
+            {link: 'https://travis-ci.org/jmcpeak/family', label: 'View Builds'}
+        ];
+
+        $scope.open = function () {
+            $mdSidenav('left').open();
+        };
+
+        $scope.close = function () {
+            $mdSidenav('left').close();
+        };
+    });

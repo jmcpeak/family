@@ -9,15 +9,15 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:css(src/) styles/scripts.css -->
     <!-- fileblock:css styles -->
-    <link href="app/user/user.css" rel="stylesheet" />
-    <link href="app/app.css" rel="stylesheet" />
+    <link href="app/user/user.css" rel="stylesheet"/>
+    <link href="app/app.css" rel="stylesheet"/>
     <!-- endfileblock -->
     <!-- endbuild -->
 </head>
@@ -42,7 +42,7 @@
     Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>
 
-<section layout="row" flex>
+<section layout="row" flex ng-controller="jmToolbarController">
     <md-sidenav class="md-sidenav-left" md-component-id="left" md-swipe-left="close()">
         <md-toolbar class="md-tall jm-menu-background">
             <h4 class="md-toolbar-tools">McPeak Family</h4>
