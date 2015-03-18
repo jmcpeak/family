@@ -94,9 +94,6 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
-    .controller("jmPartialController", function () {
-    })
-
     .service('jmDB', function ($q, jmDBUtils) {
         var tableName = 'test';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
@@ -129,7 +126,9 @@ angular.module('jmFamily', [
         this.putItem = function (user) {
             var deferred = $q.defer();
 
-            delete user.$$hashKey;
+            if (user.$$hashKey) {
+                delete user.$$hashKey;
+            }
 
             var convertedItem = jmDBUtils.convertFromJson(user);
 

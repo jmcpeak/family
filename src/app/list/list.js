@@ -4,12 +4,14 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
     .directive("jmToolbar", function () {
         return {
+            scope: true,
             templateUrl: 'list/toolbar.tpl.html'
         };
     })
 
     .directive("jmList", function () {
         return {
+            scope: true,
             templateUrl: 'list/list.tpl.html',
             controller: function ($scope, $mdSidenav, jmDB) {
                 $scope.users = [];
