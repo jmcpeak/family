@@ -28,7 +28,15 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     }
                 };
 
-                $scope.refesh = function (id) {
+                $scope.$root.$on('userRemoved', function () {
+                    $scope.update(undefined);
+                });
+
+                $scope.$root.$on('refresh', function (event, id) {
+                    $scope.refresh(id);
+                });
+
+                $scope.refresh = function (id) {
                     jmDB.queryAll().then(function (data) {
                         $scope.count = data.length;
                         $scope.users = data;
@@ -42,7 +50,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 };
 
                 $scope.update = function (user) {
-                    $scope.selectedUser = user;
+                    $scope.$root.$emit('selectUser', user);
                 };
 
                 $scope.open = function () {
@@ -61,7 +69,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     {link: 'https://travis-ci.org/jmcpeak/family', label: 'View Builds'}
                 ];
 
-                $scope.refesh();
+                $scope.refresh();
             }
         };
     });

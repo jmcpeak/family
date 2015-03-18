@@ -26,6 +26,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $scope.formName = 'userForm';
         }
 
+        $scope.$root.$on('selectUser', function (event, user) {
+            $scope.selectedUser = user;
+        });
+
         $scope.deleteItem = function (event) {
 
             $mdDialog.show($mdDialog.confirm()
@@ -38,11 +42,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     jmDB.deleteItem($scope.selectedUser).then(
                         function () {
                             angular.element('#user-' + $scope.selectedUser.id).remove();
-
-                            $scope.$apply(
-                                $scope.selectedUser = $scope.users[0]
-                            );
-
+                            $scope.$root.$emit('userRemoved');
                             toast('Removed');
                         },
                         function () {
@@ -62,7 +62,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                     if ($scope.addUser) {
                         $mdDialog.hide();
-                        $scope.refesh($scope.selectedUser.id);
+                        $scope.$root.$emit('refresh', $scope.selectedUser.id);
                         $scope.addUser = false;
                     }
                 },
@@ -117,7 +117,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.isDisabled = function () {
-            return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
+            //return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
         };
     })
 
