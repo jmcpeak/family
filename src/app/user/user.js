@@ -10,22 +10,25 @@ angular.module('jmUser', ['ngMaterial'])
                 $scope.selectedIndex = 0;
 
                 var toast = function (msg, error) {
-                    $scope.userForm.$setPristine();
+                    $scope[$scope.formName].$setPristine();
                     var errorClass = (error) ? 'class="error"' : undefined;
 
                     $mdToast.show({
-                        template: '<md-toast ' + errorClass + '><span flex><b>' + msg + '</b></span></md-toast>',
+                        template: '<md-toast ' + errorClass + '><span><b>' + msg + '</b></span></md-toast>',
                         hideDelay: 2000,
                         position: 'top right'
                     });
                 };
 
+                if (!$scope.formName) {
+                    $scope.formName = 'userForm';
+                }
+
                 $scope.deleteItem = function (event) {
 
                     $mdDialog.show($mdDialog.confirm()
                         .title('Are you sure?')
-                        .content('All the data and this entry will be removed.')
-                        .ariaLabel('Remove')
+                        .content('All the data and the entry itself will be removed')
                         .ok('Remove')
                         .cancel('Cancel')
                         .targetEvent(event)).then(
@@ -53,22 +56,30 @@ angular.module('jmUser', ['ngMaterial'])
 
                     promise.then(
                         function () {
-                            toast('Saved');
+                            toast(($scope.addUser) ? 'User Added' : 'Saved');
+
+                            if ($scope.addUser) {
+                                $mdDialog.hide();
+                                $scope.refesh($scope.selectedUser.id);
+                                $scope.addUser = false;
+                            }
                         },
                         function () {
                             toast('There was a problem saving...', true);
                         });
                 };
 
-                $scope.update = function (user) {
-                    $scope.selectedUser = user;
-                };
-
                 $scope.add = function (event) {
+
                     $scope.addUser = true;
+
                     $mdDialog.show({
+                        controller: 'jmDialogController',
                         templateUrl: 'user/dialog.tpl.html',
                         targetEvent: event
+                    }).then(function () {
+                    }, function () {
+                        $scope.addUser = false;
                     });
                 };
 
@@ -104,26 +115,31 @@ angular.module('jmUser', ['ngMaterial'])
                 };
 
                 $scope.isDisabled = function () {
-                    return $scope.userForm.$pristine || $scope.userForm.$invalid;
+                    return $scope[$scope.formName].$pristine || $scope[$scope.formName].$invalid;
                 };
             }
         };
     })
 
-    .directive("jmAddButton", function () {
+    .directive('jmAddButton', function () {
         return {
             templateUrl: 'user/button.tpl.html'
         };
     })
 
-    .directive("jmAddButtonDesktop", function () {
+    .directive('jmAddButtonDesktop', function () {
         return {
             templateUrl: 'user/buttonDesktop.tpl.html'
         };
     })
 
-    .directive("jmDialog", function () {
+    .directive('jmDialog', function () {
         return {
             templateUrl: 'user/dialog.tpl.html'
         };
+    })
+
+    .controller('jmDialogController', function ($scope, jmDB) {
+        $scope.selectedUser = {id: jmDB.guid()};
+        $scope.formName = 'addUser';
     });

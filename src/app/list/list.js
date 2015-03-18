@@ -12,19 +12,36 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         return {
             templateUrl: 'list/list.tpl.html',
             controller: function ($scope, $mdSidenav, jmDB) {
-                var promise = jmDB.queryAll();
                 $scope.users = [];
                 $scope.count = '';
                 $scope.lastUpdate = new Date();
                 $scope.name = 'McPeak';
                 $scope.height = 'auto';
 
-                promise.then(function (data) {
-                    $scope.count = data.length;
-                    $scope.users = data;
-                }, function (reason) {
-                    window.alert('Failed: ' + reason);
-                });
+                var findUser = function (id) {
+                    for (var i in $scope.users) {
+                        if ($scope.users[i].id === id) {
+                            return $scope.users[i];
+                        }
+                    }
+                };
+
+                $scope.refesh = function (id) {
+                    jmDB.queryAll().then(function (data) {
+                        $scope.count = data.length;
+                        $scope.users = data;
+
+                        if (id) {
+                            $scope.update(findUser(id));
+                        }
+                    }, function (reason) {
+                        window.alert('Failed: ' + reason);
+                    });
+                };
+
+                $scope.update = function (user) {
+                    $scope.selectedUser = user;
+                };
 
                 $scope.open = function () {
                     $mdSidenav('left').open();
@@ -41,6 +58,8 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     {link: 'https://github.com/jmcpeak/family', label: 'See the code'},
                     {link: 'https://travis-ci.org/jmcpeak/family', label: 'View Builds'}
                 ];
+
+                $scope.refesh();
             }
         };
     });

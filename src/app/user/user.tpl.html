@@ -1,20 +1,18 @@
-<div ng-show="selectedUser">
-    <ng-form name="userForm">
-        <md-tabs md-selected="selectedIndex">
-            <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
-                <md-list>
-                    <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
-                </md-list>
-            </md-tab>
-        </md-tabs>
-        <md-button class="md-accent md-raised jm-top-right" aria-label="Add"
-                   ng-click="putItem()" ng-disabled="isDisabled()">
-            <md-icon md-svg-src="file:cloud_upload" style="margin-bottom: 3px;"></md-icon>
-            Save
-        </md-button>
-        <md-button class="md-warn md-raised jm-bottom-right" aria-label="Delete" ng-click="deleteItem($event)">
-            <md-tooltip md-direction="top" md-delay="500">Remove</md-tooltip>
-            <md-icon md-svg-src="action:delete"></md-icon>
-        </md-button>
-    </ng-form>
-</div>
+<ng-form name="{{formName}}">
+    <md-tabs md-selected="selectedIndex">
+        <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
+            <md-list>
+                <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
+            </md-list>
+        </md-tab>
+    </md-tabs>
+    <md-button class="md-accent md-raised jm-top-right" aria-label="Add"
+               ng-click="putItem()" ng-disabled="isDisabled()">
+        <md-icon md-svg-src="file:cloud_upload" style="margin-bottom: 3px;"></md-icon>
+        Save
+    </md-button>
+    <md-button class="md-warn md-raised jm-bottom-right" aria-label="Delete" ng-click="deleteItem($event)">
+        <md-tooltip md-direction="top" md-delay="500">Remove</md-tooltip>
+        <md-icon md-svg-src="action:delete"></md-icon>
+    </md-button>
+</ng-form>

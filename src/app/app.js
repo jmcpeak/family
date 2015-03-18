@@ -101,6 +101,17 @@ angular.module('jmFamily', [
         var tableName = 'test';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
+        this.guid = function () {
+            function s4() {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+        };
+
         this.queryAll = function () {
             var deferred = $q.defer();
 
@@ -118,8 +129,8 @@ angular.module('jmFamily', [
         this.putItem = function (user) {
             var deferred = $q.defer();
 
-            // remove $$hashKey
             delete user.$$hashKey;
+
             var convertedItem = jmDBUtils.convertFromJson(user);
 
             var params = {
