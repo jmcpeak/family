@@ -1,11 +1,24 @@
 'use strict';
-/* jshint -W117 */
+/* jshint -W117, -W016 */
 
 angular.module('jmFamily', [
     //replace:templates-app,
     'ngMaterial', 'ngTouch', 'ngRoute', 'ngMessages', 'ngResource', 'ngAnimate', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
+
+        String.prototype.hashCode = function () {
+            var hash = 0, i, chr, len;
+            if (this.length === 0) {
+                return hash;
+            }
+            for (i = 0, len = this.length; i < len; i++) {
+                chr = this.charCodeAt(i);
+                hash = ((hash << 5) - hash) + chr;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return hash;
+        };
 
         // Initialize the Amazon Cognito credentials provider
         AWS.config.region = 'us-east-1';
@@ -14,15 +27,6 @@ angular.module('jmFamily', [
             IdentityPoolId: 'us-east-1:0531f9e8-90fb-442c-9488-066f62d9a150',
             RoleArn: 'arn:aws:iam::754934490052:role/Cognito_mcpeakfamilyUnauth_DefaultRole',
             RoleSessionName: 'web'
-        });
-
-        // login
-        AWS.config.credentials.get(function (err) {
-            if (err) {
-                //console.error(err);
-            } else {
-                //console.info("Cognito Identity Id:", AWS.config.credentials.identityId);
-            }
         });
 
         $routeProvider
@@ -94,22 +98,32 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
-    .controller('jmLoginController', function ($scope, $timeout) {
+    .controller('jmLoginController', function ($scope, $timeout, $q) {
+        var deferredCognito = $q.defer();
+        var deferredUser = $q.defer();
+        var scope = $scope;
+
+        $q.all([deferredCognito.promise, deferredUser.promise]).then(function () {
+            scope.showProgress = false;
+            scope.showOverlay = false;
+        });
+
+        AWS.config.credentials.get(function (err) {
+            if (!err) {
+                deferredCognito.resolve();
+            }
+        });
 
         $scope.showLogin = true;
 
         $scope.showOverlay = true;
 
         $scope.submit = function () {
-            if (this.loginForm.question.$modelValue.toLowerCase() === 'new') {
+            if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
                 this.showProgress = true;
                 this.showLogin = false;
                 this.error = '';
-                var that = this;
-                $timeout(function () {
-                    that.showProgress = false;
-                    that.showOverlay = false;
-                }, 2000);
+                deferredUser.resolve();
             } else {
                 this.error = 'try again...';
             }
