@@ -108,12 +108,6 @@ angular.module('jmFamily', [
             scope.showOverlay = false;
         });
 
-        AWS.config.credentials.get(function (err) {
-            if (!err) {
-                deferredCognito.resolve();
-            }
-        });
-
         $scope.showLogin = true;
 
         $scope.showOverlay = true;
@@ -124,6 +118,13 @@ angular.module('jmFamily', [
                 this.showLogin = false;
                 this.error = '';
                 deferredUser.resolve();
+
+                AWS.config.credentials.get(function (err) {
+                    if (!err) {
+                        deferredCognito.resolve();
+                    }
+                });
+
             } else {
                 this.error = 'try again...';
             }
