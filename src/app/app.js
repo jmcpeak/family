@@ -94,6 +94,28 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
+    .controller('jmLoginController', function ($scope, $timeout) {
+
+        $scope.showLogin = true;
+
+        $scope.showOverlay = true;
+
+        $scope.submit = function () {
+            if (this.loginForm.question.$modelValue.toLowerCase() === 'new') {
+                this.showProgress = true;
+                this.showLogin = false;
+                this.error = '';
+                var that = this;
+                $timeout(function () {
+                    that.showProgress = false;
+                    that.showOverlay = false;
+                }, 2000);
+            } else {
+                this.error = 'try again...';
+            }
+        };
+    })
+
     .service('jmDB', function ($q, jmDBUtils) {
         var tableName = 'test';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
