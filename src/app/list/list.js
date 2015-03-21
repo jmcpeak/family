@@ -27,8 +27,12 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         };
 
         $scope.$root.$on('userRemoved', function () {
-            $scope.update(undefined);
+            $scope.update(($scope.users.length >=1) ? $scope.users[0] : undefined);
         });
+
+        $scope.update = function (user) {
+            $scope.$root.$emit('selectUser', user);
+        };
 
         $scope.$root.$on('refresh', function (event, id) {
             $scope.refresh(id);
@@ -45,10 +49,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
             }, function (reason) {
                 window.alert('Failed: ' + reason);
             });
-        };
-
-        $scope.update = function (user) {
-            $scope.$root.$emit('selectUser', user);
         };
 
         $scope.refresh();
