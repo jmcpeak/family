@@ -27,7 +27,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         };
 
         $scope.$root.$on('userRemoved', function () {
-            $scope.update(($scope.users.length >=1) ? $scope.users[0] : undefined);
+            $scope.update(($scope.users.length >= 1) ? $scope.users[0] : undefined);
         });
 
         $scope.update = function (user) {
