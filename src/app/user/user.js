@@ -28,6 +28,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
         $scope.$root.$on('selectUser', function (event, user) {
             $scope.selectedUser = user;
+            $scope.selectedIndex = 0;
         });
 
         $scope.deleteItem = function (event) {
@@ -41,9 +42,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 function () {
                     jmDB.deleteItem($scope.selectedUser).then(
                         function () {
-                            $scope.$apply(function () {
-                                angular.element('#user-' + $scope.selectedUser.id).remove();
-                            });
+                            angular.element('#user-' + $scope.selectedUser.id).remove();
                             $scope.$root.$emit('userRemoved');
                             $scope[$scope.formName].$setPristine();
                             toast('Removed');

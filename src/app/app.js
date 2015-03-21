@@ -3,7 +3,7 @@
 
 angular.module('jmFamily', [
     //replace:templates-app,
-    'ngMaterial', 'ngTouch', 'ngRoute', 'ngMessages', 'ngResource', 'ngAnimate', 'jmList'])
+    'ngMaterial', 'ngTouch', 'ngRoute', 'ngMessages', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
@@ -98,33 +98,44 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
-    .controller('jmLoginController', function ($scope, $timeout, $q) {
-        var deferredCognito = $q.defer();
-        var deferredUser = $q.defer();
-        var scope = $scope;
+    .controller('jmLoginController', function ($scope, $timeout, $cookies, $q, $sessionStorage) {
+        $scope.$storage = $sessionStorage;
+        $scope.showInit = false;
 
-        $q.all([deferredCognito.promise, deferredUser.promise]).then(function () {
-            scope.showProgress = false;
-            scope.showOverlay = false;
-        });
+        if ($scope.$storage.credentials) {
+            $scope.showLogin = false;
+            $scope.showProgress = false;
+            $scope.showOverlay = false;
+            $scope.error = undefined;
+        } else {
+            $scope.showLogin = true;
+            $scope.showOverlay = true;
 
-        $scope.showLogin = true;
+            var deferredCognito = $q.defer();
+            var deferredUser = $q.defer();
+            var scope = $scope;
 
-        $scope.showOverlay = true;
+            $q.all([deferredCognito.promise, deferredUser.promise]).then(function () {
+                scope.showProgress = false;
+                scope.showOverlay = false;
+            });
+        }
 
         $scope.submit = function () {
             if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
                 this.showProgress = true;
                 this.showLogin = false;
-                this.error = '';
+                this.error = undefined;
+
                 deferredUser.resolve();
 
+                var that = this;
                 AWS.config.credentials.get(function (err) {
                     if (!err) {
+                        that.$storage.credentials = AWS.config.credentials;
                         deferredCognito.resolve();
                     }
                 });
-
             } else {
                 this.error = 'try again...';
             }

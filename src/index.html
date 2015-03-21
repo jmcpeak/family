@@ -32,6 +32,7 @@
 </script>
 
 <section ng-controller="jmLoginController">
+    <div class="jm-initial-div" ng-style="{display: (showInit) ? 'block' : 'none'}"></div>
     <div class="jm-logon-progress" ng-show="showProgress">
         <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
     </div>
@@ -57,7 +58,7 @@
     <jm-toolbar/>
 </md-toolbar>
 
-<md-subheader hide-sm class="md-accent">
+<md-subheader hide-sm class="md-accent" ng-controller="jmListController">
     Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
 </md-subheader>
 
@@ -103,6 +104,7 @@
 <script src="bower_components/angular-aria/angular-aria.js"></script>
 <script src="bower_components/angular-material/angular-material.js"></script>
 <script src="bower_components/aws-sdk-js/dist/aws-sdk.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 
