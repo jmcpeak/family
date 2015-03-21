@@ -30,7 +30,8 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
             $scope.update(($scope.users.length >= 1) ? $scope.users[0] : undefined);
         });
 
-        $scope.update = function (user) {
+        $scope.update = function (event, user) {
+            //angular.element(event.currentTarget).attr('md-highlight','');
             $scope.$root.$emit('selectUser', user);
         };
 
