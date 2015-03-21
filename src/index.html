@@ -36,7 +36,7 @@
     <div class="jm-logon-progress" ng-show="showProgress">
         <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
     </div>
-    <div class="jm-logon-overlay" ng-show="showOverlay">
+    <div class="jm-logon-overlay" ng-style="{height: (showOverlay) ? '100%' : '0'}">
         <div layout="row" layout-sm="column" layout-align="center center" ng-show="showLogin" style="margin: 15px;">
             <img src="assets/coatofarms.png" alt="Coat of Arms">
 
