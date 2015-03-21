@@ -41,6 +41,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
         $scope.refresh = function (id) {
             jmDB.queryAll().then(function (data) {
+                $scope.$root.$emit('showListWait', false);
                 $scope.count = data.length;
                 $scope.users = data;
 

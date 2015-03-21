@@ -82,6 +82,9 @@
 </section>
 
 <md-content layout="row" layout-sm="column">
+    <div class="jm-list-wait" ng-show="showListWait">
+        <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
+    </div>
     <jm-list flex="33" hide-sm></jm-list>
     <jm-list flex hide-gt-sm></jm-list>
     <jm-user flex hide-sm></jm-user>

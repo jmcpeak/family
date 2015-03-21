@@ -101,6 +101,7 @@ angular.module('jmFamily', [
     .controller('jmLoginController', function ($scope, $timeout, $cookies, $q, $sessionStorage) {
         $scope.$storage = $sessionStorage;
         $scope.showInit = false;
+        $scope.showListWait = true;
 
         if ($scope.$storage.credentials) {
             $scope.showLogin = false;
@@ -120,6 +121,10 @@ angular.module('jmFamily', [
                 scope.showOverlay = false;
             });
         }
+
+        $scope.$root.$on('showListWait', function (event, value) {
+            $scope.showListWait = value;
+        });
 
         $scope.submit = function () {
             if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
