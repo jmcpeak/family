@@ -1,6 +1,6 @@
 <md-list>
     <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="update(user)" id="user-{{user.id}}">
-        <md-item-content>
+        <md-item-content md-ink-ripple>
             <div class="md-tile-left" style="padding-left: 10px">
                 <md-button class="md-primary md-fab" aria-label="User Initials">
                     <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase }}</h2>
