@@ -7,7 +7,7 @@ angular.module('jmInput', ['ngMaterial'])
             scope: {
                 label: '@',
                 field: '@',
-                disabled: '@',
+                ddisabled: '@',
                 required: '@',
                 type: '@',
                 placeholder: '@',
@@ -26,7 +26,7 @@ angular.module('jmInput', ['ngMaterial'])
             scope: {
                 label: '@',
                 field: '@',
-                disabled: '@',
+                ddisabled: '@',
                 required: '@',
                 type: '@',
                 placeholder: '@',
@@ -44,7 +44,7 @@ angular.module('jmInput', ['ngMaterial'])
         return {
             scope: {
                 field: '@',
-                disabled: '@',
+                ddisabled: '@',
                 user: '='
             },
             require: ['^form'],
@@ -59,7 +59,7 @@ angular.module('jmInput', ['ngMaterial'])
         return {
             scope: {
                 field: '@',
-                disabled: '@',
+                ddisabled: '@',
                 user: '='
             },
             require: ['^form'],

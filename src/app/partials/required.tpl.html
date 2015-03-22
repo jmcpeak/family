@@ -13,22 +13,26 @@
     <!--</div>-->
 
     <div layout="row" layout-sm="column" aria-label="Names">
+
         <jm-input label="First Name"
                   field="firstName"
                   user="selectedUser"
                   required="true"
-                  type="text">
+                  type="text"
+                  ddisabled="{{disabled}}">
         </jm-input>
         <jm-input label="Last Name"
                   field="lastName"
                   user="selectedUser"
                   required="true"
-                  type="text">
+                  type="text"
+                  ddisabled="{{disabled}}">
         </jm-input>
         <jm-switch label="Gender"
                    field="gender"
                    user="selectedUser"
-                   required="false">
+                   required="false"
+                   ddisabled="{{disabled}}">
         </jm-switch>
     </div>
 
@@ -37,13 +41,15 @@
                   field="email"
                   user="selectedUser"
                   required="true"
-                  type="email">
+                  type="email"
+                  ddisabled="{{disabled}}">
         </jm-input>
         <jm-input label="Phone"
                   field="phone"
                   user="selectedUser"
                   required="true"
-                  type="tel">
+                  type="tel"
+                  ddisabled="{{disabled}}">
         </jm-input>
     </div>
 <!--</section>-->
@@ -54,19 +60,22 @@
                   field="address"
                   user="selectedUser"
                   required="true"
-                  type="text">
+                  type="text"
+                  ddisabled="{{disabled}}">
         </jm-input>
         <jm-input label="Address Line 2"
                   field="address2"
                   user="selectedUser"
                   required="false"
-                  type="text">
+                  type="text"
+                  ddisabled="{{disabled}}">
         </jm-input>
         <jm-input label="City"
                   field="city"
                   user="selectedUser"
                   required="true"
-                  type="text">
+                  type="text"
+                  ddisabled="{{disabled}}">
         </jm-input>
     </div>
 

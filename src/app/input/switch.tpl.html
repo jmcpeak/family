@@ -1,7 +1,7 @@
 <md-item>
     <md-item-content>
         <md-input-container>
-            <md-switch name="{{field}}" class="md-primary" ng-model="user[field]" aria-label="Gender">
+            <md-switch name="{{field}}" class="md-primary" ng-model="user[field]" aria-label="switch" ng-disabled="ddisabled === 'true'">
                 {{(user[field]) ? 'Female' : 'Male'}}
             </md-switch>
         </md-input-container>
