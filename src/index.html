@@ -43,7 +43,8 @@
             <form name="loginForm" ng-submit="submit()">
                 <md-input-container>
                     <label>What city is the Family Reunion usually held in?</label>
-                    <input name="question" autofocus type="password" ng-model="city" ng-keydown="error = (error !== '') ? '' : error;">
+                    <input name="question" autofocus type="password" ng-model="city"
+                           ng-keydown="error = (error !== '') ? '' : error;">
                 </md-input-container>
                 <h4 style="height: 20px; color: #D32F2F">{{error}}</h4>
             </form>
@@ -85,7 +86,7 @@
     <div class="jm-list-wait" ng-show="showListWait">
         <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
     </div>
-    <jm-list flex="33" hide-sm></jm-list>
+    <jm-list flex="33" hide-sm style="overflow-y: scroll"></jm-list>
     <jm-list flex hide-gt-sm></jm-list>
     <jm-user flex hide-sm></jm-user>
 </md-content>

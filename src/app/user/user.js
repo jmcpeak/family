@@ -9,7 +9,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .controller("jmUserController", function ($scope, $location, $timeout, $mdDialog, $mdToast, jmDB) {
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
-        $scope.selectedIndex = 0;
+        $scope.selectedTab = 0;
 
         var toast = function (msg, error) {
             $scope[$scope.formName].$setPristine();
@@ -28,7 +28,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
         $scope.$root.$on('selectUser', function (event, user) {
             $scope.selectedUser = user;
-            $scope.selectedIndex = 0;
+            $scope.selectedTab = 0;
         });
 
         $scope.deleteItem = function (event) {
@@ -88,11 +88,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.next = function () {
-            $scope.selectedIndex = Math.min($scope.selectedIndex + 1, 2);
+            $scope.selectedTab = Math.min($scope.selectedTab + 1, 2);
         };
 
         $scope.previous = function () {
-            $scope.selectedIndex = Math.max($scope.selectedIndex - 1, 0);
+            $scope.selectedTab = Math.max($scope.selectedTab - 1, 0);
         };
 
         $scope.partial = function (index) {
