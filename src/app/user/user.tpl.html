@@ -1,12 +1,12 @@
 <div flex layout="column">
-    <div layout="row" layout-align="end start">
+    <div layout="row" layout-align="end start" ng-if="!addUser">
         <md-button class="md-accent md-raised jm-margin-right" aria-label="Save" ng-disabled="!selectedUser"
                    ng-click="putItem()">
             <md-icon md-svg-src="file:cloud_upload" class="jm-fix-icon"></md-icon>
             Save
         </md-button>
         <md-button class="md-raised jm-margin-right" aria-label="Delete" ng-disabled="!selectedUser"
-                   ng-click="deleteItem($event)" ng-if="!addUser">
+                   ng-click="deleteItem($event)">
             <md-icon md-svg-src="action:delete" class="jm-fix-icon"></md-icon>
             Remove
         </md-button>

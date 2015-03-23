@@ -2,9 +2,17 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, jmDB) {
+    .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
         $scope.selectedUser = {id: jmDB.guid()};
         $scope.formName = 'addUser';
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        $scope.putItem = function () {
+            $scope.$root.$emit('putItem');
+        };
     })
 
     .controller("jmUserController", function ($scope, $location, $timeout, $mdDialog, $mdToast, jmDB) {
@@ -25,6 +33,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         if (!$scope.formName) {
             $scope.formName = 'userForm';
         }
+
+        $scope.$root.$on('putItem', function () {
+            $scope.putItem();
+        });
 
         $scope.$root.$on('selectUser', function (event, user) {
             $scope.selectedUser = user;
