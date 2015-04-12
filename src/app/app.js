@@ -1,5 +1,4 @@
 'use strict';
-/* jshint -W117, -W016 */
 
 angular.module('jmFamily', [
     //replace:templates-app,
