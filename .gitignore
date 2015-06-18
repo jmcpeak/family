@@ -7,3 +7,4 @@ dist
 coverage
 test/logs
 atlassian-ide-plugin.xml
+npm-debug.log
