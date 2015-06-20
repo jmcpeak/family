@@ -1,10 +1,27 @@
-<div class="md-toolbar-tools">
-    <md-button md-no-ink class="md-fab md-primary jm-flat" aria-label="Menu" ng-click="open()">
-        <md-icon md-svg-src="navigation:menu"></md-icon>
-    </md-button>
-    <h3>{{name}} Family Database</h3>
+<md-toolbar hide-sm>
+    <div class="md-toolbar-tools" layout="row" layout-padding>
 
-    <div flex layout="row" layout-align="end start">
-        <jm-add-button-desktop hide-sm/>
+        <span>McPeak Family Database</span>
+
+        <span flex layout-align="center center">
+            <div style="font-size: small" flex layout="row" layout-align="center start">
+                <em>Last Update: {{lastUpdate | date : 'fullDate' }} with {{count}} family members</em>
+            </div>
+        </span>
+
+        <md-button aria-label="Add" ng-click="add($event)">
+            <md-tooltip>
+                Add a new family member
+            </md-tooltip>
+            <md-icon md-svg-src="social:person_add"></md-icon>
+        </md-button>
+
+        <md-button aria-label="Email" ng-click="email($event)">
+            <md-tooltip>
+                E-mail Everyone
+            </md-tooltip>
+            <md-icon md-svg-src="communication:email" class="jm-fix-icon"></md-icon>
+        </md-button>
+
     </div>
-</div>
+</md-toolbar>
