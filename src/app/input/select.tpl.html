@@ -10,7 +10,8 @@
         <md-select ng-model="someModel" placeholder="Mother">
             <md-option ng-value="opt" ng-repeat="opt in neighborhoods2">{{ opt }}</md-option>
         </md-select>
-
-        <div ng-messages="form[field].$error" ng-messages-include="error-messages"></div>
+        <div ng-messages="form[field].$error">
+            <div ng-messages-include="error-messages"></div>
+        </div>
     </md-item-content>
 </md-item>

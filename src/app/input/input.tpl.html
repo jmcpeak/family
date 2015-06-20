@@ -8,8 +8,9 @@
                    ng-model="user[field]"
                    ng-required="required === 'true'"
                    ng-disabled="ddisabled === 'true'">
-
-            <div ng-messages="form[field].$error" ng-messages-include="error-messages"></div>
+            <div ng-messages="form[field].$error">
+                <div ng-messages-include="error-messages"></div>
+            </div>
         </md-input-container>
     </md-item-content>
 </md-item>
