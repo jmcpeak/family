@@ -97,20 +97,16 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
-    .constant('jmSubmit', {
-        hash: 463258776
-    })
-
     .directive("jmLogin", function () {
         return {
             scope: true,
             templateUrl: 'login.tpl.html',
-            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage, jmSubmit) {
+            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
 
                 $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
 
                 $scope.submit = function () {
-                    if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === jmSubmit.hash) {
+                    if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
                         this.displayCircularProgressIndicator = true;
                         this.showLoginFields = false;
                         this.error = {badPassword: false};
@@ -349,5 +345,4 @@ angular.module('jmFamily', [
 
             return data_out;
         };
-    });
-
+    })
