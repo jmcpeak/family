@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmInput', ['ngMaterial'])
+angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
     .directive("jmInput", function () {
         return {
