@@ -2,7 +2,7 @@
 
 angular.module('jmFamily', [
     //replace:templates-app,
-    'ngMaterial', 'ngTouch', 'ngRoute', 'ngMessages', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'jmList'])
+    'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
