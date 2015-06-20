@@ -2,7 +2,7 @@
 
 angular.module('jmFamily', [
     //replace:templates-app,
-    'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'jmList'])
+    'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'ngMessages', 'jmList'])
 
     .config(function ($routeProvider, $mdThemingProvider) {
 
@@ -97,51 +97,45 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     }])
 
-    .controller('jmLoginController', function ($scope, $timeout, $cookies, $q, $sessionStorage) {
-        $scope.$storage = $sessionStorage;
-        $scope.showInit = false;
-        $scope.showListWait = true;
+    .constant('jmSubmit', {
+        hash: 463258776
+    })
 
-        if ($scope.$storage.credentials) {
-            $scope.showLogin = false;
-            $scope.showProgress = false;
-            $scope.showOverlay = false;
-            $scope.error = undefined;
-        } else {
-            $scope.showLogin = true;
-            $scope.showOverlay = true;
+    .directive("jmLogin", function () {
+        return {
+            scope: true,
+            templateUrl: 'login.tpl.html',
+            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage, jmSubmit) {
 
-            var deferredCognito = $q.defer();
-            var deferredUser = $q.defer();
-            var scope = $scope;
+                $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
 
-            $q.all([deferredCognito.promise, deferredUser.promise]).then(function () {
-                scope.showProgress = false;
-                scope.showOverlay = false;
-            });
-        }
+                $scope.submit = function () {
+                    if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === jmSubmit.hash) {
+                        this.displayCircularProgressIndicator = true;
+                        this.showLoginFields = false;
+                        this.error = {badPassword: false};
 
-        $scope.$root.$on('showListWait', function (event, value) {
-            $scope.showListWait = value;
-        });
-
-        $scope.submit = function () {
-            if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
-                this.showProgress = true;
-                this.showLogin = false;
-                this.error = undefined;
-
-                deferredUser.resolve();
-
-                var that = this;
-                AWS.config.credentials.get(function (err) {
-                    if (!err) {
-                        that.$storage.credentials = AWS.config.credentials;
-                        deferredCognito.resolve();
+                        angular.bind(this,
+                            AWS.config.credentials.get(function (err) {
+                                if (!err) {
+                                    $timeout(function () {
+                                        //$sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
+                                        $scope.displayCircularProgressIndicator = false;
+                                    });
+                                } else {
+                                    $scope.displayCircularProgressIndicator = false;
+                                    $scope.showLoginFields = true;
+                                    $scope.error = {amazonError: true};
+                                }
+                            }));
+                    } else {
+                        this.error = {badPassword: true};
                     }
-                });
-            } else {
-                this.error = 'try again...';
+                };
+
+                $timeout(function () {
+                    $element.find('input').focus();
+                }, 50);
             }
         };
     })
