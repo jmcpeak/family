@@ -110,18 +110,21 @@ angular.module('jmFamily', [
                     if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
                         this.displayCircularProgressIndicator = true;
                         this.showLoginFields = false;
-                        this.error = {badPassword: false};
 
-                        angular.bind(this, AWS.config.credentials.get(function (err) {
+                        angular.bind(this, AWS.config.credentials.get(function (error) {
                             $timeout(function () {
                                 $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
 
-                                if (err) {
+                                if (error) {
+                                    //$sessionStorage.sessionToken = 'delete me';
                                     $scope.showLoginFields = !$scope.showLoginFields;
                                     $scope.error = {
                                         amazonError: true,
-                                        message: (err.message) ? err.message : 'Unknown Error'
+                                        message: (error.message) ? error.message : 'Unknown Error'
                                     };
+                                    $timeout(function () {
+                                        $element.find('input').focus();
+                                    }, 90);
                                 } else {
                                     $scope.showMainPage = !$scope.showMainPage;
                                     $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;

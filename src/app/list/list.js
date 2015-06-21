@@ -12,8 +12,8 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
     .directive("jmToolbar", function () {
         return {
             replace: true,
-            templateUrl: 'list/toolbar.tpl.html',
-            controller: 'jmListController'
+            templateUrl: 'list/toolbar.tpl.html' //,
+            //controller: 'jmListController'
         };
     })
 
@@ -24,7 +24,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         $scope.name = 'McPeak';
         $scope.height = 'auto';
         $scope.showDelete = false;
-        $scope.showUserWaitIndicator = true;
+        $scope.queryAllInProgress = false;
 
         var findUser = function (id) {
             for (var i in $scope.users) {
@@ -39,10 +39,11 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         };
 
         $scope.refresh = function (id) {
+            $scope.queryAllInProgress = true;
             jmDB.queryAll().then(function (data) {
                 $timeout(function () {
 
-                    $scope.showUserWaitIndicator = false;
+                    $scope.queryAllInProgress = false;
                     $scope.count = data.length;
                     $scope.users = data;
 
@@ -52,7 +53,8 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 });
             }, function (reason) {
                 $timeout(function () {
-                    $scope.userWaitError = reason.message ? reason.message : 'Unknown Error';
+                    $scope.queryAllInProgress = true;
+                    $scope.queryAllError = reason.message ? reason.message : 'Unknown Error';
                 });
             });
         };
