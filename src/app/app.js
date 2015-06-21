@@ -85,10 +85,10 @@ angular.module('jmFamily', [
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
-        $mdThemingProvider.theme('default');
-        //.primaryPalette('green')
-        //.accentPalette('blue')
-        //.warnPalette('pink');
+        $mdThemingProvider.theme('default')
+            .primaryPalette('green')
+            .accentPalette('indigo');
+        //.warnPalette('yellow');
         //.backgroundPalette('teal');
 
         $mdThemingProvider.theme('error')
@@ -133,6 +133,7 @@ angular.module('jmFamily', [
 
         this.putItem = function (user) {
             var deferred = $q.defer();
+            var that = this;
 
             if (user.$$hashKey) {
                 delete user.$$hashKey;
@@ -146,6 +147,30 @@ angular.module('jmFamily', [
             };
 
             dynamoDB.putItem(params, function (err, data) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
+                    that.setLastUpdateDate();
+                }
+            });
+
+            return deferred.promise;
+        };
+
+        this.setLastUpdateDate = function () {
+            var deferred = $q.defer();
+
+            var params = {
+                TableName: tableName,
+                Key: {id: {S: 'lastUpdateDate'}},
+                UpdateExpression: 'set lastUpdated = :num',
+                ExpressionAttributeValues: {
+                    ':num': {N: Date.now().toString()}
+                }
+            };
+
+            dynamoDB.updateItem(params, function (err, data) {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -179,30 +204,28 @@ angular.module('jmFamily', [
             return deferred.promise;
         };
 
-        /*
-         this.getUser = function (id) {
-         var deferred = $q.defer();
+        this.getItem = function (id) {
+            var deferred = $q.defer();
 
-         var params = {
-         TableName: tableName,
-         Key: {
-         id: {
-         S: id.toString()
-         }
-         }
-         };
+            var params = {
+                TableName: tableName,
+                Key: {
+                    id: {
+                        S: id.toString()
+                    }
+                }
+            };
 
-         dynamoDB.getItem(params, function (err, data) {
-         if (err) {
-         deferred.reject(err);
-         } else {
-         deferred.resolve(jmDBUtils.objectConverter(data.Item));
-         }
-         });
+            dynamoDB.getItem(params, function (err, data) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
+                }
+            });
 
-         return deferred.promise;
-         };
-         */
+            return deferred.promise;
+        };
     })
 
     .service('jmDBUtils', function () {
