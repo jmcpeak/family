@@ -4,6 +4,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
     .directive('jmList', function () {
         return {
+            replace: true,
             templateUrl: 'list/list.tpl.html',
             controller: 'jmListController'
         };

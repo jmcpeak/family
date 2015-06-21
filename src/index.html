@@ -9,7 +9,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -60,16 +60,14 @@
 
 <jm-login ng-cloak></jm-login>
 
-<div ng-show="showMainPage && !queryAllInProgress">
-    <jm-toolbar hide-sm></jm-toolbar>
+<jm-toolbar hide-sm ng-show="showMainPage && !queryAllInProgress"></jm-toolbar>
 
-    <md-content layout="row">
-        <jm-list flex="33" flex-sm="100"></jm-list>
-        <jm-user class="jm-user" flex hide-sm></jm-user>
-    </md-content>
+<md-content layout="row" ng-show="showMainPage && !queryAllInProgress">
+    <jm-list flex="33" flex-sm="100"></jm-list>
+    <jm-user class="jm-user" flex hide-sm></jm-user>
+</md-content>
 
-    <jm-add-button hide-gt-sm/>
-</div>
+<jm-add-button hide-gt-sm ng-show="showMainPage && !queryAllInProgress"></jm-add-button>
 
 <!-- build:js(.) js/vendor.js -->
 <!-- bower:js -->
