@@ -4,7 +4,7 @@ angular.module('jmFamily', [
     //replace:templates-app,
     'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'ngMessages', 'jmList'])
 
-    .config(function ($routeProvider, $mdThemingProvider) {
+    .config(function () {
 
         String.prototype.hashCode = function () {
             var hash = 0, i, chr, len;
@@ -27,7 +27,9 @@ angular.module('jmFamily', [
             RoleArn: 'arn:aws:iam::754934490052:role/Cognito_mcpeakfamilyUnauth_DefaultRole',
             RoleSessionName: 'web'
         });
+    })
 
+    .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'partials/required.tpl.html',
@@ -56,7 +58,29 @@ angular.module('jmFamily', [
             .otherwise({
                 redirectTo: '/'
             });
+    })
 
+    .config(function ($mdIconProvider) {
+        $mdIconProvider
+            .iconSet('action', '/assets/action-icons.svg', 24)
+            .iconSet('alert', '/assets/alert-icons.svg', 24)
+            .iconSet('av', '/assets/av-icons.svg', 24)
+            .iconSet('communication', '/assets/communication-icons.svg', 24)
+            .iconSet('content', '/assets/content-icons.svg', 24)
+            .iconSet('device', '/assets/device-icons.svg', 24)
+            .iconSet('editor', '/assets/editor-icons.svg', 24)
+            .iconSet('file', '/assets/file-icons.svg', 24)
+            .iconSet('hardware', '/assets/hardware-icons.svg', 24)
+            .iconSet('icons', '/assets/icons-icons.svg', 24)
+            .iconSet('image', '/assets/image-icons.svg', 24)
+            .iconSet('maps', '/assets/maps-icons.svg', 24)
+            .iconSet('navigation', '/assets/navigation-icons.svg', 24)
+            .iconSet('notification', '/assets/notification-icons.svg', 24)
+            .iconSet('social', '/assets/social-icons.svg', 24)
+            .iconSet('toggle', '/assets/toggle-icons.svg', 24);
+    })
+
+    .config(function ($mdThemingProvider) {
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
@@ -75,72 +99,6 @@ angular.module('jmFamily', [
             .accentPalette('blue')
             .warnPalette('pink')
             .dark();
-    })
-
-    .config(['$mdIconProvider', function ($mdIconProvider) {
-        $mdIconProvider
-            .iconSet('action', '/assets/action-icons.svg', 24)
-            .iconSet('alert', '/assets/alert-icons.svg', 24)
-            .iconSet('av', '/assets/av-icons.svg', 24)
-            .iconSet('communication', '/assets/communication-icons.svg', 24)
-            .iconSet('content', '/assets/content-icons.svg', 24)
-            .iconSet('device', '/assets/device-icons.svg', 24)
-            .iconSet('editor', '/assets/editor-icons.svg', 24)
-            .iconSet('file', '/assets/file-icons.svg', 24)
-            .iconSet('hardware', '/assets/hardware-icons.svg', 24)
-            .iconSet('icons', '/assets/icons-icons.svg', 24)
-            .iconSet('image', '/assets/image-icons.svg', 24)
-            .iconSet('maps', '/assets/maps-icons.svg', 24)
-            .iconSet('navigation', '/assets/navigation-icons.svg', 24)
-            .iconSet('notification', '/assets/notification-icons.svg', 24)
-            .iconSet('social', '/assets/social-icons.svg', 24)
-            .iconSet('toggle', '/assets/toggle-icons.svg', 24);
-    }])
-
-    .directive("jmLogin", function () {
-        return {
-            templateUrl: 'login.tpl.html',
-            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
-
-                $scope.showMainPage = ($sessionStorage.sessionToken) ? true : false;
-
-                $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
-
-                $scope.submit = function () {
-                    if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
-                        this.displayCircularProgressIndicator = true;
-                        this.showLoginFields = false;
-
-                        angular.bind(this, AWS.config.credentials.get(function (error) {
-                            $timeout(function () {
-                                $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
-
-                                if (error) {
-                                    //$sessionStorage.sessionToken = 'delete me';
-                                    $scope.showLoginFields = !$scope.showLoginFields;
-                                    $scope.error = {
-                                        amazonError: true,
-                                        message: (error.message) ? error.message : 'Unknown Error'
-                                    };
-                                    $timeout(function () {
-                                        $element.find('input').focus();
-                                    }, 90);
-                                } else {
-                                    $scope.showMainPage = !$scope.showMainPage;
-                                    $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
-                                }
-                            });
-                        }));
-                    } else {
-                        this.error = {badPassword: true};
-                    }
-                };
-
-                $timeout(function () {
-                    $element.find('input').focus();
-                }, 50);
-            }
-        };
     })
 
     .service('jmDB', function ($q, jmDBUtils) {

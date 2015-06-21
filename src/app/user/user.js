@@ -143,4 +143,50 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             templateUrl: 'user/button.tpl.html',
             controller: 'jmUserController'
         };
-    });
+    })
+
+    .directive("jmLogin", function () {
+        return {
+            templateUrl: 'user/login.tpl.html',
+            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
+
+                $scope.showMainPage = ($sessionStorage.sessionToken) ? true : false;
+
+                $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
+
+                $scope.submit = function () {
+                    if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
+                        this.displayCircularProgressIndicator = true;
+                        this.showLoginFields = false;
+
+                        angular.bind(this, AWS.config.credentials.get(function (error) {
+                            $timeout(function () {
+                                $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
+
+                                if (error) {
+                                    //$sessionStorage.sessionToken = 'delete me';
+                                    $scope.showLoginFields = !$scope.showLoginFields;
+                                    $scope.error = {
+                                        amazonError: true,
+                                        message: (error.message) ? error.message : 'Unknown Error'
+                                    };
+                                    $timeout(function () {
+                                        $element.find('input').focus();
+                                    }, 90);
+                                } else {
+                                    $scope.showMainPage = !$scope.showMainPage;
+                                    $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
+                                }
+                            });
+                        }));
+                    } else {
+                        this.error = {badPassword: true};
+                    }
+                };
+
+                $timeout(function () {
+                    $element.find('input').focus();
+                }, 50);
+            }
+        };
+    })
