@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 
     var src = 'src';
     var app = src + '/app';
-    var bower = grunt.file.readJSON("bower.json");
+    //var bower = grunt.file.readJSON('bower.json');
 
     var restMock = function (req, resp, next) {
         var endpoints = {
@@ -131,6 +131,7 @@ module.exports = function (grunt) {
                     relativeUrls: true
                 },
                 files: {
+                    /* jshint -W109 */
                     "<%= yeoman.src %>/<%= pkg.name %>-<%= pkg.version %>.css": "<%=yeoman.src%>/less/app.less"
                 }
             },
@@ -164,7 +165,7 @@ module.exports = function (grunt) {
             js: {
                 files: [
                     '<%= yeoman.app %>/**/*.js',
-                    '!<%= yeoman.app %>/**/*.spec.js',
+                    '!<%= yeoman.app %>/**/*.spec.js'
                 ],
                 tasks: ['jshint:all', 'fileblocks:app'],
                 options: {
@@ -190,7 +191,7 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     livereload: 35729,
-                    middleware: function (connect, options, middlewares) {
+                    middleware: function (connect) {
                         return [
                             connect().use('/bower_components', connect.static('./bower_components')),
                             connect.static(appConfig.src),

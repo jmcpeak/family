@@ -2,5 +2,5 @@
 
 angular.module('jmPartials', ['ngMaterial'])
 
-    .controller("jmPartialController", function () {
+    .controller('jmPartialController', function () {
     });

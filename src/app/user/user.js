@@ -15,7 +15,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .controller("jmUserController", function ($scope, $rootScope, $location, $mdDialog, $mdToast, jmDB) {
+    .controller('jmUserController', function ($scope, $rootScope, $location, $mdDialog, $mdToast, jmDB) {
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedTab = 0;
 
@@ -131,7 +131,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .directive("jmUser", function () {
+    .directive('jmUser', function () {
         return {
             templateUrl: 'user/user.tpl.html',
             controller: 'jmUserController'
@@ -145,12 +145,12 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .directive("jmLogin", function () {
+    .directive('jmLogin', function () {
         return {
             templateUrl: 'user/login.tpl.html',
             controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
 
-                $scope.showMainPage = ($sessionStorage.sessionToken) ? true : false;
+                $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
 
                 $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
 
@@ -188,4 +188,4 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 }, 50);
             }
         };
-    })
+    });

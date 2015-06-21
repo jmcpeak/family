@@ -12,6 +12,7 @@ angular.module('jmFamily', [
                 return hash;
             }
             for (i = 0, len = this.length; i < len; i++) {
+                /* jshint -W016 */
                 chr = this.charCodeAt(i);
                 hash = ((hash << 5) - hash) + chr;
                 hash |= 0; // Convert to 32bit integer
@@ -178,28 +179,30 @@ angular.module('jmFamily', [
             return deferred.promise;
         };
 
-        this.getUser = function (id) {
-            var deferred = $q.defer();
+        /*
+         this.getUser = function (id) {
+         var deferred = $q.defer();
 
-            var params = {
-                TableName: tableName,
-                Key: {
-                    id: {
-                        S: id.toString()
-                    }
-                }
-            };
+         var params = {
+         TableName: tableName,
+         Key: {
+         id: {
+         S: id.toString()
+         }
+         }
+         };
 
-            dynamoDB.getItem(params, function (err, data) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                }
-            });
+         dynamoDB.getItem(params, function (err, data) {
+         if (err) {
+         deferred.reject(err);
+         } else {
+         deferred.resolve(jmDBUtils.objectConverter(data.Item));
+         }
+         });
 
-            return deferred.promise;
-        };
+         return deferred.promise;
+         };
+         */
     })
 
     .service('jmDBUtils', function () {
@@ -254,7 +257,9 @@ angular.module('jmFamily', [
             return data_out;
         };
 
+
         this.convertFromJson = function (data) {
+            /* jshint -W109 */
             var data_out = {};
             if (!data) {
                 return data_out;
@@ -269,7 +274,7 @@ angular.module('jmFamily', [
                 }
 
                 if (typeof val === 'boolean') {
-                    subObj = {"BOOL": val};
+                    subObj = {'BOOL': val};
                 }
                 else if (typeof val === 'string') {
                     var value = val.toString();
@@ -310,4 +315,4 @@ angular.module('jmFamily', [
 
             return data_out;
         };
-    })
+    });

@@ -2,23 +2,21 @@
 
 angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
-    .directive("jmList", function () {
+    .directive('jmList', function () {
         return {
             templateUrl: 'list/list.tpl.html',
             controller: 'jmListController'
         };
     })
 
-    .directive("jmToolbar", function () {
+    .directive('jmToolbar', function () {
         return {
             replace: true,
-            templateUrl: 'list/toolbar.tpl.html' //,
-            //controller: 'jmListController'
+            templateUrl: 'list/toolbar.tpl.html'
         };
     })
 
-    .controller("jmListController", function ($scope, $rootScope, $timeout, jmDB) {
-        $scope.lastUpdate;
+    .controller('jmListController', function ($scope, $rootScope, $timeout, jmDB) {
         $scope.users = [];
         $scope.count = '';
         $scope.name = 'McPeak';

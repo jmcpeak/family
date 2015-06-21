@@ -2,7 +2,7 @@
 
 angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
-    .directive("jmInput", function () {
+    .directive('jmInput', function () {
         return {
             scope: {
                 label: '@',
@@ -21,7 +21,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
         };
     })
 
-    .directive("jmTextarea", function () {
+    .directive('jmTextarea', function () {
         return {
             scope: {
                 label: '@',
@@ -40,7 +40,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
         };
     })
 
-    .directive("jmSwitch", function () {
+    .directive('jmSwitch', function () {
         return {
             scope: {
                 field: '@',
@@ -55,7 +55,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
         };
     })
 
-    .directive("jmSelect", function () {
+    .directive('jmSelect', function () {
         return {
             scope: {
                 field: '@',
