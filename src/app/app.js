@@ -117,7 +117,6 @@ angular.module('jmFamily', [
                                 $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
 
                                 if (err) {
-                                    //$sessionStorage.sessionToken = 'delete this line';
                                     $scope.showLoginFields = !$scope.showLoginFields;
                                     $scope.error = {
                                         amazonError: true,
