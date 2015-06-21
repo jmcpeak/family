@@ -151,22 +151,27 @@ angular.module('jmFamily', [
                     deferred.reject(err);
                 } else {
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                    that.setLastUpdateDate();
+                    that.setLastUpdateDate(convertedItem.id).then(
+                        function () {},
+                        function () {
+                            console.warn('error setting last update date');
+                        });
                 }
             });
 
             return deferred.promise;
         };
 
-        this.setLastUpdateDate = function () {
+        this.setLastUpdateDate = function (id) {
             var deferred = $q.defer();
 
             var params = {
                 TableName: tableName,
                 Key: {id: {S: 'lastUpdateDate'}},
-                UpdateExpression: 'set lastUpdated = :num',
+                UpdateExpression: 'set lastUpdated = :num, lastUpdatedID = :id',
                 ExpressionAttributeValues: {
-                    ':num': {N: Date.now().toString()}
+                    ':num': {N: Date.now().toString()},
+                    ':id': id
                 }
             };
 
@@ -174,7 +179,7 @@ angular.module('jmFamily', [
                 if (err) {
                     deferred.reject(err);
                 } else {
-                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
+                    deferred.resolve(jmDBUtils.objectConverter(data));
                 }
             });
 
