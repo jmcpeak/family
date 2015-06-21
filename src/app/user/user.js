@@ -164,7 +164,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                                 $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
 
                                 if (error) {
-                                    //$sessionStorage.sessionToken = 'delete me';
                                     $scope.showLoginFields = !$scope.showLoginFields;
                                     $scope.error = {
                                         amazonError: true,
