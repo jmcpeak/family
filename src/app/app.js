@@ -120,7 +120,7 @@ angular.module('jmFamily', [
                                     $scope.showLoginFields = !$scope.showLoginFields;
                                     $scope.error = {
                                         amazonError: true,
-                                        message: (err.message) ? err.message : 'Amazon Error'
+                                        message: (err.message) ? err.message : 'Unknown Error'
                                     };
                                 } else {
                                     $scope.showMainPage = !$scope.showMainPage;

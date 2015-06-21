@@ -52,7 +52,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 });
             }, function (reason) {
                 $timeout(function () {
-                    $scope.userWaitError = reason.message ? reason.message : 'Unknown';
+                    $scope.userWaitError = reason.message ? reason.message : 'Unknown Error';
                 });
             });
         };
