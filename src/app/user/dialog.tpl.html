@@ -1,14 +1,12 @@
-<md-dialog aria-label="User" style="width: 100%; height: 100%;">
-    <jm-user flex></jm-user>
+<md-dialog aria-label="Add new user" style="height: 400px; width: 800px;">
+
+    <md-dialog-content flex>
+        <jm-user></jm-user>
+    </md-dialog-content>
+
     <div class="md-actions" layout="row">
-        <md-button class="md-accent md-raised jm-margin-right" aria-label="Save" ng-disabled="!selectedUser"
-                   ng-click="putItem()">
-            <md-icon md-svg-src="file:cloud_upload" class="jm-fix-icon"></md-icon>
-            Save
-        </md-button>
-        <md-button class="md-raised" aria-label="Cancel" ng-click="cancel()">
-            <md-icon md-svg-src="navigation:cancel" class="jm-fix-icon"></md-icon>
-            Cancel
-        </md-button>
+        <md-button aria-label="Cancel" ng-click="cancel()">Cancel</md-button>
+        <md-button class="md-accent" aria-label="Save" ng-disabled="!selectedUser" ng-click="putItem()">Add</md-button>
     </div>
+
 </md-dialog>

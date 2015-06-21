@@ -1,24 +1,26 @@
-<md-list>
-    <md-card ng-repeat="user in users" md-swipe-left="showDelete = !showDelete" ng-click="selectUser(user)"
-             id="user-{{user.id}}">
-        <md-item-content md-ink-ripple>
-            <div class="md-tile-left" style="padding-left: 10px">
-                <md-button class="md-primary md-fab" aria-label="User Initials">
-                    <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase }}</h2>
-                </md-button>
-            </div>
-            <div class="md-tile-content" style="padding-left: 30px">
-                <h3>{{user.firstName + ' ' + user.lastName}}</h3>
+<md-list layout-fill>
+    <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
+             ng-repeat="user in users" ng-click="selectUser(user)"
+             md-swipe-left="showDelete = !showDelete">
 
-                <h3>{{user.address}}</h3>
+        <div class="md-tile-left" style="padding-left: 10px">
+            <md-button class="md-fab" aria-label="User Initials">
+                <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase
+                    }}</h2>
+            </md-button>
+        </div>
 
-                <h4><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.email}}</a></h4>
-            </div>
-            <div class="md-tile-right">
-                <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove" ng-show="showDelete"
-                           ng-click="showDelete = !showDelete">Remove
-                </md-button>
-            </div>
-        </md-item-content>
+        <div class="md-tile-content">
+            <div>{{user.firstName + ' ' + user.lastName | uppercase}}</div>
+            <div>{{user.address | uppercase}}</div>
+            <div><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.email}}</a></div>
+        </div>
+
+        <div class="md-tile-right">
+            <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove"
+                       ng-show="showDelete"
+                       ng-click="showDelete = !showDelete">Remove
+            </md-button>
+        </div>
     </md-card>
 </md-list>

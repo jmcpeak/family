@@ -4,19 +4,27 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
     .directive("jmList", function () {
         return {
-            scope: true,
             templateUrl: 'list/list.tpl.html',
             controller: 'jmListController'
         };
     })
 
-    .controller("jmListController", function ($scope, jmDB) {
+    .directive("jmToolbar", function () {
+        return {
+            replace: true,
+            templateUrl: 'list/toolbar.tpl.html',
+            controller: 'jmListController'
+        };
+    })
+
+    .controller("jmListController", function ($scope, $rootScope, $timeout, jmDB) {
+        $scope.lastUpdate;
         $scope.users = [];
         $scope.count = '';
-        $scope.lastUpdate = new Date();
         $scope.name = 'McPeak';
         $scope.height = 'auto';
         $scope.showDelete = false;
+        $scope.showUserWaitIndicator = true;
 
         var findUser = function (id) {
             for (var i in $scope.users) {
@@ -26,57 +34,36 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
             }
         };
 
-        $scope.$root.$on('userRemoved', function () {
-            $scope.update(($scope.users.length >= 1) ? $scope.users[0] : undefined);
-        });
-
         $scope.selectUser = function (user) {
-            $scope.$root.$emit('selectUser', user);
+            $rootScope.$emit('selectUser', user);
         };
-
-        $scope.$root.$on('refresh', function (event, id) {
-            $scope.refresh(id);
-        });
 
         $scope.refresh = function (id) {
             jmDB.queryAll().then(function (data) {
-                $scope.$root.$emit('showListWait', false);
-                $scope.count = data.length;
-                $scope.users = data;
+                $timeout(function () {
 
-                if (id) {
-                    $scope.update(findUser(id));
-                }
+                    $scope.showUserWaitIndicator = false;
+                    $scope.count = data.length;
+                    $scope.users = data;
+
+                    if (id) {
+                        $scope.update(findUser(id));
+                    }
+                });
             }, function (reason) {
-                window.alert('Failed: ' + reason);
+                $timeout(function () {
+                    $scope.userWaitError = reason.message ? reason.message : 'Unknown';
+                });
             });
         };
 
+        $rootScope.$on('refresh', function (event, id) {
+            $scope.refresh(id);
+        });
+
+        $rootScope.$on('userRemoved', function () {
+            $scope.update($scope.users.length >= 1 ? $scope.users[0] : undefined);
+        });
+
         $scope.refresh();
-    })
-
-    .directive("jmToolbar", function () {
-        return {
-            scope: true,
-            templateUrl: 'list/toolbar.tpl.html',
-            controller: 'jmToolbarController'
-        };
-    })
-
-    .controller("jmToolbarController", function ($scope, $mdSidenav) {
-
-        $scope.menus = [
-            {link: 'https://github.com/jmcpeak/family/issues', label: 'Log an Issue'},
-            {link: 'https://github.com/jmcpeak/family', label: 'See the code'},
-            {link: 'https://travis-ci.org/jmcpeak/family', label: 'View Builds'}
-        ];
-
-        $scope.open = function () {
-            $mdSidenav('left').open();
-        };
-
-        $scope.close = function () {
-            $mdSidenav('left').close();
-            // unselect button
-        };
     });

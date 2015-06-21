@@ -1,20 +1,21 @@
 <div layout="row" layout-align="center center" layout-padding ng-show="showLoginFields">
     <img src="assets/coatofarms.png" alt="Coat of Arms" hide-sm>
 
-    <div layout="column" style="font-size: large">
+    <div layout="column" style="font-size: x-large">
         <form name="loginForm" ng-submit="submit()">
             <md-input-container>
                 <label>What city is the Family Reunion usually held in?</label>
                 <input name="question" type="text" ng-model="city" ng-keydown="error = (error !== '') ? '' : error;">
 
-                <div ng-messages="error" role="alert">
+                <div class="jmLoginError" ng-messages="error" role="alert">
                     <div ng-message="badPassword">That is not the correct city</div>
-                    <div ng-message="amazonError">Could not get credentials, try again</div>
+                    <div ng-message="amazonError">{{error.message}}</div>
                 </div>
             </md-input-container>
         </form>
     </div>
 </div>
-<div layout="row" layout-align="center center" style="height: 100vh;" ng-show="displayCircularProgressIndicator">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+<div layout="column" layout-align="center center" style="height: 100vh;" ng-show="displayCircularProgressIndicator || showUserWaitIndicator">
+    <md-progress-circular md-mode="indeterminate" ng-class="userWaitError ? 'md-warn' : ''"></md-progress-circular>
+    <span style="height: 12px;">{{userWaitError}}</span>
 </div>

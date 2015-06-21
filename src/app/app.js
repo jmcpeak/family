@@ -60,10 +60,10 @@ angular.module('jmFamily', [
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
-        $mdThemingProvider.theme('default')
-            .primaryPalette('green')
-            .accentPalette('blue')
-            .warnPalette('pink');
+        $mdThemingProvider.theme('default');
+        //.primaryPalette('green')
+        //.accentPalette('blue')
+        //.warnPalette('pink');
         //.backgroundPalette('teal');
 
         $mdThemingProvider.theme('error')
@@ -99,9 +99,10 @@ angular.module('jmFamily', [
 
     .directive("jmLogin", function () {
         return {
-            scope: true,
             templateUrl: 'login.tpl.html',
             controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
+
+                $scope.showMainPage = ($sessionStorage.sessionToken) ? true : false;
 
                 $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
 
@@ -111,19 +112,23 @@ angular.module('jmFamily', [
                         this.showLoginFields = false;
                         this.error = {badPassword: false};
 
-                        angular.bind(this,
-                            AWS.config.credentials.get(function (err) {
-                                if (!err) {
-                                    $timeout(function () {
-                                        //$sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
-                                        $scope.displayCircularProgressIndicator = false;
-                                    });
+                        angular.bind(this, AWS.config.credentials.get(function (err) {
+                            $timeout(function () {
+                                $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
+
+                                if (err) {
+                                    //$sessionStorage.sessionToken = 'delete this line';
+                                    $scope.showLoginFields = !$scope.showLoginFields;
+                                    $scope.error = {
+                                        amazonError: true,
+                                        message: (err.message) ? err.message : 'Amazon Error'
+                                    };
                                 } else {
-                                    $scope.displayCircularProgressIndicator = false;
-                                    $scope.showLoginFields = true;
-                                    $scope.error = {amazonError: true};
+                                    $scope.showMainPage = !$scope.showMainPage;
+                                    $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
                                 }
-                            }));
+                            });
+                        }));
                     } else {
                         this.error = {badPassword: true};
                     }

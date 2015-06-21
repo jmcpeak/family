@@ -2,7 +2,7 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
+    .controller('jmDialogController', function ($scope, $rootScope, $mdDialog, jmDB) {
         $scope.selectedUser = {id: jmDB.guid()};
         $scope.formName = 'addUser';
 
@@ -11,11 +11,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.putItem = function () {
-            $scope.$root.$emit('putItem');
+            $rootScope.$emit('putItem');
         };
     })
 
-    .controller("jmUserController", function ($scope, $location, $timeout, $mdDialog, $mdToast, jmDB) {
+    .controller("jmUserController", function ($scope, $rootScope, $location, $mdDialog, $mdToast, jmDB) {
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedTab = 0;
 
@@ -34,11 +34,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $scope.formName = 'userForm';
         }
 
-        $scope.$root.$on('putItem', function () {
+        $rootScope.$on('putItem', function () {
             $scope.putItem();
         });
 
-        $scope.$root.$on('selectUser', function (event, user) {
+        $rootScope.$on('selectUser', function (event, user) {
             $scope.selectedUser = user;
             $scope.selectedTab = 0;
         });
@@ -133,7 +133,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .directive("jmUser", function () {
         return {
-            scope: true,
             templateUrl: 'user/user.tpl.html',
             controller: 'jmUserController'
         };
@@ -141,16 +140,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .directive('jmAddButton', function () {
         return {
-            scope: true,
             templateUrl: 'user/button.tpl.html',
-            controller: 'jmUserController'
-        };
-    })
-
-    .directive('jmAddButtonDesktop', function () {
-        return {
-            scope: true,
-            templateUrl: 'user/buttonDesktop.tpl.html',
             controller: 'jmUserController'
         };
     });

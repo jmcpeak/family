@@ -9,19 +9,46 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:css(src/) styles/scripts.css -->
     <!-- fileblock:css styles -->
-    <link href="app/user/user.css" rel="stylesheet"/>
-    <link href="app/app.css" rel="stylesheet"/>
     <!-- endfileblock -->
     <!-- endbuild -->
+
+    <style>
+        a {
+            text-decoration: none;
+        }
+
+        .jmLoginError [ng-message] {
+            font-size: medium;
+        }
+
+        md-card[md-ink-ripple] {
+            position: relative;
+        }
+
+        md-card:focus {
+            outline: none;
+        }
+
+        .centerInitialsInButton {
+            margin-top: 1px;
+        }
+
+        .jm-user {
+            font-size: large;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
 </head>
-<body ng-app="jmFamily" layout="column" layout-fill>
+<body ng-app="jmFamily" layout="column" ng-cloak>
 
 <script type="text/ng-template" id="error-messages">
     <div ng-message="required">Required</div>
@@ -31,82 +58,33 @@
     <div ng-message="tel">Use a phone number</div>
 </script>
 
-<section ng-controller="jmLoginController">
-    <div class="jm-initial-div" ng-style="{display: (showInit) ? 'block' : 'none'}"></div>
-    <div class="jm-logon-progress" ng-show="showProgress">
-        <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
-    </div>
-    <div class="jm-logon-overlay" ng-style="{height: (showOverlay) ? '100%' : '0'}">
-        <div layout="row" layout-sm="column" layout-align="center center" ng-show="showLogin" style="margin: 15px;">
-            <img src="assets/coatofarms.png" alt="Coat of Arms">
+<jm-login ng-cloak></jm-login>
 
-            <form name="loginForm" ng-submit="submit()">
-                <md-input-container>
-                    <label>What city is the Family Reunion usually held in?</label>
-                    <input name="question" autofocus type="password" ng-model="city"
-                           ng-keydown="error = (error !== '') ? '' : error;">
-                </md-input-container>
-                <h4 style="height: 20px; color: #D32F2F">{{error}}</h4>
-            </form>
-        </div>
-    </div>
-</section>
+<div ng-show="showMainPage && !showUserWaitIndicator">
+    <jm-toolbar hide-sm></jm-toolbar>
 
-<md-toolbar hide-gt-sm md-scroll-shrink>
-    <jm-toolbar/>
-</md-toolbar>
-<md-toolbar hide-sm>
-    <jm-toolbar/>
-</md-toolbar>
+    <md-content layout="row">
+        <jm-list flex="33" flex-sm="100"></jm-list>
+        <jm-user class="jm-user" flex hide-sm></jm-user>
+    </md-content>
 
-<md-subheader hide-sm class="md-accent" ng-controller="jmListController">
-    Last Updated: <b>{{lastUpdate | date : 'fullDate' }}</b>, with <b>{{count}}</b> family members in database
-</md-subheader>
-
-<section layout="row" flex ng-controller="jmToolbarController">
-    <md-sidenav class="md-sidenav-left" md-component-id="left" md-swipe-left="close()">
-        <md-toolbar class="md-tall jm-menu-background">
-            <h4 class="md-toolbar-tools">McPeak Family</h4>
-        </md-toolbar>
-        <md-content class="md-padding">
-            <md-list>
-                <md-item ng-repeat="menu in menus">
-                    <md-item-content>
-                        <md-button class="jm-menu-button" ng-href="{{menu.link}}" target="jm-menu-frame">
-                            <h3 class="jm-menu-button-text">{{menu.label}}</h3>
-                        </md-button>
-                    </md-item-content>
-                </md-item>
-            </md-list>
-        </md-content>
-    </md-sidenav>
-</section>
-
-<md-content layout="row" layout-sm="column">
-    <div class="jm-list-wait" ng-show="showListWait">
-        <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
-    </div>
-    <jm-list flex="33" hide-sm style="overflow-y: scroll"></jm-list>
-    <jm-list flex hide-gt-sm></jm-list>
-    <jm-user flex hide-sm></jm-user>
-</md-content>
-
-<jm-add-button hide-gt-md/>
+    <jm-add-button hide-gt-sm/>
+</div>
 
 <!-- build:js(.) js/vendor.js -->
 <!-- bower:js -->
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
-<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
 <script src="bower_components/angular-resource/angular-resource.js"></script>
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-touch/angular-touch.js"></script>
-<script src="bower_components/angular-messages/angular-messages.js"></script>
 <script src="bower_components/angular-aria/angular-aria.js"></script>
 <script src="bower_components/angular-material/angular-material.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script src="bower_components/aws-sdk-js/dist/aws-sdk.js"></script>
 <script src="bower_components/ngstorage/ngStorage.js"></script>
 <!-- endbower -->
