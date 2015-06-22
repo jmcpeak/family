@@ -15,7 +15,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .controller('jmUserController', function ($scope, $rootScope, $location, $mdDialog, $mdToast, jmDB) {
+    .controller('jmUserController', function ($scope, $rootScope, $timeout, $location, $mdDialog, $mdToast, jmDB) {
         $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
         $scope.selectedTab = 0;
 
@@ -38,33 +38,62 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $scope.putItem();
         });
 
-        $rootScope.$on('selectUser', function (event, user) {
-            $scope.selectedUser = user;
-            $scope.selectedTab = 0;
-        });
-
         $scope.deleteItem = function (event) {
+            var pre = 'Remove ';
+            var fn = $scope.selectedUser.firstName ? $scope.selectedUser.firstName : '';
+            var ln = $scope.selectedUser.lastName ? $scope.selectedUser.lastName : '';
+            var name = fn + ' ' + ln;
+            var title = name.length > 1 ? pre + name + ' - are you sure?' : pre + 'user?';
 
             $mdDialog.show($mdDialog.confirm()
-                .title('Remove ' + $scope.selectedUser.firstName + ' ' + $scope.selectedUser.lastName + ' - are you sure?')
+                .title(title)
                 .content('All the data and the entry itself will be removed')
                 .ok('Remove')
                 .cancel('Cancel')
-                .targetEvent(event)).then(
-                function () {
-                    jmDB.deleteItem($scope.selectedUser).then(
-                        function () {
-                            angular.element('#user-' + $scope.selectedUser.id).remove();
-                            $scope.$root.$emit('userRemoved');
-                            $scope[$scope.formName].$setPristine();
-                            toast('Removed');
-                        },
-                        function () {
-                            toast('There was a problem removing...', true);
-                        });
-                }, function () {
-                    $scope.alert = 'You decided to keep your debt.';
-                });
+                .targetEvent(event)).then(function () {
+                jmDB.deleteItem($scope.selectedUser).then(
+                    function () {
+                        var id = $scope.selectedUser.id;
+
+                        // Delete the card
+                        angular.element('#user-' + id).remove();
+
+                        // Update count
+                        $scope.count--;
+
+                        // Set form pristine
+                        $scope[$scope.formName].$setPristine();
+
+                        // Remove from users array
+                        for (var i in $scope.users) {
+                            if ($scope.users[i].id === id) {
+                                $scope.users.splice(i, 1);
+                            }
+                        }
+
+                        if ($scope.users.length >= 1) {
+                            $scope.selectUser($scope.users[0]);
+                        }
+
+                        toast('User Removed');
+                    },
+                    function () {
+                        toast('There was a problem removing...', true);
+                    });
+            });
+        };
+
+        $scope.isRemoveDisabled = function () {
+            return !angular.isDefined($scope.selectedUser);
+        };
+
+        $scope.isSaveDisabled = function () {
+            return $scope.userForm && $scope.userForm.$invalid;
+        };
+
+        $scope.selectUser = function (user) {
+            $scope.selectedUser = user;
+            $scope.selectedTab = 0;
         };
 
         $scope.putItem = function () {
@@ -76,8 +105,8 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                     if ($scope.addUser) {
                         $mdDialog.hide();
-                        $scope.$root.$emit('refresh', $scope.selectedUser.id);
-                        $scope.addUser = false;
+                        $rootScope.$emit('refresh', $scope.selectedUser);
+                        $scope.addUser = !$scope.addUser;
                     }
                 },
                 function () {

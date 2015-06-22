@@ -103,7 +103,7 @@ angular.module('jmFamily', [
     })
 
     .service('jmDB', function ($q, jmDBUtils) {
-        var tableName = 'test';
+        var tableName = 'mcpeak';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         this.guid = function () {
@@ -120,7 +120,17 @@ angular.module('jmFamily', [
         this.queryAll = function () {
             var deferred = $q.defer();
 
-            dynamoDB.scan({TableName: tableName}, function (err, data) {
+            var minLengthId = 15;
+
+            var params = {
+                TableName: tableName,
+                FilterExpression: 'size(id) > :size',
+                ExpressionAttributeValues: {
+                    ':size': {N: minLengthId.toString()}
+                }
+            };
+
+            dynamoDB.scan(params, function (err, data) {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -151,8 +161,7 @@ angular.module('jmFamily', [
                     deferred.reject(err);
                 } else {
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                    that.setLastUpdateDate(convertedItem.id).then(
-                        function () {},
+                    that.setLastUpdateDate(convertedItem.id).then(undefined,
                         function () {
                             console.warn('error setting last update date');
                         });

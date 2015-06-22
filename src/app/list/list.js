@@ -20,34 +20,27 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
     .controller('jmListController', function ($scope, $rootScope, $timeout, jmDB) {
         $scope.users = [];
         $scope.count = '';
-        $scope.name = 'McPeak';
         $scope.height = 'auto';
         $scope.showDelete = false;
         $scope.queryAllInProgress = false;
 
-        var findUser = function (id) {
-            for (var i in $scope.users) {
-                if ($scope.users[i].id === id) {
-                    return $scope.users[i];
-                }
+        $rootScope.$on('refresh', function (event, user) {
+            $scope.refresh(user);
+        });
+
+        $scope.refresh = function (user) {
+            if (!user) {
+                $scope.queryAllInProgress = true;
             }
-        };
-
-        $scope.selectUser = function (user) {
-            $rootScope.$emit('selectUser', user);
-        };
-
-        $scope.refresh = function (id) {
-            $scope.queryAllInProgress = true;
             jmDB.queryAll().then(function (data) {
                 $timeout(function () {
 
-                    $scope.queryAllInProgress = false;
                     $scope.count = data.length;
                     $scope.users = data;
-
-                    if (id) {
-                        $scope.update(findUser(id));
+                    if (user) {
+                        $scope.selectUser(user);
+                    } else {
+                        $scope.queryAllInProgress = false;
                     }
                 });
             }, function (reason) {
@@ -66,14 +59,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 });
             });
         };
-
-        $rootScope.$on('refresh', function (event, id) {
-            $scope.refresh(id);
-        });
-
-        $rootScope.$on('userRemoved', function () {
-            $scope.update($scope.users.length >= 1 ? $scope.users[0] : undefined);
-        });
 
         $scope.refresh();
         $scope.getLastUpdateDate();
