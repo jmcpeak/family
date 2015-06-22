@@ -1,6 +1,7 @@
 <div flex layout="column" layout-padding>
+
     <div class="jm-user"
-         ng-style="{'opacity': (selectedUser !== undefined) ? '1' : '.3', 'pointer-events': (selectedUser !== undefined) ? 'auto' : 'none'}">
+         ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
         <ng-form name="{{formName}}">
             <md-tabs md-selected="selectedTab">
                 <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
@@ -12,14 +13,15 @@
         </ng-form>
 
         <div flex layout="row" layout-align="center" layout-padding ng-show="!addUser">
-            <md-button class="md-accent md-raised" aria-label="Save" ng-disabled="isSaveDisabled()" ng-click="putItem()">
+            <md-button class="md-accent md-raised" aria-label="Save" ng-disabled="isSaveDisabled()"
+                       ng-click="putItem()">
                 Save
             </md-button>
 
-            <md-button class="md-raised" aria-label="Delete" ng-disabled="isRemoveDisabled()" ng-click="deleteItem($event)">
+            <md-button class="md-raised" aria-label="Delete" ng-disabled="isRemoveDisabled()"
+                       ng-click="deleteItem($event)">
                 Remove
             </md-button>
         </div>
-
     </div>
 </div>

@@ -1,12 +1,16 @@
-<md-dialog aria-label="Add new user" style="height: 400px; width: 800px;">
+<md-dialog aria-label="Add new user" style="height: 600px; width: 800px;">
 
     <md-dialog-content flex>
         <jm-user></jm-user>
     </md-dialog-content>
 
     <div class="md-actions" layout="row">
-        <md-button aria-label="Cancel" ng-click="cancel()">Cancel</md-button>
-        <md-button class="md-accent" aria-label="Save" ng-disabled="!selectedUser" ng-click="putItem()">Add</md-button>
+        <md-button class="md-raised md-accent" aria-label="Save" ng-disabled="isDialogAddDisabled()" ng-click="putItem()">
+            Add
+        </md-button>
+        <md-button aria-label="Cancel" ng-click="cancel()">
+            Cancel
+        </md-button>
     </div>
 
 </md-dialog>

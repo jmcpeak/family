@@ -1,102 +1,59 @@
-<!--<section aria-label="Member">-->
-    <!--<div layout="row" layout-sm="column" aria-label="Parents">-->
-        <!--<jm-select label="Mother"-->
-                  <!--field="mother"-->
-                  <!--user="selectedUser"-->
-                  <!--required="true">-->
-        <!--</jm-select>-->
-        <!--<jm-select label="Father"-->
-                  <!--field="father"-->
-                  <!--user="selectedUser"-->
-                  <!--required="true">-->
-        <!--</jm-select>-->
-    <!--</div>-->
+<div layout="row" layout-sm="column" aria-label="Names">
 
-    <div layout="row" layout-sm="column" aria-label="Names">
+    <jm-input label="First Name"
+              field="firstName"
+              user="selectedUser"
+              required="true"
+              type="text",
+            focus="true">
+    </jm-input>
+    <jm-input label="Last Name"
+              field="lastName"
+              user="selectedUser"
+              required="true"
+              type="text">
+    </jm-input>
+    <jm-switch label="Gender"
+               field="gender"
+               user="selectedUser"
+               required="false">
+    </jm-switch>
+</div>
 
-        <jm-input label="First Name"
-                  field="firstName"
-                  user="selectedUser"
-                  required="true"
-                  type="text"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-        <jm-input label="Last Name"
-                  field="lastName"
-                  user="selectedUser"
-                  required="true"
-                  type="text"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-        <jm-switch label="Gender"
-                   field="gender"
-                   user="selectedUser"
-                   required="false"
-                   ddisabled="{{disabled}}">
-        </jm-switch>
-    </div>
-
-    <div layout="row" layout-sm="column" aria-label="Email and Gender">
-        <jm-input label="E-mail"
-                  field="email"
-                  user="selectedUser"
-                  required="true"
-                  type="email"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-        <jm-input label="Phone"
-                  field="phone"
-                  user="selectedUser"
-                  required="true"
-                  type="tel"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-    </div>
+<div layout="row" layout-sm="column" aria-label="Email and Gender">
+    <jm-input label="E-mail"
+              field="email"
+              user="selectedUser"
+              required="true"
+              type="email">
+    </jm-input>
+    <jm-input label="Phone"
+              field="phone"
+              user="selectedUser"
+              required="true"
+              type="tel">
+    </jm-input>
+</div>
 <!--</section>-->
 
 <!--<section aria-label="Address">-->
-    <div layout="row" layout-sm="column" aria-label="Address">
-        <jm-input label="Address"
-                  field="address"
-                  user="selectedUser"
-                  required="true"
-                  type="text"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-        <jm-input label="Address Line 2"
-                  field="address2"
-                  user="selectedUser"
-                  required="false"
-                  type="text"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-        <jm-input label="City"
-                  field="city"
-                  user="selectedUser"
-                  required="true"
-                  type="text"
-                  ddisabled="{{disabled}}">
-        </jm-input>
-    </div>
-
-    <!--<div layout="row" layout-sm="column" aria-label="Zip, etc">-->
-        <!--<jm-input label="State"-->
-                  <!--field="state"-->
-                  <!--user="selectedUser"-->
-                  <!--required="true"-->
-                  <!--type="text">-->
-        <!--</jm-input>-->
-        <!--<jm-input label="Zipcode"-->
-                  <!--field="zipcode"-->
-                  <!--user="selectedUser"-->
-                  <!--required="true"-->
-                  <!--type="text">-->
-        <!--</jm-input>-->
-        <!--<jm-input label="Country"-->
-                  <!--field="country"-->
-                  <!--user="selectedUser"-->
-                  <!--required="false"-->
-                  <!--type="text">-->
-        <!--</jm-input>-->
-    <!--</div>-->
-<!--</section>-->
+<div layout="row" layout-sm="column" aria-label="Address">
+    <jm-input label="Address"
+              field="address"
+              user="selectedUser"
+              required="true"
+              type="text">
+    </jm-input>
+    <jm-input label="Address Line 2"
+              field="address2"
+              user="selectedUser"
+              required="false"
+              type="text">
+    </jm-input>
+    <jm-input label="City"
+              field="city"
+              user="selectedUser"
+              required="true"
+              type="text">
+    </jm-input>
+</div>

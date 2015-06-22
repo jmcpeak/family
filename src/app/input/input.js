@@ -2,12 +2,11 @@
 
 angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
-    .directive('jmInput', function () {
+    .directive('jmInput', function ($timeout) {
         return {
             scope: {
                 label: '@',
                 field: '@',
-                ddisabled: '@',
                 required: '@',
                 type: '@',
                 placeholder: '@',
@@ -16,6 +15,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
             require: ['^form'],
             templateUrl: 'input/input.tpl.html',
             link: function (scope, element, attrs, controls) {
+                // does this for each tab
                 scope.form = controls[0];
             }
         };

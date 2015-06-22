@@ -294,7 +294,6 @@ angular.module('jmFamily', [
             return data_out;
         };
 
-
         this.convertFromJson = function (data) {
             /* jshint -W109 */
             var data_out = {};

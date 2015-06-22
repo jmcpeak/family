@@ -2,16 +2,15 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, $rootScope, $mdDialog, jmDB) {
+    .controller('jmDialogController', function ($scope, $timeout, $mdDialog, jmDB) {
         $scope.selectedUser = {id: jmDB.guid()};
-        $scope.formName = 'addUser';
 
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
 
-        $scope.putItem = function () {
-            $rootScope.$emit('putItem');
+        $scope.isDialogAddDisabled = function () {
+            return $scope.userForm && $scope.userForm.$invalid;
         };
     })
 
@@ -26,17 +25,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $mdToast.show({
                 template: '<md-toast ' + errorClass + '><span><b>' + msg + '</b></span></md-toast>',
                 hideDelay: 2000,
-                position: 'top right'
+                position: 'bottom right'
             });
         };
 
         if (!$scope.formName) {
             $scope.formName = 'userForm';
         }
-
-        $rootScope.$on('putItem', function () {
-            $scope.putItem();
-        });
 
         $scope.deleteItem = function (event) {
             var pre = 'Remove ';
@@ -97,16 +92,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.putItem = function () {
-            var promise = jmDB.putItem($scope.selectedUser);
-
-            promise.then(
+            jmDB.putItem($scope.selectedUser).then(
                 function () {
-                    toast(($scope.addUser) ? 'User Added' : 'Saved');
+                    toast(($scope.addUser) ? 'User Added' : 'User Saved');
 
                     if ($scope.addUser) {
                         $mdDialog.hide();
                         $rootScope.$emit('refresh', $scope.selectedUser);
-                        $scope.addUser = !$scope.addUser;
                     }
                 },
                 function () {
@@ -118,12 +110,19 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
             $scope.addUser = true;
 
+            var newScope = $scope.$new();
+            newScope.addUser = true;
+
             $mdDialog.show({
                 controller: 'jmDialogController',
                 templateUrl: 'user/dialog.tpl.html',
                 targetEvent: event,
-                clickOutsideToClose: false
-            }).then(undefined, function () {
+                clickOutsideToClose: false,
+                scope: newScope,
+                focusOnOpen: false
+            }).then(function () {
+                $scope.addUser = false;
+            }, function () {
                 $scope.addUser = false;
             });
         };

@@ -1,16 +1,11 @@
-<md-item>
-    <md-item-content>
-        <md-input-container>
-            <label>{{label}}</label>
-            <input name="{{field}}"
-                   type="{{type}}"
-                   placeholder="{{placeholder}}"
-                   ng-model="user[field]"
-                   ng-required="required === 'true'"
-                   ng-disabled="ddisabled === 'true'">
-            <div ng-messages="form[field].$error">
-                <div ng-messages-include="error-messages"></div>
-            </div>
-        </md-input-container>
-    </md-item-content>
-</md-item>
+<md-input-container>
+    <label>{{label}}</label>
+    <input name="{{field}}"
+           type="{{type}}"
+           ng-model="user[field]"
+           ng-required="required === 'true'">
+
+    <div ng-messages="form[field].$error">
+        <div ng-messages-include="error-messages"></div>
+    </div>
+</md-input-container>
