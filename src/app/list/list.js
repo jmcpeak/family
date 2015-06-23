@@ -53,7 +53,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         };
 
         $scope.getLastUpdateDate = function () {
-            $scope.queryAllInProgress = true;
             jmDB.getItem('lastUpdateDate').then(function (data) {
                 $timeout(function () {
                     $scope.lastUpdate = data.lastUpdated;
