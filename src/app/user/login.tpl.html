@@ -15,7 +15,7 @@
         </form>
     </div>
 </div>
-<div layout="column" layout-align="center center" style="height: 100vh;" ng-show="displayCircularProgressIndicator && queryAllInProgress">
+<div layout="column" layout-align="center center" style="height: 100vh;" ng-show="displayCircularProgressIndicator || queryAllInProgress">
     <md-progress-circular md-mode="indeterminate" ng-class="queryAllError ? 'md-warn' : ''"></md-progress-circular>
     <span style="height: 12px;">{{queryAllError}}</span>
 </div>

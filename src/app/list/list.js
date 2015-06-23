@@ -32,6 +32,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
             if (!user) {
                 $scope.queryAllInProgress = true;
             }
+
             jmDB.queryAll().then(function (data) {
                 $timeout(function () {
 
