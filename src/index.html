@@ -37,15 +37,26 @@
         .jmLoginError [ng-message] {
             font-size: medium;
         }
-        .jm-user {
-            font-size: large;
-            position: fixed;
+        md-tabs {
             width: 100%;
-            height: 100%;
+            font-size: large;
+        }
+        md-sidenav,
+        md-sidenav.md-locked-open,
+        md-sidenav.md-closed.md-locked-open-add-active {
+            min-width: 200px !important;
+            width: 33% !important;
+            max-width: 400px !important;
+        }
+        md-tabs {
+            /*background: #f6f6f6;*/
+        }
+        md-tabs-canvas {
+            background: white;
         }
     </style>
 </head>
-<body ng-app="jmFamily" layout="column" ng-cloak>
+<body ng-app="jmFamily" layout="row" ng-cloak>
 
 <script type="text/ng-template" id="error-messages">
     <div ng-message="required">Required</div>
@@ -57,12 +68,26 @@
 
 <jm-login ng-cloak></jm-login>
 
-<jm-toolbar hide-sm ng-show="showMainPage && !queryAllInProgress"></jm-toolbar>
+<jm-list></jm-list>
 
-<md-content layout="row" ng-show="showMainPage && !queryAllInProgress">
-    <jm-list flex="33" flex-sm="100"></jm-list>
-    <jm-user class="jm-user" flex hide-sm></jm-user>
-</md-content>
+<div flex>
+    <jm-toolbar hide-sm ng-show="showMainPage && !queryAllInProgress"></jm-toolbar>
+    <md-content layout="row" ng-show="showMainPage && !queryAllInProgress" ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
+        <div flex layout="column" layout-fill layout-padding>
+            <div layout="row" layout-align="end" layout-padding>
+                <md-button class="md-accent md-raised" aria-label="Save" ng-disabled="isSaveDisabled()"
+                           ng-click="putItem()">
+                    Save
+                </md-button>
+                <md-button class="md-raised" aria-label="Delete" ng-disabled="isRemoveDisabled()"
+                           ng-click="deleteItem($event)">
+                    Remove
+                </md-button>
+            </div>
+            <jm-user hide-sm></jm-user>
+        </div>
+    </md-content>
+</div>
 
 <jm-add-button hide-gt-sm ng-show="showMainPage && !queryAllInProgress"></jm-add-button>
 

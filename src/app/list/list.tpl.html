@@ -1,26 +1,34 @@
-<md-list layout-fill>
-    <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
-             ng-repeat="user in users" ng-click="selectUser(user)"
-             md-swipe-left="showDelete = !showDelete">
-
-        <div class="md-tile-left" style="padding-left: 10px">
-            <md-button class="md-fab" aria-label="User Initials">
-                <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase
-                    }}</h2>
-            </md-button>
+<md-sidenav class="md-sidenav-left md-locked-open" md-component-id="left" tabindex="-1"
+            md-is-locked-open="$mdMedia('gt-sm')">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <span>McPeak Family Database</span>
         </div>
-
-        <div class="md-tile-content">
-            <div>{{user.firstName + ' ' + user.lastName | uppercase}}</div>
-            <div>{{user.address | uppercase}}</div>
-            <div style="color: #0000cc"><a>{{user.email}}</a></div> <!-- href="mailto:{{user.email}}?Subject=McPeak%20Family%20" -->
-        </div>
-
-        <div class="md-tile-right">
-            <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove"
-                       ng-show="showDelete"
-                       ng-click="showDelete = !showDelete">Remove
-            </md-button>
-        </div>
-    </md-card>
-</md-list>
+    </md-toolbar>
+    <md-content>
+        <md-list layout-fill>
+            <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
+                     ng-repeat="user in users" ng-click="selectUser(user)"
+                     md-swipe-left="showDelete = !showDelete">
+                <div class="md-tile-left" style="padding-left: 10px">
+                    <md-button class="md-fab" aria-label="User Initials">
+                        <h2 class="centerInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase
+                            }}</h2>
+                    </md-button>
+                </div>
+                <div class="md-tile-content">
+                    <div>{{user.firstName + ' ' + user.lastName | uppercase}}</div>
+                    <div>{{user.address | uppercase}}</div>
+                    <div style="color: #0000cc"><a>{{user.email}}</a></div>
+                    <!-- href="mailto:{{user.email}}?Subject=McPeak%20Family%20" -->
+                </div>
+                <div class="md-tile-right">
+                    <md-button class="md-raised md-warn jm-remove-button" aria-label="Remove"
+                               ng-show="showDelete"
+                               ng-click="showDelete = !showDelete">Remove
+                    </md-button>
+                </div>
+            </md-card>
+        </md-list>
+    </md-content>
+</md-sidenav>
