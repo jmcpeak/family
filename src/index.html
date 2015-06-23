@@ -31,12 +31,6 @@
         md-card:focus {
             outline: none;
         }
-        .centerInitialsInButton {
-            margin-top: 1px;
-        }
-        .jmLoginError [ng-message] {
-            font-size: medium;
-        }
         md-tabs {
             width: 100%;
             font-size: large;
@@ -49,10 +43,19 @@
             max-width: 400px !important;
         }
         md-tabs {
-            /*background: #f6f6f6;*/
+            background: #f8f8f8;
         }
         md-tabs-canvas {
             background: white;
+        }
+        .jmCenterInitialsInButton {
+            margin-top: 1px;
+        }
+        .jmLoginError [ng-message] {
+            font-size: medium;
+        }
+        .jmFormInputArea {
+            background: #f8f8f8;
         }
     </style>
 </head>
@@ -70,10 +73,10 @@
 
 <jm-list></jm-list>
 
-<div flex>
+<div flex class="jmFormInputArea">
     <jm-toolbar hide-sm ng-show="showMainPage && !queryAllInProgress"></jm-toolbar>
     <md-content layout="row" ng-show="showMainPage && !queryAllInProgress" ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
-        <div flex layout="column" layout-fill layout-padding>
+        <div flex layout="column" layout-fill>
             <div layout="row" layout-align="end" layout-padding>
                 <md-button class="md-accent md-raised" aria-label="Save" ng-disabled="isSaveDisabled()"
                            ng-click="putItem()">
