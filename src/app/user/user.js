@@ -161,7 +161,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .directive('jmUser', function () {
         return {
-            replace: true,
             templateUrl: 'user/user.tpl.html',
             controller: 'jmUserController'
         };
