@@ -1,9 +1,11 @@
-<ng-form name="{{formName}}">
-    <md-tabs md-selected="selectedTab" md-dynamic-height>
-        <md-tab label="{{tab}}" ng-repeat="tab in tabs" md-on-select="partial($index)">
-            <md-list>
-                <div ng-view md-swipe-left="next()" md-swipe-right="previous()"></div>
-            </md-list>
-        </md-tab>
-    </md-tabs>
-</ng-form>
+<md-tabs md-selected="selectedTab" md-dynamic-height>
+    <md-tab label="{{tab.name}}" ng-repeat="tab in tabs">
+        <ng-form novalidate name="{{'userForm' + $index}}">
+            <jm-required ng-if="tab.position === 0"></jm-required>
+            <jm-additional ng-if="tab.position === 1"></jm-additional>
+            <jm-spouse ng-if="tab.position === 2"></jm-spouse>
+            <jm-dates-and-places ng-if="tab.position === 3"></jm-dates-and-places>
+            <jm-children ng-if="tab.position === 4"></jm-children>
+        </ng-form>
+    </md-tab>
+</md-tabs>

@@ -30,37 +30,6 @@ angular.module('jmFamily', [
         });
     })
 
-    .config(function ($routeProvider) {
-        $routeProvider
-            .when('/', {
-                templateUrl: 'partials/required.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .when('/required', {
-                templateUrl: 'partials/required.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .when('/spouse', {
-                templateUrl: 'partials/spouse.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .when('/additional', {
-                templateUrl: 'partials/additional.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .when('/datesAndPlaces', {
-                templateUrl: 'partials/datesAndPlaces.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .when('/children', {
-                templateUrl: 'partials/children.tpl.html',
-                controller: 'jmPartialController'
-            })
-            .otherwise({
-                redirectTo: '/'
-            });
-    })
-
     .config(function ($mdIconProvider) {
         $mdIconProvider
             .iconSet('action', '/assets/action-icons.svg', 24)

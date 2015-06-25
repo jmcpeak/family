@@ -2,7 +2,7 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, $timeout, $mdDialog, jmDB) {
+    .controller('jmDialogController', function ($scope, $mdDialog, jmDB, jmFormService) {
         $scope.selectedUser = {id: jmDB.guid()};
 
         $scope.cancel = function () {
@@ -10,16 +10,20 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.isDialogAddDisabled = function () {
-            return $scope.userForm && $scope.userForm.$invalid;
+            return jmFormService.getRequiredForm() && jmFormService.getRequiredForm().$invalid;
         };
     })
 
-    .controller('jmUserController', function ($scope, $rootScope, $timeout, $location, $mdDialog, $mdToast, jmDB) {
-        $scope.tabs = ['required', 'additional', 'spouse', 'dates and places', 'children / pets'];
+    .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, jmDB, jmFormService) {
+        $scope.tabs = [
+            {name: 'required', position: 0},
+            {name: 'additional', position: 1},
+            {name: 'spouse', position: 2},
+            {name: 'dates and places', position: 3},
+            {name: 'children / pets', position: 4}];
         $scope.selectedTab = 0;
 
         var toast = function (msg, error) {
-            $scope[$scope.formName].$setPristine();
             var errorClass = (error) ? 'class="error"' : undefined;
 
             $mdToast.show({
@@ -28,10 +32,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 position: 'bottom right'
             });
         };
-
-        if (!$scope.formName) {
-            $scope.formName = 'userForm';
-        }
 
         $scope.deleteItem = function (event) {
             var pre = 'Remove ';
@@ -55,9 +55,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                         // Update count
                         $scope.count--;
-
-                        // Set form pristine
-                        $scope[$scope.formName].$setPristine();
 
                         // Remove from users array
                         for (var i in $scope.users) {
@@ -83,7 +80,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.isSaveDisabled = function () {
-            return $scope.userForm && $scope.userForm.$invalid;
+            return jmFormService.getRequiredForm() && jmFormService.getRequiredForm().$invalid;
         };
 
         $scope.selectUser = function (user) {
@@ -134,29 +131,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         $scope.previous = function () {
             $scope.selectedTab = Math.max($scope.selectedTab - 1, 0);
         };
-
-        $scope.partial = function (index) {
-            switch (index) {
-                case 0:
-                    $location.path('/required');
-                    break;
-                case 1:
-                    $location.path('/additional');
-                    break;
-                case 2:
-                    $location.path('/spouse');
-                    break;
-                case 3:
-                    $location.path('/datesAndPlaces');
-                    break;
-                case 4:
-                    $location.path('/children');
-                    break;
-                default :
-                    $location.path('/required');
-                    break;
-            }
-        };
     })
 
     .directive('jmUser', function () {
@@ -182,7 +156,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                 $scope.showLoginFields = (!$sessionStorage.sessionToken) ? true : false;
 
-                $scope.submit = function () {
+                $scope.login = function () {
                     if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
                         this.displayCircularProgressIndicator = true;
                         this.showLoginFields = false;
