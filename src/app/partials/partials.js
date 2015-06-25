@@ -4,17 +4,23 @@ angular.module('jmPartials', ['ngMaterial'])
 
     .service('jmService', function () {
         var form;
+        var previousForm;
         var card;
         var color;
         var shadow;
         var margin;
 
         this.setRequiredForm = function (reqForm) {
+            previousForm = form;
             form = reqForm;
         };
 
         this.getRequiredForm = function () {
             return form;
+        };
+
+        this.usePreviousForm = function () {
+            form = previousForm;
         };
 
         this.resetPreviousCard = function () {

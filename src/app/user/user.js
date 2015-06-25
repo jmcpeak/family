@@ -9,6 +9,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             $mdDialog.cancel();
         };
 
+        $scope.ok = function () {
+            $mdDialog.hide();
+        };
+
         $scope.isDialogAddDisabled = function () {
             return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
         };
@@ -96,14 +100,16 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 };
 
                 $scope.putItem = function () {
+                    // ToDo - get new user data from form or use selected user
+                    //var requiredForm = jmService.getRequiredForm();
                     jmDB.putItem($scope.selectedUser).then(
                         function () {
                             toast(($scope.addUser) ? 'User Added' : 'User Saved');
 
                             if ($scope.addUser) {
-                                $mdDialog.hide();
-                                $rootScope.$emit('refresh', $scope.selectedUser);
+                                $scope.refresh($scope.selectedUser);
                             }
+                            $scope.addUser = !$scope.addUser;
                         },
                         function () {
                             toast('There was a problem saving...', true);
@@ -112,6 +118,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                 $scope.add = function (event) {
 
+                    var that = this;
                     $scope.addUser = true;
 
                     var newScope = $scope.$new();
@@ -125,9 +132,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         scope: newScope,
                         focusOnOpen: false
                     }).then(function () {
-                        $scope.addUser = false;
+                        that.putItem();
                     }, function () {
                         $scope.addUser = false;
+                        jmService.usePreviousForm();
                     });
                 };
 

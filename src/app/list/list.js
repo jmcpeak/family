@@ -29,10 +29,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     });
                 };
 
-                $rootScope.$on('refresh', function (event, user) {
-                    $scope.refresh(user);
-                });
-
                 $scope.refresh = function (user) {
                     if (!user) {
                         $scope.queryAllInProgress = true;
