@@ -16,7 +16,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, jmDB, jmService) {
         $scope.tabs = [
-            {name: 'required', position: 0},
+            {name: 'basic', position: 0},
             {name: 'additional', position: 1},
             {name: 'spouse', position: 2},
             {name: 'dates and places', position: 3},

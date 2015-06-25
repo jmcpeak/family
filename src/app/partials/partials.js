@@ -33,7 +33,7 @@ angular.module('jmPartials', ['ngMaterial'])
             margin = card.css('margin-right');
 
             // modify
-            card.css('background-color', 'rgb(244, 244, 244)');
+            card.css('background-color', 'rgb(238,255,238)');
             card.css('box-shadow', 'none');
             card.css('margin-right', '0');
         };
