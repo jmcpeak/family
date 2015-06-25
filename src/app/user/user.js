@@ -14,7 +14,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, jmDB, jmService) {
+    .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, $localStorage, jmDB, jmService, jmConstant) {
         $scope.tabs = [
             {name: 'basic', position: 0},
             {name: 'additional', position: 1},
@@ -51,7 +51,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         var id = $scope.selectedUser.id;
 
                         // Delete the card
-                        angular.element('#user-' + id).remove();
+                        angular.element(jmConstant.userIdHash).remove();
 
                         // Update count
                         $scope.count--;
@@ -84,12 +84,12 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.selectUser = function (user) {
-            var mdCard;
             $scope.selectedUser = user;
+            $localStorage.user = user;
             $scope.selectedTab = 0;
 
             jmService.resetPreviousCard();
-            jmService.setSelectedCard(angular.element('#user-' + user.id));
+            jmService.setSelectedCard(angular.element(jmConstant.userIdHash + user.id));
         };
 
         $scope.putItem = function () {

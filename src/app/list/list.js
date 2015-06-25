@@ -17,12 +17,28 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         };
     })
 
-    .controller('jmListController', function ($scope, $rootScope, $timeout, jmDB) {
+    .controller('jmListController', function ($scope, $rootScope, $timeout, $localStorage, jmDB, jmConstant) {
         $scope.users = [];
         $scope.count = '';
         $scope.height = 'auto';
         $scope.showDelete = false;
         $scope.queryAllInProgress = false;
+
+        var init = function () {
+            jmDB.getItem('lastUpdateDate').then(function (data) {
+                $timeout(function () {
+                    $scope.lastUpdate = data.lastUpdated;
+                });
+            });
+
+            $scope.refresh().then(function() {
+                if ($localStorage.user) {
+                    $timeout(function () {
+                        angular.element(jmConstant.userIdHash + $localStorage.user.id).click()[0].scrollIntoView(false);
+                    }, 100);
+                }
+            });
+        };
 
         $rootScope.$on('refresh', function (event, user) {
             $scope.refresh(user);
@@ -33,7 +49,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 $scope.queryAllInProgress = true;
             }
 
-            jmDB.queryAll().then(function (data) {
+            return jmDB.queryAll().then(function (data) {
                 $timeout(function () {
 
                     $scope.count = data.length;
@@ -52,14 +68,5 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
             });
         };
 
-        $scope.getLastUpdateDate = function () {
-            jmDB.getItem('lastUpdateDate').then(function (data) {
-                $timeout(function () {
-                    $scope.lastUpdate = data.lastUpdated;
-                });
-            });
-        };
-
-        $scope.refresh();
-        $scope.getLastUpdateDate();
+        init();
     });

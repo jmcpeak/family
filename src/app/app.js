@@ -4,6 +4,10 @@ angular.module('jmFamily', [
     //replace:templates-app,
     'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'ngMessages', 'jmList'])
 
+    .constant('jmConstant', {
+        userIdHash: '#user-'
+    })
+
     .config(function () {
 
         String.prototype.hashCode = function () {
