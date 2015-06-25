@@ -2,7 +2,7 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, $mdDialog, jmDB, jmFormService) {
+    .controller('jmDialogController', function ($scope, $mdDialog, jmDB, jmService) {
         $scope.selectedUser = {id: jmDB.guid()};
 
         $scope.cancel = function () {
@@ -10,11 +10,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.isDialogAddDisabled = function () {
-            return jmFormService.getRequiredForm() && jmFormService.getRequiredForm().$invalid;
+            return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
         };
     })
 
-    .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, jmDB, jmFormService) {
+    .controller('jmUserController', function ($scope, $rootScope, $mdDialog, $mdToast, jmDB, jmService) {
         $scope.tabs = [
             {name: 'required', position: 0},
             {name: 'additional', position: 1},
@@ -80,12 +80,16 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.isSaveDisabled = function () {
-            return jmFormService.getRequiredForm() && jmFormService.getRequiredForm().$invalid;
+            return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
         };
 
         $scope.selectUser = function (user) {
+            var mdCard;
             $scope.selectedUser = user;
             $scope.selectedTab = 0;
+
+            jmService.resetPreviousCard();
+            jmService.setSelectedCard(angular.element('#user-' + user.id));
         };
 
         $scope.putItem = function () {

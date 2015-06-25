@@ -2,8 +2,12 @@
 
 angular.module('jmPartials', ['ngMaterial'])
 
-    .service('jmFormService', function () {
+    .service('jmService', function () {
         var form;
+        var card;
+        var color;
+        var shadow;
+        var margin;
 
         this.setRequiredForm = function (reqForm) {
             form = reqForm;
@@ -12,14 +16,35 @@ angular.module('jmPartials', ['ngMaterial'])
         this.getRequiredForm = function () {
             return form;
         };
+
+        this.resetPreviousCard = function () {
+            if (card) {
+                card.css('background-color', color);
+                card.css('box-shadow', shadow);
+                card.css('margin-right', margin);
+            }
+        };
+
+        this.setSelectedCard = function (arg) {
+            // save current values before modifying
+            card = arg;
+            color = card.css('background-color');
+            shadow = card.css('box-shadow');
+            margin = card.css('margin-right');
+
+            // modify
+            card.css('background-color', 'rgb(244, 244, 244)');
+            card.css('box-shadow', 'none');
+            card.css('margin-right', '0');
+        };
     })
 
-    .directive('jmRequired', function (jmFormService) {
+    .directive('jmRequired', function (jmService) {
         return {
             require: '^form',
             templateUrl: 'partials/required.tpl.html',
             controller: function ($scope) {
-                jmFormService.setRequiredForm($scope.userForm0);
+                jmService.setRequiredForm($scope.userForm0);
             }
         };
     })
