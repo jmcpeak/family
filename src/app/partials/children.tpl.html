@@ -1,31 +1,32 @@
-<div layout="row" layout-sm="column">
-    <jm-input label="First Name"
-              field="firstNameChild"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="Middle Name"
-              field="middleNameChild"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <!--<jm-input label="Birthday"-->
-    <!--field="childBirthday"-->
-    <!--user="selectedUser"-->
-    <!--required="false"-->
-    <!--type="date">-->
-    <!--</jm-input>-->
-</div>
-<!--</section>-->
+<div flex layout="column" layout-fill layout-padding>
 
-<!--<section  aria-label="Pets">-->
-<div layout="row" layout-sm="column">
-    <jm-input label="Pets"
-              field="pets"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
+    <div layout="row" layout-sm="column" aria-label="Name">
+        <jm-input label="First Name"
+                  field="firstNameChild"
+                  user="selectedUser"
+                  type="text"
+                  focus="true">
+        </jm-input>
+        <jm-input label="Middle Name"
+                  field="middleNameChild"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Birthday"
+                  field="birthdayChild"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-switch label="Gender"
+                   field="genderChild"
+                   user="selectedUser">
+        </jm-switch>
+    </div>
+
+    <div layout="row" aria-label="Pets">
+        <jm-text-area label="Pets"
+                      field="pets"
+                      user="selectedUser">
+        </jm-text-area>
+    </div>
 </div>
