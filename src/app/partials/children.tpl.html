@@ -1,26 +1,38 @@
 <div flex layout="column" layout-fill layout-padding>
 
-    <div layout="row" layout-sm="column" aria-label="Name">
+    <div layout="row" layout-sm="column" aria-label="Name" ng-repeat="child in selectedUser.children">
         <jm-input label="First Name"
-                  field="firstNameChild"
+                  field="{{'firstNameChild' + child}}"
                   user="selectedUser"
                   type="text"
                   focus="true">
         </jm-input>
         <jm-input label="Middle Name"
-                  field="middleNameChild"
+                  field="{{'middleNameChild' + child}}"
                   user="selectedUser"
                   type="text">
         </jm-input>
         <jm-input label="Birthday"
-                  field="birthdayChild"
+                  field="{{'bithdayChild' + child}}"
                   user="selectedUser"
                   type="date">
         </jm-input>
         <jm-switch label="Gender"
-                   field="genderChild"
+                   field="{{'genderChild' + child}}d"
                    user="selectedUser">
         </jm-switch>
+        <md-button ng-if="child" ng-click="removeChild($event, child)" class="md-icon-button" aria-label="Remove">
+            <md-tooltip>
+                Remove child
+            </md-tooltip>
+            <md-icon md-svg-src="content:remove_circle"></md-icon>
+        </md-button>
+        <md-button ng-if="child === selectedUser.children.length - 1" ng-click="addChild($event)" class="md-icon-button" aria-label="Add">
+            <md-tooltip>
+                Add child
+            </md-tooltip>
+            <md-icon md-svg-src="content:add_circle"></md-icon>
+        </md-button>
     </div>
 
     <div layout="row" aria-label="Pets">

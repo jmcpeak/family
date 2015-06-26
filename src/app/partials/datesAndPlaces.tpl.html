@@ -1,14 +1,107 @@
-<div layout="row" layout-sm="column" aria-label="Birth">
-    <jm-input label="City of Birth"
-              field="birthCity"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="State of Birth"
-              field="birthState"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
+<div flex layout="column" layout-fill layout-padding>
+
+    <div layout="row" layout-sm="column" aria-label="Birth">
+
+        <jm-input label="Birthday"
+                  field="birthday"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-input label="City"
+                  field="cityBirth"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-select placeholder="State"
+                   field="stateBirth"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Wedding">
+
+        <jm-input label="Wedding"
+                  field="wedding"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-input label="City"
+                  field="cityWedding"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-select placeholder="State"
+                   field="stateWedding"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Death">
+
+        <jm-input label="Death"
+                  field="death"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-input label="City"
+                  field="cityDeath"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-select placeholder="State"
+                   field="stateDeath"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Spouse Birth">
+
+        <jm-input label="Birthday Spouse"
+                  field="bithdaySpouse"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-input label="City"
+                  field="cityBirthSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-select placeholder="State"
+                   field="stateBirthSpouse"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Spouse Death">
+
+        <jm-input label="Death Spouse"
+                  field="deathSpouse"
+                  user="selectedUser"
+                  type="date">
+        </jm-input>
+        <jm-input label="City"
+                  field="cityDeathSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-select placeholder="State"
+                   field="stateDeathSpouse"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
 </div>

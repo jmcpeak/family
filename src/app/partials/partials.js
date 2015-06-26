@@ -45,6 +45,70 @@ angular.module('jmPartials', ['ngMaterial'])
         };
     })
 
+    .controller('jmPartialController', function ($scope) {
+        $scope.states = [
+            {name: 'ALABAMA', abbreviation: 'AL'},
+            {name: 'ALASKA', abbreviation: 'AK'},
+            {name: 'AMERICAN SAMOA', abbreviation: 'AS'},
+            {name: 'ARIZONA', abbreviation: 'AZ'},
+            {name: 'ARKANSAS', abbreviation: 'AR'},
+            {name: 'CALIFORNIA', abbreviation: 'CA'},
+            {name: 'COLORADO', abbreviation: 'CO'},
+            {name: 'CONNECTICUT', abbreviation: 'CT'},
+            {name: 'DELAWARE', abbreviation: 'DE'},
+            {name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
+            {name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
+            {name: 'FLORIDA', abbreviation: 'FL'},
+            {name: 'GEORGIA', abbreviation: 'GA'},
+            {name: 'GUAM', abbreviation: 'GU'},
+            {name: 'HAWAII', abbreviation: 'HI'},
+            {name: 'IDAHO', abbreviation: 'ID'},
+            {name: 'ILLINOIS', abbreviation: 'IL'},
+            {name: 'INDIANA', abbreviation: 'IN'},
+            {name: 'IOWA', abbreviation: 'IA'},
+            {name: 'KANSAS', abbreviation: 'KS'},
+            {name: 'KENTUCKY', abbreviation: 'KY'},
+            {name: 'LOUISIANA', abbreviation: 'LA'},
+            {name: 'MAINE', abbreviation: 'ME'},
+            {name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
+            {name: 'MARYLAND', abbreviation: 'MD'},
+            {name: 'MASSACHUSETTS', abbreviation: 'MA'},
+            {name: 'MICHIGAN', abbreviation: 'MI'},
+            {name: 'MINNESOTA', abbreviation: 'MN'},
+            {name: 'MISSISSIPPI', abbreviation: 'MS'},
+            {name: 'MISSOURI', abbreviation: 'MO'},
+            {name: 'MONTANA', abbreviation: 'MT'},
+            {name: 'NEBRASKA', abbreviation: 'NE'},
+            {name: 'NEVADA', abbreviation: 'NV'},
+            {name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
+            {name: 'NEW JERSEY', abbreviation: 'NJ'},
+            {name: 'NEW MEXICO', abbreviation: 'NM'},
+            {name: 'NEW YORK', abbreviation: 'NY'},
+            {name: 'NORTH CAROLINA', abbreviation: 'NC'},
+            {name: 'NORTH DAKOTA', abbreviation: 'ND'},
+            {name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
+            {name: 'OHIO', abbreviation: 'OH'},
+            {name: 'OKLAHOMA', abbreviation: 'OK'},
+            {name: 'OREGON', abbreviation: 'OR'},
+            {name: 'PALAU', abbreviation: 'PW'},
+            {name: 'PENNSYLVANIA', abbreviation: 'PA'},
+            {name: 'PUERTO RICO', abbreviation: 'PR'},
+            {name: 'RHODE ISLAND', abbreviation: 'RI'},
+            {name: 'SOUTH CAROLINA', abbreviation: 'SC'},
+            {name: 'SOUTH DAKOTA', abbreviation: 'SD'},
+            {name: 'TENNESSEE', abbreviation: 'TN'},
+            {name: 'TEXAS', abbreviation: 'TX'},
+            {name: 'UTAH', abbreviation: 'UT'},
+            {name: 'VERMONT', abbreviation: 'VT'},
+            {name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
+            {name: 'VIRGINIA', abbreviation: 'VA'},
+            {name: 'WASHINGTON', abbreviation: 'WA'},
+            {name: 'WEST VIRGINIA', abbreviation: 'WV'},
+            {name: 'WISCONSIN', abbreviation: 'WI'},
+            {name: 'WYOMING', abbreviation: 'WY'}
+        ];
+    })
+
     .directive('jmRequired', function (jmService) {
         return {
             require: '^form',
@@ -52,65 +116,65 @@ angular.module('jmPartials', ['ngMaterial'])
             controller: function ($scope) {
                 jmService.setRequiredForm($scope.userForm0);
                 $scope.states = [
-                    { name: 'ALABAMA', abbreviation: 'AL'},
-                    { name: 'ALASKA', abbreviation: 'AK'},
-                    { name: 'AMERICAN SAMOA', abbreviation: 'AS'},
-                    { name: 'ARIZONA', abbreviation: 'AZ'},
-                    { name: 'ARKANSAS', abbreviation: 'AR'},
-                    { name: 'CALIFORNIA', abbreviation: 'CA'},
-                    { name: 'COLORADO', abbreviation: 'CO'},
-                    { name: 'CONNECTICUT', abbreviation: 'CT'},
-                    { name: 'DELAWARE', abbreviation: 'DE'},
-                    { name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
-                    { name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
-                    { name: 'FLORIDA', abbreviation: 'FL'},
-                    { name: 'GEORGIA', abbreviation: 'GA'},
-                    { name: 'GUAM', abbreviation: 'GU'},
-                    { name: 'HAWAII', abbreviation: 'HI'},
-                    { name: 'IDAHO', abbreviation: 'ID'},
-                    { name: 'ILLINOIS', abbreviation: 'IL'},
-                    { name: 'INDIANA', abbreviation: 'IN'},
-                    { name: 'IOWA', abbreviation: 'IA'},
-                    { name: 'KANSAS', abbreviation: 'KS'},
-                    { name: 'KENTUCKY', abbreviation: 'KY'},
-                    { name: 'LOUISIANA', abbreviation: 'LA'},
-                    { name: 'MAINE', abbreviation: 'ME'},
-                    { name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
-                    { name: 'MARYLAND', abbreviation: 'MD'},
-                    { name: 'MASSACHUSETTS', abbreviation: 'MA'},
-                    { name: 'MICHIGAN', abbreviation: 'MI'},
-                    { name: 'MINNESOTA', abbreviation: 'MN'},
-                    { name: 'MISSISSIPPI', abbreviation: 'MS'},
-                    { name: 'MISSOURI', abbreviation: 'MO'},
-                    { name: 'MONTANA', abbreviation: 'MT'},
-                    { name: 'NEBRASKA', abbreviation: 'NE'},
-                    { name: 'NEVADA', abbreviation: 'NV'},
-                    { name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
-                    { name: 'NEW JERSEY', abbreviation: 'NJ'},
-                    { name: 'NEW MEXICO', abbreviation: 'NM'},
-                    { name: 'NEW YORK', abbreviation: 'NY'},
-                    { name: 'NORTH CAROLINA', abbreviation: 'NC'},
-                    { name: 'NORTH DAKOTA', abbreviation: 'ND'},
-                    { name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
-                    { name: 'OHIO', abbreviation: 'OH'},
-                    { name: 'OKLAHOMA', abbreviation: 'OK'},
-                    { name: 'OREGON', abbreviation: 'OR'},
-                    { name: 'PALAU', abbreviation: 'PW'},
-                    { name: 'PENNSYLVANIA', abbreviation: 'PA'},
-                    { name: 'PUERTO RICO', abbreviation: 'PR'},
-                    { name: 'RHODE ISLAND', abbreviation: 'RI'},
-                    { name: 'SOUTH CAROLINA', abbreviation: 'SC'},
-                    { name: 'SOUTH DAKOTA', abbreviation: 'SD'},
-                    { name: 'TENNESSEE', abbreviation: 'TN'},
-                    { name: 'TEXAS', abbreviation: 'TX'},
-                    { name: 'UTAH', abbreviation: 'UT'},
-                    { name: 'VERMONT', abbreviation: 'VT'},
-                    { name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
-                    { name: 'VIRGINIA', abbreviation: 'VA'},
-                    { name: 'WASHINGTON', abbreviation: 'WA'},
-                    { name: 'WEST VIRGINIA', abbreviation: 'WV'},
-                    { name: 'WISCONSIN', abbreviation: 'WI'},
-                    { name: 'WYOMING', abbreviation: 'WY' }
+                    {name: 'ALABAMA', abbreviation: 'AL'},
+                    {name: 'ALASKA', abbreviation: 'AK'},
+                    {name: 'AMERICAN SAMOA', abbreviation: 'AS'},
+                    {name: 'ARIZONA', abbreviation: 'AZ'},
+                    {name: 'ARKANSAS', abbreviation: 'AR'},
+                    {name: 'CALIFORNIA', abbreviation: 'CA'},
+                    {name: 'COLORADO', abbreviation: 'CO'},
+                    {name: 'CONNECTICUT', abbreviation: 'CT'},
+                    {name: 'DELAWARE', abbreviation: 'DE'},
+                    {name: 'DISTRICT OF COLUMBIA', abbreviation: 'DC'},
+                    {name: 'FEDERATED STATES OF MICRONESIA', abbreviation: 'FM'},
+                    {name: 'FLORIDA', abbreviation: 'FL'},
+                    {name: 'GEORGIA', abbreviation: 'GA'},
+                    {name: 'GUAM', abbreviation: 'GU'},
+                    {name: 'HAWAII', abbreviation: 'HI'},
+                    {name: 'IDAHO', abbreviation: 'ID'},
+                    {name: 'ILLINOIS', abbreviation: 'IL'},
+                    {name: 'INDIANA', abbreviation: 'IN'},
+                    {name: 'IOWA', abbreviation: 'IA'},
+                    {name: 'KANSAS', abbreviation: 'KS'},
+                    {name: 'KENTUCKY', abbreviation: 'KY'},
+                    {name: 'LOUISIANA', abbreviation: 'LA'},
+                    {name: 'MAINE', abbreviation: 'ME'},
+                    {name: 'MARSHALL ISLANDS', abbreviation: 'MH'},
+                    {name: 'MARYLAND', abbreviation: 'MD'},
+                    {name: 'MASSACHUSETTS', abbreviation: 'MA'},
+                    {name: 'MICHIGAN', abbreviation: 'MI'},
+                    {name: 'MINNESOTA', abbreviation: 'MN'},
+                    {name: 'MISSISSIPPI', abbreviation: 'MS'},
+                    {name: 'MISSOURI', abbreviation: 'MO'},
+                    {name: 'MONTANA', abbreviation: 'MT'},
+                    {name: 'NEBRASKA', abbreviation: 'NE'},
+                    {name: 'NEVADA', abbreviation: 'NV'},
+                    {name: 'NEW HAMPSHIRE', abbreviation: 'NH'},
+                    {name: 'NEW JERSEY', abbreviation: 'NJ'},
+                    {name: 'NEW MEXICO', abbreviation: 'NM'},
+                    {name: 'NEW YORK', abbreviation: 'NY'},
+                    {name: 'NORTH CAROLINA', abbreviation: 'NC'},
+                    {name: 'NORTH DAKOTA', abbreviation: 'ND'},
+                    {name: 'NORTHERN MARIANA ISLANDS', abbreviation: 'MP'},
+                    {name: 'OHIO', abbreviation: 'OH'},
+                    {name: 'OKLAHOMA', abbreviation: 'OK'},
+                    {name: 'OREGON', abbreviation: 'OR'},
+                    {name: 'PALAU', abbreviation: 'PW'},
+                    {name: 'PENNSYLVANIA', abbreviation: 'PA'},
+                    {name: 'PUERTO RICO', abbreviation: 'PR'},
+                    {name: 'RHODE ISLAND', abbreviation: 'RI'},
+                    {name: 'SOUTH CAROLINA', abbreviation: 'SC'},
+                    {name: 'SOUTH DAKOTA', abbreviation: 'SD'},
+                    {name: 'TENNESSEE', abbreviation: 'TN'},
+                    {name: 'TEXAS', abbreviation: 'TX'},
+                    {name: 'UTAH', abbreviation: 'UT'},
+                    {name: 'VERMONT', abbreviation: 'VT'},
+                    {name: 'VIRGIN ISLANDS', abbreviation: 'VI'},
+                    {name: 'VIRGINIA', abbreviation: 'VA'},
+                    {name: 'WASHINGTON', abbreviation: 'WA'},
+                    {name: 'WEST VIRGINIA', abbreviation: 'WV'},
+                    {name: 'WISCONSIN', abbreviation: 'WI'},
+                    {name: 'WYOMING', abbreviation: 'WY'}
                 ];
             }
         };
@@ -119,27 +183,48 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmAdditional', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/additional.tpl.html'
+            templateUrl: 'partials/additional.tpl.html',
+            controller: 'jmPartialController'
         };
     })
 
     .directive('jmSpouse', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/spouse.tpl.html'
+            templateUrl: 'partials/spouse.tpl.html',
+            controller: 'jmPartialController'
         };
     })
 
     .directive('jmDatesAndPlaces', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/datesAndPlaces.tpl.html'
+            templateUrl: 'partials/datesAndPlaces.tpl.html',
+            controller: 'jmPartialController'
         };
     })
 
     .directive('jmChildren', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/children.tpl.html'
+            templateUrl: 'partials/children.tpl.html',
+            controller: function ($scope) {
+                $scope.$on('selectUser', function (event, user) {
+                    if (user && !user.children) {
+                        //$scope.children = event.currentScope.selectedUser.children;
+                        //$scope.children = [0];
+                        $scope.selectedUser.children = [0];
+
+                        $scope.addChild = function () {
+                            var lastOne = $scope.selectedUser.children.slice(-1).pop();
+                            $scope.selectedUser.children.push(++lastOne);
+                        };
+
+                        $scope.removeChild = function (event, index) {
+                            $scope.selectedUser.children.splice($scope.selectedUser.children.indexOf(index), 1);
+                        };
+                    }
+                });
+            }
         };
     });
