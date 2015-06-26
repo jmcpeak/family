@@ -9,7 +9,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -96,10 +96,6 @@
             <div layout="row" layout-align="center" layout-padding>
                 <md-button class="md-accent md-raised" aria-label="Save" ng-click="putItem()" ng-disabled="isSaveDisabled()">
                     Save
-                </md-button>
-                <md-button class="md-raised" aria-label="Delete" ng-disabled="isRemoveDisabled()"
-                           ng-click="deleteItem($event)">
-                    Remove
                 </md-button>
             </div>
             <jm-user hide-sm></jm-user>

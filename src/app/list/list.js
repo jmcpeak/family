@@ -6,7 +6,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         return {
             replace: true,
             templateUrl: 'list/list.tpl.html',
-            controller: function ($scope, $rootScope, $timeout, $localStorage, jmDB, jmConstant) {
+            controller: function ($scope, $rootScope, $timeout, $window, $localStorage, jmDB, jmConstant) {
                 $scope.users = [];
                 $scope.count = '';
                 $scope.height = 'auto';
@@ -51,6 +51,10 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                             $scope.queryAllError = reason.message ? reason.message : 'Unknown Error';
                         });
                     });
+                };
+
+                $scope.openUrl = function (url) {
+                    $window.open(url, '_blank');
                 };
 
                 init();
