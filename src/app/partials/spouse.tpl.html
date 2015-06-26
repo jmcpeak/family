@@ -1,72 +1,56 @@
-<div layout="row" layout-sm="column" aria-label="Names">
-    <jm-input label="Spouse First Name"
-              field="firstNameSpouse"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="Spouse Middle Name"
-              field="middleNameSpouse"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="Spouse Last Name"
-              field="lastNameSpouse"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
+<div flex layout="column" layout-fill layout-padding>
+
+    <div layout="row" layout-sm="column" aria-label="Name">
+
+        <jm-input label="First Name"
+                  field="firstNameSpouse"
+                  user="selectedUser"
+                  type="text"
+                  focus="true">
+        </jm-input>
+        <jm-input label="Last Name"
+                  field="lastNameSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-switch label="Gender"
+                   field="genderSpouse"
+                   user="selectedUser">
+        </jm-switch>
+    </div>
+
+    <div layout="row" aria-label="Name More">
+
+        <jm-input label="Middle Name"
+                  field="middleNameSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Maiden Name"
+                  field="maidenNameSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" aria-label="Name more 2">
+
+        <jm-input label="Nickname"
+                  field="nicknameSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Suffix (e.g. 'Jr.')"
+                  field="suffixNameSpouse"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" aria-label="Hobbies">
+        <jm-text-area label="Occupation and/or Hobbies"
+                      field="hobbiesSpouse"
+                      user="selectedUser">
+        </jm-text-area>
+    </div>
 </div>
-
-<div layout="row" layout-sm="column" aria-label="Email, Address Gender">
-    <jm-input label="Spouse E-mail"
-              field="emailSpouse"
-              user="selectedUser"
-              required="false"
-              type="email">
-    </jm-input>
-    <jm-input label="Spouse Address"
-              field="addressSpouse"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-switch label="Spouse Gender"
-               field="genderSpouse"
-               user="selectedUser"
-               required="true">
-    </jm-switch>
-</div>
-
-<!--<div layout="row" layout-sm="column" aria-label="Additional names">-->
-<!--<jm-input label="Spouse Maiden Name"-->
-<!--field="maidenNameSpouse"-->
-<!--user="selectedUser"-->
-<!--required="false"-->
-<!--type="text">-->
-<!--</jm-input>-->
-<!--<jm-input label="Spouse Nickname"-->
-<!--field="nickNameSpouse"-->
-<!--user="selectedUser"-->
-<!--required="false"-->
-<!--type="text">-->
-<!--</jm-input>-->
-<!--&lt;!&ndash; TODO placeholder="'Jr.', 'Senior', or 'III'" &ndash;&gt;-->
-<!--<jm-input label="Spouse Suffix"-->
-<!--field="suffixName"-->
-<!--user="selectedUser"-->
-<!--required="false"-->
-<!--type="text">-->
-<!--</jm-input>-->
-<!--</div>-->
-
-<!--<div layout="row" layout-sm="column" aria-label="Hobbies">-->
-<!--<jm-textarea class=""-->
-<!--label="Spouse Hobbies, Interests, etc."-->
-<!--field="hobbiesSpouse"-->
-<!--user="selectedUser"-->
-<!--required="false"-->
-<!--type="text">-->
-<!--</jm-textarea>-->
-<!--</div>-->
