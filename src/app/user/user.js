@@ -10,7 +10,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
 
         $scope.ok = function () {
-            $mdDialog.hide();
+            $mdDialog.hide($scope.selectedUser);
         };
 
         $scope.isDialogAddDisabled = function () {
@@ -97,17 +97,18 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                     jmService.resetPreviousCard();
                     jmService.setSelectedCard(angular.element(jmConstant.userIdHash + user.id));
+
+                    $scope.$broadcast('selectUser', user);
                 };
 
-                $scope.putItem = function () {
-                    // ToDo - get new user data from form or use selected user
-                    //var requiredForm = jmService.getRequiredForm();
-                    jmDB.putItem($scope.selectedUser).then(
+                $scope.putItem = function (user) {
+
+                    jmDB.putItem(user).then(
                         function () {
                             toast(($scope.addUser) ? 'User Added' : 'User Saved');
 
                             if ($scope.addUser) {
-                                $scope.refresh($scope.selectedUser);
+                                $scope.refresh(user);
                             }
                             $scope.addUser = !$scope.addUser;
                         },
@@ -131,8 +132,8 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         clickOutsideToClose: false,
                         scope: newScope,
                         focusOnOpen: false
-                    }).then(function () {
-                        that.putItem();
+                    }).then(function (user) {
+                        that.putItem(user);
                     }, function () {
                         $scope.addUser = false;
                         jmService.usePreviousForm();
@@ -153,7 +154,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
     .directive('jmLogin', function () {
         return {
             templateUrl: 'user/login.tpl.html',
-            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage) {
+            controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
 
                 $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
 
@@ -180,6 +181,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                                 } else {
                                     $scope.showMainPage = !$scope.showMainPage;
                                     $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
+
+                                    if ($localStorage.user) {
+                                        $scope.selectUser($localStorage.user);
+                                        $timeout(function () {
+                                            angular.element(jmConstant.userIdHash + $localStorage.user.id).click()[0].scrollIntoView(false);
+                                        });
+                                    }
                                 }
                             });
                         }));

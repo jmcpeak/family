@@ -1,6 +1,6 @@
 <md-toolbar>
     <div class="md-toolbar-tools" layout="row" layout-padding>
-        <span flex layout-align="center center">
+        <span flex layout-align="center center" hide-sm>
             <div style="font-size: small" flex layout="row" layout-align="center start">
                 <em>Last Update: {{lastUpdate | date : 'fullDate' }} with {{count}} family members</em>
             </div>
@@ -11,7 +11,7 @@
             </md-tooltip>
             <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
         </md-button>
-        <md-button class="md-raised md-hue-2 md-primary" aria-label="Email" ng-click="email($event)"
+        <md-button hide-sm class="md-raised md-hue-2 md-primary" aria-label="Email" ng-click="email($event)"
                    style="margin-right: 8px">
             <md-tooltip>
                 E-mail Everyone

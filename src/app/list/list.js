@@ -20,17 +20,11 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                         });
                     });
 
-                    $scope.refresh().then(function () {
-                        if ($localStorage.user) {
-                            $timeout(function () {
-                                angular.element(jmConstant.userIdHash + $localStorage.user.id).click()[0].scrollIntoView(false);
-                            }, 100);
-                        }
-                    });
+                    $scope.refresh($localStorage.user, true);
                 };
 
-                $scope.refresh = function (user) {
-                    if (!user) {
+                $scope.refresh = function (user, init) {
+                    if (!init) {
                         $scope.queryAllInProgress = true;
                     }
 
@@ -41,6 +35,9 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                             $scope.users = data;
                             if (user) {
                                 $scope.selectUser(user);
+                                $timeout(function () {
+                                    angular.element(jmConstant.userIdHash + user.id).click()[0].scrollIntoView(false);
+                                }, 200);
                             } else {
                                 $scope.queryAllInProgress = false;
                             }

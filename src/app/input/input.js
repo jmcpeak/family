@@ -2,7 +2,7 @@
 
 angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
-    .directive('jmInput', function () {
+    .directive('jmInput', function ($timeout) {
         return {
             scope: {
                 label: '@',
@@ -10,12 +10,26 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 required: '@',
                 type: '@',
                 placeholder: '@',
+                focus: '=',
                 user: '='
             },
             require: ['^form'],
             templateUrl: 'input/input.tpl.html',
             link: function (scope, element, attrs, controls) {
+                var previous;
                 scope.form = controls[0];
+
+                if (scope.focus) {
+                    $timeout(function () {
+                        element.find('input').focus();
+                    });
+                }
+
+                scope.$on('selectUser', function(event, user) {
+                    if (event.currentScope.focus) {
+                        element.find('input').focus();
+                    }
+                });
             }
         };
     })
