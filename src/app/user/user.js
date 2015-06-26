@@ -108,7 +108,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                             toast(($scope.addUser) ? 'User Added' : 'User Saved');
 
                             if ($scope.addUser) {
-                                $scope.refresh(user);
+                                $scope.refresh(user, true);
                             }
                             $scope.addUser = !$scope.addUser;
                         },

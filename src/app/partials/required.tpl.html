@@ -1,11 +1,11 @@
-<div>
+<div flex layout="column" layout-fill layout-padding>
     <div layout="row" layout-sm="column" aria-label="Name">
 
         <jm-input label="First Name"
                   field="firstName"
                   user="selectedUser"
                   required="true"
-                  type="text" ,
+                  type="text"
                   focus="true">
         </jm-input>
         <jm-input label="Last Name"
@@ -18,6 +18,19 @@
                    field="gender"
                    user="selectedUser">
         </jm-switch>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Parents">
+        <jm-input label="Father"
+                  field="father"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Mother"
+                  field="mother"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Email and Gender">
@@ -47,6 +60,26 @@
         </jm-input>
         <jm-input label="City"
                   field="city"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Address Continued">
+        <jm-select placeholder="State"
+                   field="state"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+        <jm-input label="ZipCode"
+                  field="zipcode"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Country"
+                  field="country"
                   user="selectedUser"
                   type="text">
         </jm-input>

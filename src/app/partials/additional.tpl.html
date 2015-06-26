@@ -1,46 +1,37 @@
-<div layout="row" layout-sm="column" aria-label="Additional names">
-    <jm-input label="Middle Name"
-              field="middleName"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="Maiden Name"
-              field="maidenName"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-    <jm-input label="Nickname"
-              field="nickName"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-</div>
+<div flex layout="column" layout-fill layout-padding>
 
-<div layout="row" layout-sm="column" aria-label="Hobbies">
-    <!-- TODO placeholder="'Jr.', 'Senior', or 'III'" -->
-    <jm-input label="Suffix"
-              field="suffixName"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
+    <div layout="row" aria-label="Name More">
 
-    <jm-input label="Facebook"
-              field="facebook"
-              user="selectedUser"
-              required="false"
-              type="text">
-    </jm-input>
-</div>
+        <jm-input label="Nickname"
+                  field="nickname"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Middle Name"
+                  field="middleName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
 
-<div layout="row" layout-sm="column" aria-label="Hobbies">
-    <jm-textarea label="Hobbies, Interests, etc."
-                 field="hobbies"
-                 user="selectedUser"
-                 required="false"
-                 type="text">
-    </jm-textarea>
+    <div layout="row" aria-label="Name more 2">
+        <jm-input label="Maiden Name"
+                  field="maidenName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+
+        <jm-input label="Suffix (e.g. 'Jr.')"
+                  field="suffixName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="row" aria-label="Hobbies">
+        <jm-text-area label="Occupation and/or Hobbies"
+                      field="hobbies"
+                      user="selectedUser">
+        </jm-text-area>
+    </div>
 </div>
