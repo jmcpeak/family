@@ -295,6 +295,7 @@ angular.module('jmFamily', [
                 else if (typeof val === 'object') {
                     if (Array.isArray(val) && val.length >= 1) {
                         var subObjKey = null;
+                        subObj = {};
                         if (typeof val[0] === 'boolean') {
                             subObjKey = "BS";
                         }
@@ -308,7 +309,7 @@ angular.module('jmFamily', [
                         if (!!subObjKey) {
                             var subObjArr = [];
                             for (var i = 0; i < val.length; i++) {
-                                subObjArr.push(val.toString());
+                                subObjArr.push(val[i].toString());
                             }
                             subObj[subObjKey] = subObjArr;
                         }
