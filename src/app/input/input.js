@@ -69,11 +69,24 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 field: '@',
                 keyvalue: '@',
                 keydisplay: '@',
+                keydisplay2: '@',
                 user: '=',
-                repeat: '='
+                repeat: '=',
+                orderclause: '@'
             },
             require: ['^form'],
             templateUrl: 'input/select.tpl.html',
+            controller: function ($scope) {
+                $scope.selection = function (value) {
+                    if ($scope.keydisplay && $scope.keydisplay2) {
+                        return value[$scope.keydisplay] + ' ' + value[$scope.keydisplay2];
+                    } else if ($scope.keydisplay) {
+                        return value[$scope.keydisplay];
+                    } else {
+                        return value;
+                    }
+                };
+            },
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }

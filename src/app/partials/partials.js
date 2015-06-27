@@ -109,16 +109,22 @@ angular.module('jmPartials', ['ngMaterial'])
         ];
     })
 
-    .directive('jmRequired', function (jmService) {
+    .directive('jmRequired', function (jmService, jmDB) {
         return {
             require: '^form',
             templateUrl: 'partials/required.tpl.html',
             controller: function ($scope) {
                 jmService.setRequiredForm($scope.userForm0);
 
-                $scope.fathers = [];
+                var update = function () {
+                    jmDB.queryFathers().then(function (resp) {
+                        $scope.fathers = resp;
+                    });
 
-                $scope.mothers = [];
+                    jmDB.queryMothers().then(function (resp) {
+                        $scope.mothers = resp;
+                    });
+                };
 
                 $scope.states = [
                     {name: 'ALABAMA', abbreviation: 'AL'},
@@ -181,6 +187,12 @@ angular.module('jmPartials', ['ngMaterial'])
                     {name: 'WISCONSIN', abbreviation: 'WI'},
                     {name: 'WYOMING', abbreviation: 'WY'}
                 ];
+
+                $scope.update = function () {
+                    update();
+                };
+
+                update();
             }
         };
     })
