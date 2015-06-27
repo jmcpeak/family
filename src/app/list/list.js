@@ -6,7 +6,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         return {
             replace: true,
             templateUrl: 'list/list.tpl.html',
-            controller: function ($scope, $rootScope, $timeout, $window, $localStorage, jmDB, jmConstant) {
+            controller: function ($scope, $timeout, $window, $localStorage, jmDB, jmConstant) {
                 $scope.users = [];
                 $scope.count = '';
                 $scope.height = 'auto';

@@ -25,9 +25,9 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
-    .directive('jmUser', function () {
+    .directive('jmTabs', function () {
         return {
-            templateUrl: 'user/user.tpl.html',
+            templateUrl: 'user/tabs.tpl.html',
             controller: function ($scope, $mdDialog, $mdToast, $localStorage, jmDB, jmService, jmConstant) {
                 $scope.tabs = [
                     {name: 'family member', position: 0},
@@ -38,8 +38,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 $scope.selectedTab = 0;
 
                 var toast = function (msg, isError) {
+                    var errorClass = (isError) ? 'class="error"' : undefined;
+
                     $mdToast.show({
-                        template: '<md-toast ' + (isError) ? 'class="error"' : undefined + '><b>' + msg + '</b></md-toast>',
+                        template: '<md-toast ' + errorClass + '><b>' + msg + '</b></md-toast>',
                         hideDelay: 2000,
                         position: 'top left'
                     });
@@ -135,7 +137,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                     return jmDB.putItem(user).then(
                         function () {
-                            toast('User ' + $scope.addUser ? 'Added' : 'Saved');
+                            toast($scope.addUser ? 'User Added' : 'User Saved');
 
                             jmService.getRequiredForm().$setSubmitted();
                             jmService.getRequiredForm().$setPristine();
@@ -163,8 +165,8 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                             controller: 'jmDialogController',
                             templateUrl: 'user/dialog.tpl.html',
                             targetEvent: event,
-                            clickOutsideToClose: false,
                             scope: newScope,
+                            clickOutsideToClose: false,
                             focusOnOpen: false
                         }).then(function (user) {
                             that.putItem(user);

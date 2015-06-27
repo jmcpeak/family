@@ -2,31 +2,6 @@
             md-is-locked-open="true">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <md-menu>
-                <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Settings">
-                    <md-icon md-svg-src="navigation:menu"></md-icon>
-                </md-button>
-                <md-menu-content width="5">
-                    <md-menu-item ng-click="deleteItem($event)" ng-disabled="isRemoveDisabled()">
-                        <md-button>
-                            <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
-                            Remove
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family/issues/new')">
-                        <md-button>
-                            <md-icon md-menu-align-target md-svg-src="action:bug_report"></md-icon>
-                            Log a bug
-                        </md-button>
-                    </md-menu-item>
-                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family')" ng-disabled="isRemoveDisabled()">
-                        <md-button>
-                            <md-icon md-menu-align-target md-svg-src="image:edit"></md-icon>
-                            View code
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
             <span hide-sm>McPeak Family Database</span>
             <span flex></span>
         </div>
@@ -38,8 +13,9 @@
                      md-swipe-left="showDelete = !showDelete">
                 <div class="md-tile-left" style="padding-left: 10px" hide-sm>
                     <md-button class="md-fab" aria-label="User Initials">
-                        <h2 class="jmCenterInitialsInButton">{{user.firstName[0] + user.lastName[0] | uppercase
-                            }}</h2>
+                        <h2 style="margin-top: 1px;">
+                            {{user.firstName[0] + user.lastName[0] | uppercase}}
+                        </h2>
                     </md-button>
                 </div>
                 <div class="md-tile-content">

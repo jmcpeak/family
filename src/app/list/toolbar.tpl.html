@@ -1,22 +1,46 @@
 <md-toolbar>
-    <div class="md-toolbar-tools" layout="row" layout-padding>
-        <span flex layout-align="center center" hide-sm>
-            <div style="font-size: small" flex layout="row" layout-align="center start">
-                <em>Last Update: {{lastUpdate | date : 'fullDate' }} with {{count}} family members</em>
-            </div>
-        </span>
-        <md-button class="md-raised md-hue-2 md-primary" aria-label="Add" ng-click="add($event)">
-            <md-tooltip>
-                Add a new family member
-            </md-tooltip>
-            <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
-        </md-button>
-        <md-button hide-sm class="md-raised md-hue-2 md-primary" aria-label="Email" ng-click="email($event)"
-                   style="margin-right: 8px">
-            <md-tooltip>
-                E-mail Everyone
-            </md-tooltip>
-            <md-icon md-svg-src="communication:email" style="width: 32px; height: 32px;"></md-icon>
-        </md-button>
+    <div class="md-toolbar-tools" layout="row">
+        <div layout-align="start" hide-sm>
+            <em style="font-size: medium">
+                Last Update: {{lastUpdate | date : 'fullDate' }} with {{count}} family members
+            </em>
+        </div>
+        <span flex></span>
+        <div layout="row" layout-align="end center">
+            <md-button class="md-icon-button" aria-label="Add" ng-click="add($event)">
+                <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
+            </md-button>
+            <md-menu     md-position-mode="target-right target">
+                <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Settings">
+                    <md-icon md-menu-origin md-svg-src="navigation:menu" style="width: 32px; height: 32px;"></md-icon>
+                </md-button>
+                <md-menu-content width="3">
+                    <md-menu-item ng-click="deleteItem($event)" ng-disabled="isRemoveDisabled()">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="communication:email"></md-icon>
+                            Remove Member
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="email($event)">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
+                            E-mail Everyone
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family/issues/new')">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="action:bug_report"></md-icon>
+                            Log a bug
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family')" ng-disabled="isRemoveDisabled()">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="image:edit"></md-icon>
+                            View code
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
     </div>
 </md-toolbar>
