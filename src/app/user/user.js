@@ -30,8 +30,8 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             templateUrl: 'user/user.tpl.html',
             controller: function ($scope, $rootScope, $mdDialog, $mdToast, $localStorage, jmDB, jmService, jmConstant) {
                 $scope.tabs = [
-                    {name: 'basic', position: 0},
-                    {name: 'additional', position: 1},
+                    {name: 'family member', position: 0},
+                    {name: 'address', position: 1},
                     {name: 'spouse', position: 2},
                     {name: 'dates and places', position: 3},
                     {name: 'children / pets', position: 4}];
@@ -43,7 +43,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     $mdToast.show({
                         template: '<md-toast ' + errorClass + '><span><b>' + msg + '</b></span></md-toast>',
                         hideDelay: 2000,
-                        position: 'bottom right'
+                        position: 'top left'
                     });
                 };
 
@@ -97,15 +97,37 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
                 };
 
-                $scope.selectUser = function (user) {
-                    $scope.selectedUser = user;
-                    $localStorage.user = user;
-                    $scope.selectedTab = 0;
+                $scope.selectUser = function (user, event) {
 
-                    jmService.resetPreviousCard();
-                    jmService.setSelectedCard(angular.element(jmConstant.userIdHash + user.id));
+                    var select = function () {
+                        $scope.selectedUser = user;
+                        $localStorage.user = user;
+                        $scope.selectedTab = 0;
 
-                    $scope.$broadcast('selectUser', user);
+                        jmService.resetPreviousCard();
+                        jmService.setSelectedCard(angular.element(jmConstant.userIdHash + user.id));
+
+                        $scope.$broadcast('selectUser', user);
+                    };
+
+                    if (jmService.getRequiredForm().$dirty) {
+
+                        $mdDialog.show($mdDialog.confirm()
+                            .content('Save your changes before selecting someone else?')
+                            .ariaLabel('Save')
+                            .ok('Save')
+                            .cancel('Don\'t Save')
+                            .targetEvent(event)).then(
+                            function () {
+                                $scope.putItem($scope.selectedUser);
+                                select();
+                            }, function () {
+                                jmService.getRequiredForm().$setPristine();
+                                select();
+                            });
+                    } else {
+                        select();
+                    }
                 };
 
                 $scope.putItem = function (user) {
@@ -113,6 +135,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     jmDB.putItem(user).then(
                         function () {
                             toast(($scope.addUser) ? 'User Added' : 'User Saved');
+                            jmService.getRequiredForm().$setPristine();
 
                             if ($scope.addUser) {
                                 $scope.refresh(user, true);
@@ -162,6 +185,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         return {
             templateUrl: 'user/login.tpl.html',
             controller: function ($scope, $rootScope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
+
+                $scope.genders = [
+                    {name: 'Male', key: 'm'},
+                    {name: 'Female', key: 'f'}];
 
                 $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
 

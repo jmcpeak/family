@@ -1,40 +1,60 @@
 <div flex layout="column" layout-fill layout-padding>
 
-    <div layout="row" aria-label="Name More">
+    <div layout="row" layout-sm="column" aria-label="Email and Gender">
+        <jm-input label="E-mail"
+                  field="email"
+                  user="selectedUser"
+                  type="email">
+        </jm-input>
+        &nbsp;&nbsp;&nbsp;
+        <jm-input label="Phone"
+                  field="phone"
+                  user="selectedUser"
+                  type="tel">
+        </jm-input>
+    </div>
 
-        <jm-input label="Middle Name"
-                  field="middleName"
+    <div layout="row" layout-sm="column" aria-label="Address">
+        <jm-input label="Address"
+                  field="address"
                   user="selectedUser"
                   type="text">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
-        <jm-input label="Maiden Name"
-                  field="maidenName"
+        <jm-input label="Address Line 2"
+                  field="address2"
                   user="selectedUser"
+                  required="false"
                   type="text">
         </jm-input>
-
-    </div>
-
-    <div layout="row" aria-label="Name more 2">
-
-        <jm-input label="Nickname"
-                  field="nickname"
+        &nbsp;&nbsp;&nbsp;
+        <jm-input label="City"
+                  field="city"
                   user="selectedUser"
                   type="text">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
-        <jm-input label="Suffix (e.g. 'Jr.')"
-                  field="suffixName"
+        <jm-select placeholder="State"
+                   field="state"
+                   user="selectedUser"
+                   repeat="states"
+                   keyvalue="abbreviation"
+                   keydisplay="name">
+        </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Address Continued">
+        <jm-input label="ZipCode"
+                  field="zipcode"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        &nbsp;&nbsp;&nbsp;
+        <jm-input label="Country"
+                  field="country"
                   user="selectedUser"
                   type="text">
         </jm-input>
     </div>
 
-    <div layout="row" aria-label="Hobbies">
-        <jm-text-area label="Occupation and/or Hobbies"
-                      field="hobbies"
-                      user="selectedUser">
-        </jm-text-area>
-    </div>
 </div>

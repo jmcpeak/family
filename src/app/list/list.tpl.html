@@ -34,7 +34,7 @@
     <md-content>
         <md-list layout-fill>
             <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
-                     ng-repeat="user in users" ng-click="selectUser(user)"
+                     ng-repeat="user in users" ng-click="selectUser(user, $event)"
                      md-swipe-left="showDelete = !showDelete">
                 <div class="md-tile-left" style="padding-left: 10px" hide-sm>
                     <md-button class="md-fab" aria-label="User Initials">

@@ -15,10 +15,15 @@
                   type="text">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
-        <jm-switch label="Gender"
+        <jm-select placeholder="Gender"
                    field="genderSpouse"
-                   user="selectedUser">
-        </jm-switch>
+                   required="true"
+                   user="selectedUser"
+                   repeat="genders"
+                   keyvalue="key"
+                   keydisplay="name">
+        </jm-select>
+
     </div>
 
     <div layout="row" aria-label="Name More">
@@ -43,7 +48,7 @@
                   user="selectedUser"
                   type="text">
         </jm-input>
-        &nbsp;&nbsp;&nbsp;s
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="Suffix (e.g. 'Jr.')"
                   field="suffixNameSpouse"
                   user="selectedUser"

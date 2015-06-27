@@ -1,6 +1,7 @@
 <div>
-    <md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}">
-        <md-option ng-value="keyvalue !== undefined ? value[keyvalue] : value" ng-repeat="value in repeat | orderBy:orderclause">
+    <md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}}">
+        <md-option ng-value="keyvalue !== undefined ? value[keyvalue] : value"
+                   ng-repeat="value in repeat | orderBy:orderclause" ng-required="required">
             {{selection(value)}}
         </md-option>
     </md-select>

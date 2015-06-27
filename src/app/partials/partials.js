@@ -6,9 +6,10 @@ angular.module('jmPartials', ['ngMaterial'])
         var form;
         var previousForm;
         var card;
-        var color;
-        var shadow;
-        var margin;
+        var outline;
+        //var color;
+        //var shadow;
+        //var margin;
 
         this.setRequiredForm = function (reqForm) {
             previousForm = form;
@@ -25,23 +26,25 @@ angular.module('jmPartials', ['ngMaterial'])
 
         this.resetPreviousCard = function () {
             if (card) {
-                card.css('background-color', color);
-                card.css('box-shadow', shadow);
-                card.css('margin-right', margin);
+                card.css('outline', outline);
+                //card.css('background-color', color);
+                //card.css('box-shadow', shadow);
+                //card.css('margin-right', margin);
             }
         };
 
         this.setSelectedCard = function (arg) {
             // save current values before modifying
             card = arg;
-            color = card.css('background-color');
-            shadow = card.css('box-shadow');
-            margin = card.css('margin-right');
+            outline = card.css('outline');
+            //color = card.css('background-color');
+            //shadow = card.css('box-shadow');
+            //margin = card.css('margin-right');
 
             // modify
-            card.css('background-color', 'rgb(238,255,238)');
-            card.css('box-shadow', 'none');
-            card.css('margin-right', '0');
+            card.css('outline', '4px auto -webkit-focus-ring-color');
+            //card.css('box-shadow', 'none');
+            //card.css('margin-right', '0');
         };
     })
 

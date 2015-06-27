@@ -121,7 +121,7 @@ angular.module('jmFamily', [
                 TableName: tableName,
                 FilterExpression: 'gender = :gender',
                 ExpressionAttributeValues: {
-                    ':gender': {BOOL: true}
+                    ':gender': {S: 'f'}
                 }
             };
 
@@ -141,7 +141,10 @@ angular.module('jmFamily', [
 
             var params = {
                 TableName: tableName,
-                FilterExpression: 'attribute_not_exists(gender)'
+                FilterExpression: 'gender = :gender',
+                ExpressionAttributeValues: {
+                    ':gender': {S: 'm'}
+                }
             };
 
             dynamoDB.scan(params, function (err, data) {

@@ -27,9 +27,13 @@ md-sidenav.md-closed.md-locked-open-add-active {
     max-width: 400px !important;
 }
 
-md-tabs {
-    background-color: #eeffee;
-}
+/*md-tabs {*/
+    /*background-color: #eeffee;*/
+/*}*/
+
+/*.jmFormInputArea {*/
+    /*background-color: #eeffee;*/
+/*}*/
 
 md-tabs-canvas {
     background: #ffffff;
@@ -46,8 +50,4 @@ md-toast.error {
 
 .jmLoginError [ng-message] {
     font-size: medium;
-}
-
-.jmFormInputArea {
-    background-color: #eeffee;
 }

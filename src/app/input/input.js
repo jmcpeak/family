@@ -70,6 +70,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 keyvalue: '@',
                 keydisplay: '@',
                 keydisplay2: '@',
+                required: '=',
                 user: '=',
                 repeat: '=',
                 orderclause: '@'
