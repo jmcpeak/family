@@ -6,7 +6,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         return {
             replace: true,
             templateUrl: 'list/list.tpl.html',
-            controller: function ($scope, $timeout, $window, $localStorage, jmDB, jmConstant) {
+            controller: function ($scope, $timeout, $window, $localStorage, $mdMedia, jmDB, jmConstant) {
                 $scope.users = [];
                 $scope.count = '';
                 $scope.height = 'auto';
@@ -55,10 +55,11 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 };
 
                 $scope.email = function () {
-                    jmDB.getEmailAddresses().then(function(addresses) {
+                    jmDB.getEmailAddresses().then(function (addresses) {
                         var emailAddresses;
+                        var sep = $mdMedia('lg') ? ';' : ',';
                         angular.forEach(addresses, function (address) {
-                            emailAddresses = emailAddresses ? emailAddresses + ';' + address.email : address.email;
+                            emailAddresses = emailAddresses ? emailAddresses + sep + address.email : address.email;
                         });
 
                         window.location = 'mailto:' + emailAddresses + '?subject=McPeak%20Family';
@@ -66,7 +67,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 };
 
                 $scope.export = function () {
-                    jmDB.exportToCSV().then(function(entries) {
+                    jmDB.exportToCSV().then(function (entries) {
                         var link = document.createElement('a');
                         link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
                         link.setAttribute('download', 'McPeak Family.csv');
