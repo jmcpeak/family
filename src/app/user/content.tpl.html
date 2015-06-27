@@ -1,0 +1,14 @@
+<div flex class="jmFormInputArea" ng-show="showMainPage && !queryAllInProgress">
+    <jm-toolbar></jm-toolbar>
+    <md-content hide-sm layout="row" ng-show="showMainPage && !queryAllInProgress"
+                ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
+        <div flex layout="column" layout-fill>
+            <div layout="row" layout-align="center" layout-padding>
+                <md-button class="md-accent md-raised" aria-label="Save" ng-click="putItem(selectedUser)" ng-disabled="isSaveDisabled()">
+                    Save
+                </md-button>
+            </div>
+            <jm-user></jm-user>
+        </div>
+    </md-content>
+</div>

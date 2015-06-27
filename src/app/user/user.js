@@ -18,6 +18,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         };
     })
 
+    .directive('jmContentArea', function () {
+        return {
+            replace: true,
+            templateUrl: 'user/content.tpl.html'
+        };
+    })
+
     .directive('jmUser', function () {
         return {
             templateUrl: 'user/user.tpl.html',
