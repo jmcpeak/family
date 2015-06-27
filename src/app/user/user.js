@@ -2,7 +2,7 @@
 
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
-    .controller('jmDialogController', function ($scope, $mdDialog, jmDB, jmService) {
+    .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
         $scope.selectedUser = {id: jmDB.guid(), children: [0]};
 
         $scope.cancel = function () {
@@ -11,10 +11,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
         $scope.ok = function () {
             $mdDialog.hide($scope.selectedUser);
-        };
-
-        $scope.isDialogAddDisabled = function () {
-            return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
         };
     })
 
@@ -29,13 +25,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
         return {
             templateUrl: 'user/tabs.tpl.html',
             controller: function ($scope, $mdDialog, $mdToast, $localStorage, jmDB, jmService, jmConstant) {
-                $scope.tabs = [
-                    {name: 'family member', position: 0},
-                    {name: 'address', position: 1},
-                    {name: 'spouse', position: 2},
-                    {name: 'dates and places', position: 3},
-                    {name: 'children / pets', position: 4}];
-                $scope.selectedTab = 0;
+                var cachedDisableSaveValue;
 
                 var toast = function (msg, isError) {
                     var errorClass = (isError) ? 'class="error"' : undefined;
@@ -57,11 +47,32 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         .targetEvent(event));
                 };
 
+                $scope.tabs = [
+                    {name: 'family member', position: 0},
+                    {name: 'address', position: 1},
+                    {name: 'spouse', position: 2},
+                    {name: 'dates and places', position: 3},
+                    {name: 'children / pets', position: 4}];
+                $scope.selectedTab = 0;
+
                 $scope.isRemoveDisabled = function () {
                     return !angular.isDefined($scope.selectedUser);
                 };
 
                 $scope.isSaveDisabled = function () {
+                    var disabled;
+
+                    if ($scope.addUser) {
+                        disabled = cachedDisableSaveValue;
+                    } else {
+                        disabled = jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
+                        cachedDisableSaveValue = disabled;
+                    }
+
+                    return disabled;
+                };
+
+                $scope.isAddDisabled = function () {
                     return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
                 };
 
