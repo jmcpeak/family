@@ -38,7 +38,7 @@ angular.module('jmPartials', ['ngMaterial'])
         $scope.states = jmConstant.states;
     })
 
-    .directive('jmRequired', function (jmService, jmDB, jmConstant) {
+    .directive('jmRequired', function (jmService, jmDB) {
         return {
             require: '^form',
             templateUrl: 'partials/required.tpl.html',

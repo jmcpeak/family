@@ -490,6 +490,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
+        'jshint',
         'clean',
         'html2js',                  //generate .tmp/templates-app.js
         'index',
