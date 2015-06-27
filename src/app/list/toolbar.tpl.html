@@ -10,30 +10,31 @@
             <md-button class="md-icon-button" aria-label="Add" ng-click="add($event)">
                 <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
             </md-button>
-            <md-menu     md-position-mode="target-right target">
-                <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Settings">
+            <md-menu md-position-mode="target-right target">
+                <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Menu">
                     <md-icon md-menu-origin md-svg-src="navigation:menu" style="width: 32px; height: 32px;"></md-icon>
                 </md-button>
-                <md-menu-content width="3">
-                    <md-menu-item ng-click="deleteItem($event)" ng-disabled="isRemoveDisabled()">
-                        <md-button>
-                            <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
-                            Delete Entry
-                        </md-button>
-                    </md-menu-item>
+                <md-menu-content>
                     <md-menu-item ng-click="email($event)">
                         <md-button>
                             <md-icon md-menu-align-target md-svg-src="communication:email"></md-icon>
-                            E-mail Everyone
+                            E-mail
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-click="deleteItem($event)" ng-disabled="isRemoveDisabled()">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
+                            Delete
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-divider></md-menu-divider>
                     <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family/issues/new')">
                         <md-button>
                             <md-icon md-menu-align-target md-svg-src="action:bug_report"></md-icon>
                             Log a bug
                         </md-button>
                     </md-menu-item>
-                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family')" ng-disabled="isRemoveDisabled()">
+                    <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family')">
                         <md-button>
                             <md-icon md-menu-align-target md-svg-src="image:edit"></md-icon>
                             View code
