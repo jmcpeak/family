@@ -119,21 +119,21 @@ angular.module('jmFamily', [
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
-        $mdThemingProvider.theme('default')
+        $mdThemingProvider.theme('default');
+
+        $mdThemingProvider.theme('golf', 'default')
             .primaryPalette('green')
             .accentPalette('indigo');
-        //.warnPalette('yellow');
-        //.backgroundPalette('teal');
 
-        $mdThemingProvider.theme('error')
-            .backgroundPalette('red');
-
-        // Configure a dark theme with primary foreground yellow
-        $mdThemingProvider.theme('docs-dark', 'default')
+        $mdThemingProvider.theme('golf-dark', 'golf')
             .primaryPalette('green')
-            .accentPalette('blue')
-            .warnPalette('pink')
+            .accentPalette('indigo')
             .dark();
+
+        $mdThemingProvider.theme('dark', 'default')
+            .dark();
+
+        $mdThemingProvider.setDefaultTheme('golf');
     })
 
     .service('jmDB', function ($q, jmDBUtils) {

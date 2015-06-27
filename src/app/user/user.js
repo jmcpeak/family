@@ -43,7 +43,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     $mdToast.show({
                         template: '<md-toast ' + errorClass + '><b>' + msg + '</b></md-toast>',
                         hideDelay: 2000,
-                        position: 'top left'
+                        position: 'top right'
                     });
                 };
 
@@ -205,6 +205,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .directive('jmLogin', function () {
         return {
+            replace: true,
             templateUrl: 'user/login.tpl.html',
             controller: function ($scope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
 

@@ -1,20 +1,24 @@
-<div layout="row" layout-align="center center" layout-padding ng-show="showLoginFields">
-    <img src="assets/clover.png" alt="shamrocks" hide-sm>
-    <div layout="column" style="font-size: x-large">
-        <form name="loginForm" ng-submit="login()">
-            <md-input-container>
-                <label>What city is the Family Reunion usually held in?</label>
-                <input name="question" type="text" ng-model="city" ng-keydown="error = {}">
+<md-content layout="row" layout-sm="column" layout-align="center start" flex ng-show="!(showMainPage && !queryAllInProgress)">
+    <div layout="row" layout-sm="column" layout-align="center center" layout-padding ng-show="showLoginFields">
+        <img src="assets/clover.png" alt="shamrocks">
 
-                <div class="jmLoginError" ng-messages="error" role="alert">
-                    <div ng-message="badPassword">That is not the correct city</div>
-                    <div ng-message="amazonError">{{error.message}}</div>
-                </div>
-            </md-input-container>
-        </form>
+        <div layout="column" style="font-size: x-large">
+            <form name="loginForm" ng-submit="login()">
+                <md-input-container>
+                    <label>What city is the Family Reunion usually held in?</label>
+                    <input name="question" type="text" ng-model="city" ng-keydown="error = {}">
+
+                    <div class="jmLoginError" ng-messages="error" role="alert">
+                        <div ng-message="badPassword">That is not the right city</div>
+                        <div ng-message="amazonError">{{error.message}}</div>
+                    </div>
+                </md-input-container>
+            </form>
+        </div>
     </div>
-</div>
-<div layout="column" layout-align="center center" style="height: 100vh;" ng-show="displayCircularProgressIndicator || queryAllInProgress">
-    <md-progress-circular md-mode="indeterminate" ng-class="queryAllError ? 'md-warn' : ''"></md-progress-circular>
-    <span style="height: 12px;">{{queryAllError}}</span>
-</div>
+    <div layout="column" layout-align="center center" style="height: 100vh;"
+         ng-show="displayCircularProgressIndicator || queryAllInProgress">
+        <md-progress-circular md-mode="indeterminate" ng-class="queryAllError ? 'md-warn' : ''"></md-progress-circular>
+        <span style="height: 12px;">{{queryAllError}}</span>
+    </div>
+</md-content>
