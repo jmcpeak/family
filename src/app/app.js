@@ -219,6 +219,30 @@ angular.module('jmFamily', [
             return deferred.promise;
         };
 
+        this.getEmailAddresses = function () {
+            var deferred = $q.defer();
+
+            var params = {
+                TableName: tableName,
+                ProjectionExpression: 'email',
+                FilterExpression: 'attribute_exists(email) AND size(email) > :size',
+                ExpressionAttributeValues: {
+                    ':size': {N: '4'}
+                }
+            };
+
+            dynamoDB.scan(params, function (err, data) {
+                if (err) {
+                    deferred.reject(err);
+                    console.log(err.message);
+                } else {
+                    deferred.resolve(jmDBUtils.arrayConverter(data.Items));
+                }
+            });
+
+            return deferred.promise;
+        };
+
         this.putItem = function (user) {
             var deferred = $q.defer();
             var that = this;

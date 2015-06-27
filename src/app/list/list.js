@@ -54,6 +54,17 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     $window.open(url, '_blank');
                 };
 
+                $scope.email = function () {
+                    jmDB.getEmailAddresses().then(function(addresses) {
+                        var emailAddresses;
+                        angular.forEach(addresses, function (address) {
+                            emailAddresses = emailAddresses ? emailAddresses + ';' + address.email : address.email;
+                        });
+
+                        window.location = 'mailto:' + emailAddresses + '?subject=McPeak%20Family';
+                    });
+                };
+
                 init();
             }
         };

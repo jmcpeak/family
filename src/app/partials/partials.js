@@ -58,10 +58,10 @@ angular.module('jmPartials', ['ngMaterial'])
         };
     })
 
-    .directive('jmAdditional', function () {
+    .directive('jmAddress', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/additional.tpl.html',
+            templateUrl: 'partials/address.tpl.html',
             controller: 'jmPartialController'
         };
     })
