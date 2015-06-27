@@ -1,8 +1,7 @@
-<md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}">
-    <md-option ng-value="keyvalue !== undefined ? value[keyvalue] : value" ng-repeat="value in repeat">
-        {{keydisplay !== undefined ? value[keydisplay] : value}}
-    </md-option>
-</md-select>
-<div ng-messages="form[field].$error">
-    <div ng-messages-include="error-messages"></div>
-</div>
+<span>
+    <md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}">
+        <md-option ng-value="keyvalue !== undefined ? value[keyvalue] : value" ng-repeat="value in repeat">
+            {{keydisplay !== undefined ? value[keydisplay] : value}}
+        </md-option>
+    </md-select>
+</span>

@@ -1,6 +1,5 @@
-<div flex layout="column" layout-fill layout-padding>
+<div layout="column" layout-margin layout-fill layout-padding>
     <div layout="row" layout-sm="column" aria-label="Name">
-
         <jm-input label="First Name"
                   field="firstName"
                   user="selectedUser"
@@ -8,29 +7,36 @@
                   type="text"
                   focus="true">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="Last Name"
                   field="lastName"
                   user="selectedUser"
                   required="true"
                   type="text">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-switch label="Gender"
                    field="gender"
                    user="selectedUser">
         </jm-switch>
     </div>
 
-    <div layout="row" layout-sm="column" aria-label="Parents">
-        <jm-input label="Father"
-                  field="father"
-                  user="selectedUser"
-                  type="text">
-        </jm-input>
-        <jm-input label="Mother"
-                  field="mother"
-                  user="selectedUser"
-                  type="text">
-        </jm-input>
+    <div layout="row" layout-sm="column" layout-padding aria-label="Parents">
+        <jm-select placeholder="Father"
+                   field="father"
+                   user="selectedUser"
+                   repeat="fathers"
+                   keyvalue="id"
+                   keydisplay="name">
+        </jm-select>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <jm-select placeholder="Mother"
+                   field="mother"
+                   user="selectedUser"
+                   repeat="mothers"
+                   keyvalue="id"
+                   keydisplay="name">
+        </jm-select>
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Email and Gender">
@@ -39,6 +45,7 @@
                   user="selectedUser"
                   type="email">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="Phone"
                   field="phone"
                   user="selectedUser"
@@ -52,20 +59,20 @@
                   user="selectedUser"
                   type="text">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="Address Line 2"
                   field="address2"
                   user="selectedUser"
                   required="false"
                   type="text">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="City"
                   field="city"
                   user="selectedUser"
                   type="text">
         </jm-input>
-    </div>
-
-    <div layout="row" layout-sm="column" aria-label="Address Continued">
+        &nbsp;&nbsp;&nbsp;
         <jm-select placeholder="State"
                    field="state"
                    user="selectedUser"
@@ -73,11 +80,15 @@
                    keyvalue="abbreviation"
                    keydisplay="name">
         </jm-select>
+    </div>
+
+    <div layout="row" layout-sm="column" aria-label="Address Continued">
         <jm-input label="ZipCode"
                   field="zipcode"
                   user="selectedUser"
                   type="text">
         </jm-input>
+        &nbsp;&nbsp;&nbsp;
         <jm-input label="Country"
                   field="country"
                   user="selectedUser"

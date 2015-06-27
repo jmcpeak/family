@@ -115,6 +115,11 @@ angular.module('jmPartials', ['ngMaterial'])
             templateUrl: 'partials/required.tpl.html',
             controller: function ($scope) {
                 jmService.setRequiredForm($scope.userForm0);
+
+                $scope.fathers = [];
+
+                $scope.mothers = [];
+
                 $scope.states = [
                     {name: 'ALABAMA', abbreviation: 'AL'},
                     {name: 'ALASKA', abbreviation: 'AK'},
@@ -209,20 +214,23 @@ angular.module('jmPartials', ['ngMaterial'])
             require: '^form',
             templateUrl: 'partials/children.tpl.html',
             controller: function ($scope) {
+                $scope.fields = ['firstNameChild', 'middleNameChild', 'bithdayChild', 'genderChild'];
+
+                $scope.addChild = function () {
+                    var lastOne = $scope.selectedUser.children.slice(-1).pop();
+                    $scope.selectedUser.children.push(++lastOne);
+                };
+
+                $scope.removeChild = function (event, index) {
+                    $scope.selectedUser.children.splice($scope.selectedUser.children.indexOf(index), 1);
+                    angular.forEach($scope.fields, function (field) {
+                        delete $scope.selectedUser[field + index];
+                    });
+                };
+
                 $scope.$on('selectUser', function (event, user) {
                     if (user && !user.children) {
-                        //$scope.children = event.currentScope.selectedUser.children;
-                        //$scope.children = [0];
                         $scope.selectedUser.children = [0];
-
-                        $scope.addChild = function () {
-                            var lastOne = $scope.selectedUser.children.slice(-1).pop();
-                            $scope.selectedUser.children.push(++lastOne);
-                        };
-
-                        $scope.removeChild = function (event, index) {
-                            $scope.selectedUser.children.splice($scope.selectedUser.children.indexOf(index), 1);
-                        };
                     }
                 });
             }

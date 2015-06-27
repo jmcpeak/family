@@ -4,6 +4,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
     .directive('jmInput', function () {
         return {
+            replace: true,
             scope: {
                 label: '@',
                 field: '@',
@@ -29,13 +30,13 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
     .directive('jmTextArea', function () {
         return {
+            replace: true,
             scope: {
                 label: '@',
                 field: '@',
                 placeholder: '@',
                 user: '='
             },
-            replace: true,
             require: ['^form'],
             templateUrl: 'input/textarea.tpl.html',
             link: function (scope, element, attrs, controls) {
@@ -46,6 +47,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
     .directive('jmSwitch', function () {
         return {
+            //replace: true,
             scope: {
                 field: '@',
                 ddisabled: '@',
@@ -61,6 +63,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
     .directive('jmSelect', function () {
         return {
+            replace: true,
             scope: {
                 placeholder: '@',
                 field: '@',

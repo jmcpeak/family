@@ -14,10 +14,10 @@ md-card:focus {
     outline: none;
 }
 
-md-tabs {
-    width: 100%;
-    font-size: large;
-}
+/*md-tabs {*/
+    /*width: 100%;*/
+    /*font-size: large;*/
+/*}*/
 
 md-sidenav,
 md-sidenav.md-locked-open,
