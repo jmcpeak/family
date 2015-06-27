@@ -86,7 +86,6 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-
             less: {
                 options: {
                     cwd: '<%= yeoman.src %>/less',
@@ -121,6 +120,7 @@ module.exports = function (grunt) {
                 ]
             }
         },
+
         less: {
             options: {
                 compress: false,
@@ -144,6 +144,7 @@ module.exports = function (grunt) {
                 }
             }
         },
+
         // Watches files for changes and runs tasks based on the changed files
         //  'fileblocks:less',
         //  'less:compile',
@@ -180,6 +181,7 @@ module.exports = function (grunt) {
                 files: ['Gruntfile.js']
             }
         },
+
         // The actual grunt server settings
         connect: {
             options: {
@@ -340,11 +342,13 @@ module.exports = function (grunt) {
                 rebase:false
             }
         },
+
         uglify: {
             options: {
                 mangle: false
             }
         },
+
         concat: {
             dist: {}
         },
@@ -468,9 +472,9 @@ module.exports = function (grunt) {
 
     grunt.registerTask('index', [
         'wiredep:app',              //change index.html dependency of third party script tag
-        'fileblocks:less',          //change app.less import other less
-        'less:compile',             //compile app.less to css and copy the assets folder to .tmp
-        'fileblocks:app'            //change index.html script tag and stylesheet
+        'fileblocks:app',           //change index.html script tag and stylesheet
+        //'fileblocks:less',          //change app.less import other less
+        'less:compile'              //compile app.less to css and copy the assets folder to .tmp
     ]);
 
     grunt.registerTask('serve', [
