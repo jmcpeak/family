@@ -310,7 +310,6 @@ angular.module('jmFamily', [
                             for (var i = 0; i < val.length; i++) {
                                 subObjArr.push(val.toString());
                             }
-                            subObj = [];
                             subObj[subObjKey] = subObjArr;
                         }
                     }
