@@ -10,17 +10,17 @@
             <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
                      ng-repeat="user in users" ng-click="selectUser(user, $event)"
                      md-swipe-left="showDelete = !showDelete">
-                <div class="md-tile-left" style="padding-left: 10px" hide-sm>
+                <div class="md-tile-left" style="padding-left: 10px; min-width: 80px" hide-sm>
                     <md-button class="md-fab" aria-label="User Initials">
                         <h2 style="margin-top: 1px;">
                             {{user.firstName[0] + user.lastName[0] | uppercase}}
                         </h2>
                     </md-button>
                 </div>
-                <div class="md-tile-content">
+                <div class="md-tile-content" style="white-space: nowrap; overflow: hidden">
                     <div>{{user.firstName + ' ' + user.lastName | uppercase}}</div>
                     <div>{{user.address | uppercase}}</div>
-                    <div style="color: #0000cc"><a>{{user.email}}</a></div>
+                    <div style="color: #0000cc"><a href="">{{user.email}}</a></div>
                     <div hide-gt-md><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.phone}}</a></div>
                 </div>
                 <div class="md-tile-right">

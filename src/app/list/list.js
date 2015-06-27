@@ -65,6 +65,15 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     });
                 };
 
+                $scope.export = function () {
+                    jmDB.exportToCSV().then(function(entries) {
+                        var link = document.createElement('a');
+                        link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
+                        link.setAttribute('download', 'McPeak Family.csv');
+                        link.click();
+                    });
+                };
+
                 init();
             }
         };

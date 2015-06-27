@@ -137,6 +137,7 @@ angular.module('jmFamily', [
     })
 
     .service('jmDB', function ($q, jmDBUtils) {
+        var minLengthId = 15;
         var tableName = 'mcpeak';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
@@ -153,8 +154,6 @@ angular.module('jmFamily', [
 
         this.queryAll = function () {
             var deferred = $q.defer();
-
-            var minLengthId = 15;
 
             var params = {
                 TableName: tableName,
@@ -241,6 +240,101 @@ angular.module('jmFamily', [
             });
 
             return deferred.promise;
+        };
+
+        this.exportToCSV = function () {
+            var deferred = $q.defer();
+            var headers = [];
+            var query = {
+                TableName: tableName,
+                ProjectionExpression: 'firstName, lastName, email, phone, address, address2, city, theState, zipcode, country',
+                FilterExpression: 'size(id) > :size',
+                ExpressionAttributeValues: {
+                    ':size': {N: minLengthId.toString()}
+                }
+            };
+
+            var scanDynamoDB = function () {
+                dynamoDB.scan(query, function (err, data) {
+                    if (!err) {
+                        if (data.LastEvaluatedKey) {
+                            query.ExclusiveStartKey = data.LastEvaluatedKey;
+                            scanDynamoDB(query);
+                        }
+                        deferred.resolve(printout(data.Items));
+                    } else {
+                        deferred.reject(err);
+                        console.log(err.message);
+                    }
+                });
+
+                return deferred.promise;
+            };
+
+            var arrayToCSV = function (array_input) {
+                var string_output = '';
+
+                for (var i = 0; i < array_input.length; i++) {
+
+                    try {
+                        string_output += ('"' + array_input[i].replace('"', '\"') + '"');
+                    } catch (e) {
+                        console.log(e);
+                    }
+
+                    if (i !== array_input.length - 1) {
+                        string_output += ',';
+                    }
+                }
+
+                return string_output;
+            };
+
+            var printout = function (items) {
+                var headersMap = {};
+                var values = [];
+                var header;
+                var value;
+
+                if (headers.length === 0) {
+                    if (items.length > 0) {
+                        for (var j = 0; j < items.length; j++) {
+                            for (var key in items[j]) {
+                                headersMap[key] = true;
+                            }
+                        }
+                    }
+
+                    for (var key2 in headersMap) {
+                        headers.push(key2);
+                    }
+                }
+
+                for (var index in items) {
+                    var line = [];
+                    for (var i = 0; i < headers.length; i++) {
+                        value = '';
+                        header = headers[i];
+
+                        // Loop through the header rows, adding values if they exist
+                        if (items[index].hasOwnProperty(header)) {
+                            if (items[index][header].N) {
+                                value = items[index][header].N;
+                            } else if (items[index][header].S) {
+                                value = items[index][header].S;
+                            } else if (items[index][header].SS) {
+                                value = items[index][header].SS.toString();
+                            }
+                        }
+                        line.push(value);
+                    }
+                    values += arrayToCSV(line) + '\r\n';
+                }
+
+                return arrayToCSV(headers) + '\r\n' + values;
+            };
+
+            return scanDynamoDB();
         };
 
         this.putItem = function (user) {

@@ -21,6 +21,13 @@
                             E-mail
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-click="export()">
+                        <md-button>
+                            <md-icon md-menu-align-target md-svg-src="content:archive"></md-icon>
+                            Export
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-divider></md-menu-divider>
                     <md-menu-item ng-click="deleteItem()" ng-disabled="isRemoveDisabled()">
                         <md-button>
                             <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
