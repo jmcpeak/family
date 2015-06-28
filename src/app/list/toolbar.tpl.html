@@ -2,7 +2,7 @@
     <div class="md-toolbar-tools" layout="row">
         <div layout-align="start" hide-sm>
             <em style="font-size: medium">
-                Last Update: {{lastUpdate | date : 'fullDate' }} with {{count}} family members
+                Last Update: {{lastUpdate | date : 'fullDate' }} with {{getCount(users)}} family members
             </em>
         </div>
         <span flex></span>

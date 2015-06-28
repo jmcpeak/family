@@ -24,6 +24,24 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     $scope.refresh($localStorage.user, true);
                 };
 
+                $scope.getCount = function (data) {
+                    var additional = 0;
+                    angular.forEach(data, function (entry) {
+                        if (entry.firstNameSpouse && entry.firstNameSpouse > 1) {
+                            additional++;
+                        }
+
+                        angular.forEach(entry.children, function (child) {
+                            var firstName = entry['firstNameChild' + child];
+                            if (firstName && firstName.length >= 1) {
+                                additional++;
+                            }
+                        });
+                    });
+
+                    return data.length + additional;
+                };
+
                 $scope.refresh = function (user, init) {
                     if (!init) {
                         $scope.queryAllInProgress = true;
@@ -32,7 +50,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     return jmDB.queryAll().then(function (data) {
                         $timeout(function () {
 
-                            $scope.count = data.length;
                             $scope.users = data;
                             if (user) {
                                 $scope.selectUser(user);
