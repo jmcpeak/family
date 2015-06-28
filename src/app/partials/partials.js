@@ -67,16 +67,39 @@ angular.module('jmPartials', ['ngMaterial'])
             require: '^form',
             templateUrl: 'partials/required.tpl.html',
             controller: function ($scope) {
+                $scope.names = [];
+
                 var parents = function (resp, gender) {
                     var parents = [];
                     angular.forEach(resp, function (entry) {
                         if (entry.genderSpouse === gender) {
-                            parents.push({id: entry.id, firstName: entry.firstNameSpouse, lastName: entry.lastNameSpouse});
+                            parents.push({
+                                id: entry.id,
+                                firstName: entry.firstNameSpouse,
+                                lastName: entry.lastNameSpouse
+                            });
                         } else {
                             parents.push({id: entry.id, firstName: entry.firstName, lastName: entry.lastName});
                         }
                     });
                     return parents;
+                };
+
+                var displayNames = function () {
+                    if ($scope.selectedUser) {
+                        var names = [];
+                        var user = angular.copy($scope.selectedUser, user);
+
+                        names.push({display: user.firstName + ' ' + user.lastName});
+
+                        if (user.firstNameSpouse) {
+                            names.push({display: user.firstNameSpouse + ' ' + user.lastNameSpouse});
+                            names.push({display: user.firstName + ' & ' + user.firstNameSpouse + ' ' + user.lastName});
+                            names.push({display: user.firstNameSpouse + ' & ' + user.firstName + ' ' + user.lastName});
+                        }
+
+                        $scope.names = names;
+                    }
                 };
 
                 var update = function () {
@@ -87,6 +110,8 @@ angular.module('jmPartials', ['ngMaterial'])
                     jmDB.queryMothers().then(function (resp) {
                         $scope.mothers = parents(resp, 'f');
                     });
+
+                    displayNames();
                 };
 
                 jmService.setRequiredForm($scope.userForm0);

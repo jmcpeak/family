@@ -19,7 +19,7 @@
                 </div>
                 <div class="md-tile-content" style="white-space: nowrap; overflow: hidden">
                     <div style="font-size: x-small; font-style: italic" ng-if="lastUpdatedID === user.id">Last Updated</div>
-                    <div>{{user.firstName + ' ' + user.lastName | uppercase}}</div>
+                    <div>{{user.displayName ? user.displayName : user.firstName + ' ' + user.lastName | uppercase}}</div>
                     <div>{{user.address | uppercase}}</div>
                     <div style="color: #0000cc"><a href="">{{user.email}}</a></div>
                     <div hide-gt-md><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.phone}}</a></div>

@@ -1,6 +1,6 @@
-<div layout="column" layout-margin layout-fill layout-padding>
+<div layout="row" layout-padding>
 
-    <div layout="row" layout-sm="column" layout-padding aria-label="Parents">
+    <div layout="column" layout-padding>
         <jm-select placeholder="Father"
                    field="father"
                    user="selectedUser"
@@ -11,7 +11,30 @@
                    ng-click="update()"
                    orderclause="lastName">
         </jm-select>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <jm-input label="First Name"
+                  field="firstName"
+                  user="selectedUser"
+                  required="true"
+                  type="text"
+                  focus="true">
+        </jm-input>
+        <jm-input label="Middle Name"
+                  field="middleName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Title ('Dr.')"
+                  field="title"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-text-area label="Occupation and/or Hobbies"
+                      field="hobbies"
+                      user="selectedUser">
+        </jm-text-area>
+    </div>
+
+    <div layout="column" layout-padding>
         <jm-select placeholder="Mother"
                    field="mother"
                    user="selectedUser"
@@ -22,30 +45,26 @@
                    ng-click="update()"
                    orderclause="lastName">
         </jm-select>
-    </div>
-
-    <div layout="row" layout-sm="column" aria-label="Name">
-        <jm-input label="First Name"
-                  field="firstName"
-                  user="selectedUser"
-                  required="true"
-                  type="text"
-                  focus="true">
-        </jm-input>
-        &nbsp;&nbsp;&nbsp;
-        <jm-input label="Middle Name"
-                  field="middleName"
-                  user="selectedUser"
-                  type="text">
-        </jm-input>
-        &nbsp;&nbsp;&nbsp;
         <jm-input label="Last Name"
                   field="lastName"
                   user="selectedUser"
                   required="true"
                   type="text">
         </jm-input>
-        &nbsp;&nbsp;&nbsp;
+        <jm-input label="Maiden Name"
+                  field="maidenName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+        <jm-input label="Suffix ('Jr.')"
+                  field="suffixName"
+                  user="selectedUser"
+                  type="text">
+        </jm-input>
+    </div>
+
+    <div layout="column" layout-padding>
+        <jm-input label="placeholder" type="text" style="visibility: hidden"></jm-input>
         <jm-select placeholder="Gender"
                    field="gender"
                    required="true"
@@ -54,33 +73,20 @@
                    keyvalue="key"
                    keydisplay="name">
         </jm-select>
-    </div>
-
-    <div layout="row" aria-label="Name more 2">
-
-        <jm-input label="Maiden Name"
-                  field="maidenName"
-                  user="selectedUser"
-                  type="text">
-        </jm-input>
-        &nbsp;&nbsp;&nbsp;
         <jm-input label="Nickname"
                   field="nickname"
                   user="selectedUser"
                   type="text">
         </jm-input>
-        &nbsp;&nbsp;&nbsp;
-        <jm-input label="Suffix (e.g. 'Jr.')"
-                  field="suffixName"
-                  user="selectedUser"
-                  type="text">
-        </jm-input>
+        <jm-select placeholder="How should the name appear?"
+                   field="displayName"
+                   user="selectedUser"
+                   repeat="names"
+                   keyvalue="display"
+                   keydisplay="display"
+                   ng-click="update()"
+                   orderclause="display">
+        </jm-select>
     </div>
 
-    <div layout="row" aria-label="Hobbies">
-        <jm-text-area label="Occupation and/or Hobbies"
-                      field="hobbies"
-                      user="selectedUser">
-        </jm-text-area>
-    </div>
 </div>
