@@ -87,7 +87,7 @@ angular.module('jmPartials', ['ngMaterial'])
                     jmDB.queryMothers().then(function (resp) {
                         $scope.mothers = parents(resp, 'f');
                     });
-                }
+                };
 
                 jmService.setRequiredForm($scope.userForm0);
 
