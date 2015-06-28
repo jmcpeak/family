@@ -85,24 +85,103 @@ angular.module('jmPartials', ['ngMaterial'])
                     return parents;
                 };
 
-                var displayNames = function () {
-                    if ($scope.selectedUser) {
-                        var names = [];
-                        var user = angular.copy($scope.selectedUser, user);
+                var possibleFirstNames = function (user, first, nick, title) {
+                    var names = [];
 
-                        names.push({display: user.firstName + ' ' + user.lastName});
+                    var firstName = user[first] ? user[first].trim() : '';
+                    var firstNameWithNickname;
+                    var firstNameAsNickname;
+                    var firstNameWithTitle;
 
-                        if (user.firstNameSpouse) {
-                            names.push({display: user.firstNameSpouse + ' ' + user.lastNameSpouse});
-                            names.push({display: user.firstName + ' & ' + user.firstNameSpouse + ' ' + user.lastName});
-                            names.push({display: user.firstNameSpouse + ' & ' + user.firstName + ' ' + user.lastName});
+                    names.push({display: firstName});
+
+                    if (user[nick]) {
+                        firstNameWithNickname = firstName + ' "' + user[nick].trim() + '" ';
+                        firstNameAsNickname = user[nick].trim();
+                        names.push({display: firstNameAsNickname});
+                        names.push({display: firstNameWithNickname});
+                    }
+
+                    if (user[title]) {
+                        var titleName = user[title].trim() + ' ';
+                        firstNameWithTitle = titleName + firstName;
+                        names.push({display: firstNameWithTitle});
+
+                        if (user[nick]) {
+                            names.push({display: titleName + firstNameWithNickname});
+                            names.push({display: titleName + firstNameAsNickname});
+                        }
+                    }
+
+                    return names;
+                };
+
+                var buildNames = function (user) {
+                    var possible = [];
+
+                    if (user.lastName && user.firstName) {
+
+                        var spouse;
+                        var member;
+                        var memberLastName;
+                        var memberLastNameWithSuffix;
+                        var spouseLastName;
+                        var spouseLastNameWithSuffix;
+
+                        memberLastName = user.lastName.trim();
+                        memberLastNameWithSuffix = user.lastName.trim() + (user.suffixName ? ' ' + user.suffixName.trim() : '');
+
+                        if (user.lastNameSpouse) {
+                            spouseLastName = user.lastNameSpouse.trim();
+                            spouseLastNameWithSuffix = user.lastNameSpouse.trim() + (user.suffixNameSpouse ? ' ' + user.suffixNameSpouse.trim() : '');
                         }
 
-                        $scope.names = names;
+                        member = possibleFirstNames(user, 'firstName', 'nickName', 'titleName');
+                        if (user.firstNameSpouse) {
+                            spouse = possibleFirstNames(user, 'firstNameSpouse', 'nickNameSpouse', 'titleNameSpouse');
+                        }
+
+                        angular.forEach(member, function (name) {
+                            possible.push({display: name.display + ' ' + memberLastName});
+                            if (memberLastNameWithSuffix !== memberLastName) {
+                                possible.push({display: name.display + ' ' + memberLastNameWithSuffix});
+                            }
+                        });
+
+                        angular.forEach(spouse, function (name) {
+                            possible.push({display: name.display + ' ' + spouseLastName});
+                            if (spouseLastNameWithSuffix !== spouseLastNameWithSuffix) {
+                                possible.push({display: name.display + ' ' + spouseLastNameWithSuffix});
+                            }
+                        });
+
+                        angular.forEach(member, function (name) {
+                            angular.forEach(spouse, function (spouseName) {
+                                possible.push({display: name.display + ' & ' + spouseName.display + ' ' + memberLastName});
+                                if (memberLastNameWithSuffix !== memberLastName) {
+                                    possible.push({display: name.display + ' & ' + spouseName.display + ' ' + memberLastNameWithSuffix});
+                                }
+                            });
+                        });
+
+                        angular.forEach(spouse, function (name) {
+                            angular.forEach(member, function (memberName) {
+                                possible.push({display: name.display + ' & ' + memberName.display + ' ' + spouseLastName});
+                                if (spouseLastNameWithSuffix !== spouseLastNameWithSuffix) {
+                                    possible.push({display: name.display + ' & ' + memberName.display + ' ' + spouseLastNameWithSuffix});
+                                }
+                            });
+                        });
                     }
+
+                    return possible;
                 };
 
                 var update = function () {
+                    if ($scope.selectedUser) {
+                        $scope.names = buildNames(angular.copy($scope.selectedUser));
+                    }
+
                     jmDB.queryFathers().then(function (resp) {
                         $scope.fathers = parents(resp, 'm');
                     });
@@ -110,8 +189,6 @@ angular.module('jmPartials', ['ngMaterial'])
                     jmDB.queryMothers().then(function (resp) {
                         $scope.mothers = parents(resp, 'f');
                     });
-
-                    displayNames();
                 };
 
                 jmService.setRequiredForm($scope.userForm0);
