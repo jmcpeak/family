@@ -27,13 +27,12 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 $scope.getCount = function (data) {
                     var additional = 0;
                     angular.forEach(data, function (entry) {
-                        if (entry.firstNameSpouse && entry.firstNameSpouse > 1) {
+                        if (entry.firstNameSpouse && entry.firstNameSpouse.length >= 1) {
                             additional++;
                         }
 
                         angular.forEach(entry.children, function (child) {
-                            var firstName = entry['firstNameChild' + child];
-                            if (firstName && firstName.length >= 1) {
+                            if (entry['firstNameChild' + child] && entry['firstNameChild' + child].length >= 1) {
                                 additional++;
                             }
                         });
