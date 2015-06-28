@@ -17,6 +17,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                     jmDB.getItem('lastUpdateDate').then(function (data) {
                         $timeout(function () {
                             $scope.lastUpdate = data.lastUpdated;
+                            $scope.lastUpdatedID = data.lastUpdatedID;
                         });
                     });
 

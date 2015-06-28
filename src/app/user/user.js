@@ -150,6 +150,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         function () {
                             toast($scope.addUser ? 'User Added' : 'User Saved');
 
+                            $scope.lastUpdatedID = user.id;
                             jmService.getRequiredForm().$setSubmitted();
                             jmService.getRequiredForm().$setPristine();
                             jmService.getRequiredForm().$setUntouched();
