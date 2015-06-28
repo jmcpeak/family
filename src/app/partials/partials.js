@@ -34,8 +34,32 @@ angular.module('jmPartials', ['ngMaterial'])
         };
     })
 
-    .controller('jmPartialController', function ($scope, jmConstant) {
+    .controller('jmPartialController', function ($scope, $window, jmConstant) {
+        var hasValidAddress = function (user) {
+            user = user ? user : $scope.selectedUser;
+            return (user && user.theState &&
+            (user.address && user.address.length > 5) &&
+            (user.city && user.city.length > 4)) ? true : false;
+        };
+
+        var getAddress = function (user) {
+            user = user ? user : $scope.selectedUser;
+            return $window.encodeURIComponent(user.address + ',' + user.city + ',' + user.theState);
+        };
+
         $scope.states = jmConstant.states;
+
+        $scope.addressDefined = function () {
+            return hasValidAddress();
+        };
+
+        $scope.getStreetViewURL = function () {
+            return jmConstant.streetViewBase + getAddress() + jmConstant.streetViewSuffix;
+        };
+
+        $scope.getGoogleMapsURL = function () {
+            return jmConstant.googleMapsBase + getAddress();
+        };
     })
 
     .directive('jmRequired', function (jmService, jmDB) {

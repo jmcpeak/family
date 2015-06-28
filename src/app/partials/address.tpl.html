@@ -57,4 +57,8 @@
         </jm-input>
     </div>
 
+    <div ng-if="addressDefined()" layout="row" layout-sm="column" layout-align="center center" aria-label="street view">
+        <a ng-href="{{getGoogleMapsURL()}}" target="_blank"><img ng-src="{{getStreetViewURL()}}"></a>
+    </div>
+
 </div>

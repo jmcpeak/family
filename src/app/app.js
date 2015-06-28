@@ -6,6 +6,9 @@ angular.module('jmFamily', [
 
     .constant('jmConstant', {
         userIdHash: '#user-',
+        googleMapsBase: 'https://www.google.com/maps/place/',
+        streetViewBase: 'https://maps.googleapis.com/maps/api/streetview?location=',
+        streetViewSuffix: '&size=450x250',
         states: [
             {name: 'ALABAMA', abbreviation: 'AL'},
             {name: 'ALASKA', abbreviation: 'AK'},
