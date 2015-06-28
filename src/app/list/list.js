@@ -95,11 +95,4 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 init();
             }
         };
-    })
-
-    .directive('jmToolbar', function () {
-        return {
-            replace: true,
-            templateUrl: 'list/toolbar.tpl.html'
-        };
     });

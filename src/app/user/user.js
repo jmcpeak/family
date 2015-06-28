@@ -60,12 +60,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 };
 
                 $scope.isSaveDisabled = function () {
-                    var disabled;
+                    var disabled = true;
+                    var form = jmService.getRequiredForm();
 
                     if ($scope.addUser) {
                         disabled = cachedDisableSaveValue;
                     } else {
-                        disabled = jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
+                        disabled = form && (form.$invalid || form.$pristine);
                         cachedDisableSaveValue = disabled;
                     }
 
