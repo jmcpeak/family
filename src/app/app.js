@@ -182,7 +182,7 @@ angular.module('jmFamily', [
 
             var params = {
                 TableName: tableName,
-                FilterExpression: 'gender = :gender',
+                FilterExpression: 'gender = :gender OR genderSpouse = :gender',
                 ExpressionAttributeValues: {
                     ':gender': {S: 'f'}
                 }
@@ -204,7 +204,7 @@ angular.module('jmFamily', [
 
             var params = {
                 TableName: tableName,
-                FilterExpression: 'gender = :gender',
+                FilterExpression: 'gender = :gender OR genderSpouse = :gender',
                 ExpressionAttributeValues: {
                     ':gender': {S: 'm'}
                 }

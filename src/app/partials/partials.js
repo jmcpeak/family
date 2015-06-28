@@ -67,17 +67,35 @@ angular.module('jmPartials', ['ngMaterial'])
             require: '^form',
             templateUrl: 'partials/required.tpl.html',
             controller: function ($scope) {
-                jmService.setRequiredForm($scope.userForm0);
+                var parents = function (resp, gender) {
+                    var parents = [];
+                    angular.forEach(resp, function (entry) {
+                        if (entry.genderSpouse === gender) {
+                            parents.push({id: entry.id, firstName: entry.firstNameSpouse, lastName: entry.lastNameSpouse});
+                        } else {
+                            parents.push({id: entry.id, firstName: entry.firstName, lastName: entry.lastName});
+                        }
+                    });
+                    return parents;
+                };
 
-                $scope.update = function () {
+                var update = function () {
                     jmDB.queryFathers().then(function (resp) {
-                        $scope.fathers = resp;
+                        $scope.fathers = parents(resp, 'm');
                     });
 
                     jmDB.queryMothers().then(function (resp) {
-                        $scope.mothers = resp;
+                        $scope.mothers = parents(resp, 'f');
                     });
+                }
+
+                jmService.setRequiredForm($scope.userForm0);
+
+                $scope.update = function () {
+                    update();
                 };
+
+                update();
             }
         };
     })

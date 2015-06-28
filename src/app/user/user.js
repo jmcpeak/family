@@ -108,10 +108,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                                         $scope.selectUser($scope.users[0]);
                                     }
 
-                                    toast('User Removed');
+                                    toast('Removed');
                                 },
                                 function () {
-                                    toast('User NOT Removed', true);
+                                    toast('Error: NOT Removed', true);
                                 });
                         });
                 };
@@ -148,7 +148,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                     return jmDB.putItem(user).then(
                         function () {
-                            toast($scope.addUser ? 'User Added' : 'User Saved');
+                            toast($scope.addUser ? 'Added' : 'Saved');
 
                             $scope.lastUpdatedID = user.id;
                             jmService.getRequiredForm().$setSubmitted();
@@ -162,7 +162,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                             }
                         },
                         function () {
-                            toast('There was a problem saving...', true);
+                            toast('NOT Saved', true);
                         });
                 };
 
