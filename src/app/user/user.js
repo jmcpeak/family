@@ -24,7 +24,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
     .directive('jmTabs', function () {
         return {
             templateUrl: 'user/tabs.tpl.html',
-            controller: function ($scope, $mdDialog, $mdToast, $localStorage, jmDB, jmService, jmConstant) {
+            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
 
                 var toast = function (msg, isError) {
@@ -211,6 +211,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                 $scope.previous = function () {
                     $scope.selectedTab = Math.max($scope.selectedTab - 1, 0);
+                };
+
+                $scope.toggleSearch = function (id) {
+                    $mdSidenav(id).toggle();
+                    $scope.search = '';
                 };
             }
         };

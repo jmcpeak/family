@@ -1,22 +1,23 @@
 <div flex ng-show="showMainPage && !queryAllInProgress">
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row">
-            <div layout-align="start" hide-sm>
-                <em style="font-size: medium">
-                    Last Update: {{lastUpdate | date : 'fullDate' }} with {{getCount(users)}} family members
-                </em>
-            </div>
+            <em style="font-size: medium">
+                Last Update: {{lastUpdate | date : 'fullDate' }} with {{getCount(users)}} family members
+            </em>
             <span flex></span>
+
             <div layout="row" layout-align="end center">
-                <md-button class="md-accent md-raised" ng-click="putItem(selectedUser)" ng-disabled="isSaveDisabled()">
-                    Save
+                <md-button ng-click="toggleSearch('search')" class="md-icon-button" aria-label="Menu">
+                    <md-icon md-menu-origin md-svg-src="action:search"
+                             style="width: 32px; height: 32px;"></md-icon>
                 </md-button>
                 <md-button class="md-icon-button" aria-label="Add" ng-click="add($event)">
                     <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
                 </md-button>
                 <md-menu md-position-mode="target-right target">
                     <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Menu">
-                        <md-icon md-menu-origin md-svg-src="navigation:menu" style="width: 32px; height: 32px;"></md-icon>
+                        <md-icon md-menu-origin md-svg-src="navigation:menu"
+                                 style="width: 32px; height: 32px;"></md-icon>
                     </md-button>
                     <md-menu-content width="3">
                         <md-menu-item ng-click="email()">
@@ -54,12 +55,26 @@
                     </md-menu-content>
                 </md-menu>
             </div>
+            <md-sidenav class="md-sidenav-right" md-component-id="search">
+                <div layout="row" layout-align="center center" layout-fill>
+                    <md-button class="md-icon-button" ng-click="toggleSearch('search')" aria-label="Close Search">
+                        <md-icon class="md-accent" md-svg-src="navigation:chevron_right"
+                                 style="width: 48px; height: 48px;"></md-icon>
+                    </md-button>
+                    <input type="search" placeholder="Search" ng-model="search" size="14">&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </md-sidenav>
         </div>
     </md-toolbar>
-    <md-content hide-sm flex layout="row" ng-show="showMainPage && !queryAllInProgress"
+    <md-content hide-sm flex layout="column" ng-show="showMainPage && !queryAllInProgress"
                 ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
         <div flex layout="column" layout-fill>
-            <md-card>
+            <md-card class="md-whiteframe-z2">
+                <md-button class="md-accent md-raised" ng-click="putItem(selectedUser)" ng-disabled="isSaveDisabled()"
+                           style="width: 120px; margin-left: auto; margin-right: auto;">
+                    <!--<md-icon class="md-accent" md-svg-src="navigation:chevron_right"></md-icon>-->
+                    Save
+                </md-button>
                 <jm-tabs></jm-tabs>
             </md-card>
         </div>
