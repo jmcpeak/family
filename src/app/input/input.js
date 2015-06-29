@@ -11,6 +11,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 required: '@',
                 type: '@',
                 placeholder: '@',
+                taborder: '@',
                 focus: '=',
                 user: '='
             },
@@ -35,6 +36,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 label: '@',
                 field: '@',
                 placeholder: '@',
+                taborder: '@',
                 user: '='
             },
             require: ['^form'],
@@ -51,6 +53,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
             scope: {
                 field: '@',
                 ddisabled: '@',
+                taborder: '@',
                 user: '='
             },
             require: ['^form'],
@@ -70,10 +73,11 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 keyvalue: '@',
                 keydisplay: '@',
                 keydisplay2: '@',
+                orderclause: '@',
+                taborder: '@',
                 required: '=',
                 user: '=',
-                repeat: '=',
-                orderclause: '@'
+                repeat: '='
             },
             require: ['^form'],
             templateUrl: 'input/select.tpl.html',
