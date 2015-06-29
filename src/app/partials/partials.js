@@ -70,7 +70,7 @@ angular.module('jmPartials', ['ngMaterial'])
                 $scope.names = [];
 
                 var parents = function (resp, gender) {
-                    var parents = [];
+                    var parents = [{id: '', firstName: '', lastName: ''}];
                     angular.forEach(resp, function (entry) {
                         if (entry.genderSpouse === gender) {
                             parents.push({
@@ -117,7 +117,7 @@ angular.module('jmPartials', ['ngMaterial'])
                 };
 
                 var buildNames = function (user) {
-                    var possible = [];
+                    var possible = [{names: undefined}];
 
                     if (user.lastName && user.firstName) {
 

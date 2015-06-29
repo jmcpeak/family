@@ -222,9 +222,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             templateUrl: 'user/login.tpl.html',
             controller: function ($scope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
 
-                $scope.genders = [
-                    {name: 'Male', key: 'm'},
-                    {name: 'Female', key: 'f'}];
+                $scope.genders = jmConstant.genders;
 
                 $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
 

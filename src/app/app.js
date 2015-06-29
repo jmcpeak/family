@@ -9,7 +9,12 @@ angular.module('jmFamily', [
         googleMapsBase: 'https://www.google.com/maps/place/',
         streetViewBase: 'https://maps.googleapis.com/maps/api/streetview?location=',
         streetViewSuffix: '&size=450x250',
+        genders: [
+            {name: '', key: ''},
+            {name: 'Male', key: 'm'},
+            {name: 'Female', key: 'f'}],
         states: [
+            {name: '', abbreviation: ''},
             {name: 'ALABAMA', abbreviation: 'AL'},
             {name: 'ALASKA', abbreviation: 'AK'},
             {name: 'AMERICAN SAMOA', abbreviation: 'AS'},
