@@ -144,9 +144,9 @@ angular.module('jmFamily', [
         $mdThemingProvider.setDefaultTheme('golf');
     })
 
-    .service('jmDB', function ($q, jmDBUtils) {
+    .service('jmDB', function ($q, $location, jmDBUtils) {
         var minLengthId = 15;
-        var tableName = 'mcpeak';
+        var tableName = $location.$$path === '/prod/' ? 'mcpeak' : 'test';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         this.guid = function () {
