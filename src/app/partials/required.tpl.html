@@ -9,28 +9,33 @@
                    keydisplay="firstName"
                    keydisplay2="lastName"
                    ng-click="update()"
-                   orderclause="lastName">
+                   orderclause="lastName"
+                   taborder="11">
         </jm-select>
         <jm-input label="First Name"
                   field="firstName"
                   user="selectedUser"
                   required="true"
                   type="text"
-                  focus="true">
+                  focus="true"
+                  taborder="1">
         </jm-input>
         <jm-input label="Middle Name"
                   field="middleName"
                   user="selectedUser"
-                  type="text">
+                  type="text"
+                  taborder="4">
         </jm-input>
         <jm-input label="Title ('Dr.')"
                   field="titleName"
                   user="selectedUser"
-                  type="text">
+                  type="text"
+                  taborder="7">
         </jm-input>
         <jm-text-area label="Occupation and/or Hobbies"
                       field="hobbies"
-                      user="selectedUser">
+                      user="selectedUser"
+                      taborder="10">
         </jm-text-area>
     </div>
 
@@ -43,23 +48,27 @@
                    keydisplay="firstName"
                    keydisplay2="lastName"
                    ng-click="update()"
-                   orderclause="lastName">
+                   orderclause="lastName"
+                   taborder="12">
         </jm-select>
         <jm-input label="Last Name"
                   field="lastName"
                   user="selectedUser"
                   required="true"
-                  type="text">
+                  type="text"
+                  taborder="2">
         </jm-input>
         <jm-input label="Maiden Name"
                   field="maidenName"
                   user="selectedUser"
-                  type="text">
+                  type="text"
+                  taborder="5">
         </jm-input>
         <jm-input label="Suffix ('Jr.')"
                   field="suffixName"
                   user="selectedUser"
-                  type="text">
+                  type="text"
+                  taborder="8">
         </jm-input>
     </div>
 
@@ -71,12 +80,14 @@
                    user="selectedUser"
                    repeat="genders"
                    keyvalue="key"
-                   keydisplay="name">
+                   keydisplay="name"
+                   taborder="3">
         </jm-select>
         <jm-input label="Nickname"
                   field="nickName"
                   user="selectedUser"
-                  type="text">
+                  type="text"
+                  taborder="6">
         </jm-input>
         <jm-select placeholder="How should the name appear?"
                    field="displayName"
@@ -84,7 +95,8 @@
                    repeat="names"
                    keyvalue="display"
                    keydisplay="display"
-                   ng-click="update()">
+                   ng-click="update()"
+                   taborder="9">
         </jm-select>
     </div>
 
