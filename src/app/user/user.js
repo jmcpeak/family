@@ -24,7 +24,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
     .directive('jmTabs', function () {
         return {
             templateUrl: 'user/tabs.tpl.html',
-            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
+            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdBottomSheet, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
                 var showNgStats;
 
@@ -52,7 +52,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     {name: 'family member', position: 0},
                     {name: 'address', position: 1},
                     {name: 'spouse', position: 2},
-                    {name: 'dates and places', position: 3},
+                    {name: 'dates / places', position: 3},
                     {name: 'children / pets', position: 4}];
                 $scope.selectedTab = 0;
 
@@ -217,6 +217,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 $scope.toggleSearch = function (id) {
                     $mdSidenav(id).toggle();
                     $scope.search = '';
+                };
+
+                $scope.about = function (event) {
+                    $mdBottomSheet.show({
+                        templateUrl: 'user/about.tpl.html',
+                        targetEvent: event
+                    });
                 };
 
                 $scope.toggleNgStats = function () {
