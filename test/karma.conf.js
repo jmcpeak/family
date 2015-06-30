@@ -33,6 +33,7 @@ module.exports = function(config) {
             'bower_components/bootstrap/dist/js/bootstrap.js',
             'bower_components/aws-sdk-js/dist/aws-sdk.js',
             'bower_components/ngstorage/ngStorage.js',
+            'bower_components/ng-stats/dist/ng-stats.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/jasmine/lib/jasmine-core/jasmine.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',

@@ -26,6 +26,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             templateUrl: 'user/tabs.tpl.html',
             controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
+                var showNgStats;
 
                 var toast = function (msg, isError) {
                     var errorClass = (isError) ? 'class="error"' : undefined;
@@ -216,6 +217,21 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 $scope.toggleSearch = function (id) {
                     $mdSidenav(id).toggle();
                     $scope.search = '';
+                };
+
+                $scope.toggleNgStats = function () {
+                    showNgStats = !showNgStats;
+
+                    $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
+
+                    var options = (showNgStats) ? {
+                        position: 'bottomright',
+                        logDigest: true,
+                        logWatches: true
+                    } : false;
+
+                    /* jshint -W117 */
+                    showAngularStats(options);
                 };
             }
         };

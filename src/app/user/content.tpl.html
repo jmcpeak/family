@@ -52,6 +52,19 @@
                                 View code
                             </md-button>
                         </md-menu-item>
+                        <md-menu-divider></md-menu-divider>
+                        <md-menu-item ng-click="about()">
+                            <md-button>
+                                <md-icon md-menu-align-target md-svg-src="action:description"></md-icon>
+                                About
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-divider></md-menu-divider>
+                        <md-menu-item ng-click="toggleNgStats()">
+                            <md-button>
+                                {{ngStatsLabel}} ng-stats
+                            </md-button>
+                        </md-menu-item>
                     </md-menu-content>
                 </md-menu>
             </div>
