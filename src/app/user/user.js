@@ -24,7 +24,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
     .directive('jmTabs', function () {
         return {
             templateUrl: 'user/tabs.tpl.html',
-            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdBottomSheet, jmDB, jmService, jmConstant) {
+            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
                 var showNgStats;
 
@@ -180,7 +180,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                             templateUrl: 'user/dialog.tpl.html',
                             targetEvent: event,
                             scope: newScope,
-                            clickOutsideToClose: false,
                             focusOnOpen: false
                         }).then(function (user) {
                             that.putItem(user);
@@ -220,9 +219,11 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                 };
 
                 $scope.about = function (event) {
-                    $mdBottomSheet.show({
+                    $mdDialog.show({
                         templateUrl: 'user/about.tpl.html',
-                        targetEvent: event
+                        targetEvent: event,
+                        clickOutsideToClose: true,
+                        controller: 'jmDialogController'
                     });
                 };
 
