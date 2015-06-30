@@ -10,7 +10,7 @@
     "angular-route": "^1.4.1",
     "angular-sanitize": "^1.4.1",
     "angular-touch": "^1.4.1",
-    "angular-material": "master",
+    "angular-material": "0.10.0",
     "bootstrap": "^3.3.5",
     "aws-sdk-js": "~2.1.36",
     "ngstorage": "~0.3.5",
