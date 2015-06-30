@@ -10,8 +10,9 @@ md-card[md-ink-ripple] {
     position: relative;
 }
 
-md-card {
+md-card.jm-list:hover {
     cursor: pointer;
+    background-color: #f9f9f9;
 }
 
 md-card:focus {

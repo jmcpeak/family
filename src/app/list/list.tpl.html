@@ -9,7 +9,7 @@
         <md-list layout-fill>
             <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
                      ng-repeat="user in users | filter:search" ng-click="selectUser(user, $event)"
-                     md-swipe-left="showDelete = !showDelete" class="md-whiteframe-z2">
+                     md-swipe-left="showDelete = !showDelete" class="md-whiteframe-z2 jm-list">
                 <div class="md-tile-left" style="padding-left: 10px; min-width: 80px" hide-sm>
                     <md-button class="md-fab" aria-label="User Initials">
                         <h2 style="margin-top: 1px;">
