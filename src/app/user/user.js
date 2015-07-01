@@ -131,7 +131,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         $scope.$broadcast('selectUser', user);
                     };
 
-                    if (jmService.getRequiredForm().$dirty) {
+                    if (jmService.getRequiredForm() && jmService.getRequiredForm().$dirty) {
 
                         confirmSave(event).then(function () {
                             $scope.putItem($scope.selectedUser);
