@@ -31,6 +31,8 @@
     "spyOn": false,
     "ngGridLayoutPlugin": false,
     "FinraUtil": false,
-    "jasmine": false
+    "jasmine": false,
+    "moment": false,
+    "showAngularStats": false
   }
 }

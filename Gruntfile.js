@@ -198,7 +198,7 @@ module.exports = function (grunt) {
                             connect().use('/bower_components', connect.static('./bower_components')),
                             connect.static(appConfig.src),
                             connect.static(appConfig.app),
-                            restMock,
+                            restMock
                         ];
                     }
                 }
@@ -459,7 +459,6 @@ module.exports = function (grunt) {
                     patterns: [
                         {match: '//replace:templates-app', replacement: '\'templates-app\''},
                         {match: '<script src="app/app.js"></script>', replacement: ''}
-
                     ]
                 },
                 files: [

@@ -238,7 +238,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         logWatches: true
                     } : false;
 
-                    showAngularStats(options); // jshint ignore:line
+                    showAngularStats(options);
                 };
             }
         };

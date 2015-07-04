@@ -99,7 +99,6 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
     })
 
     .directive('jmDuration', function () {
-        /* jshint ignore:start */
         return {
             replace: true,
             scope: {
@@ -136,5 +135,4 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 };
             }
         };
-        /* jshint ignore:end */
     });
