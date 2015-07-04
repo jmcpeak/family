@@ -25,6 +25,7 @@
                    orderclause="name"
                    taborder="3">
         </jm-select>
+        <jm-duration user="selectedUser" from="birthday" to="death" />
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Wedding">
@@ -52,6 +53,7 @@
                    orderclause="name"
                    taborder="6">
         </jm-select>
+        <jm-duration user="selectedUser" from="wedding" split="death,deathSpouse" />
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Death">
@@ -79,6 +81,7 @@
                    orderclause="name"
                    taborder="9">
         </jm-select>
+        <jm-duration user="selectedUser" from="death" />
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Spouse Birth">
@@ -106,6 +109,7 @@
                    orderclause="name"
                    taborder="12">
         </jm-select>
+        <jm-duration user="selectedUser" from="bithdaySpouse" to="deathSpouse" />
     </div>
 
     <div layout="row" layout-sm="column" aria-label="Spouse Death">
@@ -133,5 +137,6 @@
                    orderclause="name"
                    taborder="15">
         </jm-select>
+        <jm-duration user="selectedUser" from="deathSpouse" />
     </div>
 </div>

@@ -20,7 +20,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
 
-                scope.$on('selectUser', function(event) {
+                scope.$on('selectUser', function (event) {
                     if (event.currentScope.focus) {
                         element.find('input').focus();
                     }
@@ -94,6 +94,38 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
             },
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
+            }
+        };
+    })
+
+    .directive('jmDuration', function () {
+        return {
+            replace: true,
+            scope: {
+                user: '=',
+                from: '@',
+                to: '@',
+                split: '@'
+            },
+            templateUrl: 'input/duration.tpl.html',
+            //template: '<md-input-container><label>&nbsp;&nbsp;&nbsp;{{duration()}}</label></md-input-container>',
+            controller: function ($scope) {
+                $scope.duration = function () {
+                    if ($scope.user) {
+                        /* jshint -W117 */
+                        var from = $scope.from ? moment($scope.user[$scope.from]) : false;
+                        var to = $scope.to ? moment($scope.user[$scope.to]) : moment();
+                        var split = $scope.split ? $scope.split.split(',') : undefined;
+
+                        if (split && split.length > 1) {
+                            var dateOne = moment($scope.user[split[0]]);
+                            var dateTwo = moment($scope.user[split[1]]);
+                            to = moment(dateOne).isBefore(dateTwo) ? dateOne : dateTwo;
+                        }
+
+                        return (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? moment.duration(from - to).humanize() : '';
+                    }
+                };
             }
         };
     });

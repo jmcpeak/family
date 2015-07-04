@@ -14,7 +14,8 @@
     "bootstrap": "^3.3.5",
     "aws-sdk-js": "~2.1.36",
     "ngstorage": "~0.3.5",
-    "ng-stats": "~2.3.1"
+    "ng-stats": "~2.3.1",
+    "moment": "~2.10.3"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.1",
