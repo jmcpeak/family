@@ -108,7 +108,6 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 split: '@'
             },
             templateUrl: 'input/duration.tpl.html',
-            //template: '<md-input-container><label>&nbsp;&nbsp;&nbsp;{{duration()}}</label></md-input-container>',
             controller: function ($scope) {
                 $scope.duration = function () {
                     if ($scope.user) {
