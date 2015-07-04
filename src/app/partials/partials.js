@@ -231,7 +231,7 @@ angular.module('jmPartials', ['ngMaterial'])
             require: '^form',
             templateUrl: 'partials/children.tpl.html',
             controller: function ($scope) {
-                $scope.fields = ['firstNameChild', 'middleNameChild', 'bithdayChild', 'genderChild'];
+                $scope.fields = ['firstNameChild', 'middleNameChild', 'lastNameChild', 'bithdayChild', 'genderChild'];
 
                 $scope.addChild = function () {
                     var lastOne = $scope.selectedUser.children.slice(-1).pop();

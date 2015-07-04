@@ -21,21 +21,26 @@
                           type="text">
                 </jm-input>
                 &nbsp;&nbsp;&nbsp;
-                <jm-input label="Birthday"
+                <jm-input label="Last Name"
                           field="{{fields[2] + child}}"
+                          user="selectedUser"
+                          type="text">
+                </jm-input>
+                <jm-input label="Birthday"
+                          field="{{fields[3] + child}}"
                           user="selectedUser"
                           type="text">
                 </jm-input>
                 &nbsp;&nbsp;&nbsp;
                 <jm-select placeholder="Gender"
-                           field="{{fields[3] + child}}"
+                           field="{{fields[4] + child}}"
                            required="true"
                            user="selectedUser"
                            repeat="genders"
                            keyvalue="key"
                            keydisplay="name">
                 </jm-select>
-                <jm-duration user="selectedUser" from="{{fields[2] + child}}" suffix="old"></jm-duration>
+                <jm-duration user="selectedUser" from="{{fields[3] + child}}" suffix="old"></jm-duration>
             </div>
         </div>
         <div layout="column">
