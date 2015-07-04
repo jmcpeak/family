@@ -105,7 +105,9 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 user: '=',
                 from: '@',
                 to: '@',
-                split: '@'
+                split: '@',
+                prefix: '@',
+                suffix: '@',
             },
             templateUrl: 'input/duration.tpl.html',
             controller: function ($scope) {
@@ -122,7 +124,11 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                             to = moment(dateOne).isBefore(dateTwo) ? dateOne : dateTwo;
                         }
 
-                        return (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? moment.duration(from - to).humanize() : '';
+                        var retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? moment.duration(from - to).humanize() : '';
+
+                        $scope.hasValue = retVal.length ? true : false;
+
+                        return retVal;
                     }
                 };
             }
