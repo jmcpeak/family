@@ -99,6 +99,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
     })
 
     .directive('jmDuration', function () {
+        /* jshint ignore:start */
         return {
             replace: true,
             scope: {
@@ -107,13 +108,13 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 to: '@',
                 split: '@',
                 prefix: '@',
-                suffix: '@',
+                suffix: '@'
             },
             templateUrl: 'input/duration.tpl.html',
             controller: function ($scope) {
+
                 $scope.duration = function () {
                     if ($scope.user) {
-                        /* jshint -W117 */
                         var from = $scope.from ? moment($scope.user[$scope.from]) : false;
                         var to = $scope.to ? moment($scope.user[$scope.to]) : moment();
                         var split = $scope.split ? $scope.split.split(',') : undefined;
@@ -126,6 +127,8 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
                         var retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? moment.duration(from - to).humanize() : '';
 
+
+
                         $scope.hasValue = retVal.length ? true : false;
 
                         return retVal;
@@ -133,4 +136,5 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 };
             }
         };
+        /* jshint ignore:end */
     });
