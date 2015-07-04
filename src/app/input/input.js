@@ -124,9 +124,17 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                             to = moment(dateOne).isBefore(dateTwo) ? dateOne : dateTwo;
                         }
 
-                        var retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? moment.duration(from - to).humanize() : '';
+                        var years = Math.floor(moment.duration(to - from).asYears());
 
+                        if (years === 0) {
+                            years = 'less than a year';
+                        } else if (years === 1) {
+                            years = years + ' year';
+                        } else {
+                            years = years + ' years';
+                        }
 
+                        var retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? years : '';
 
                         $scope.hasValue = retVal.length ? true : false;
 
