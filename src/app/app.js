@@ -182,36 +182,14 @@ angular.module('jmFamily', [
             return deferred.promise;
         };
 
-        this.queryMothers = function () {
+        this.queryParents = function (gender) {
             var deferred = $q.defer();
 
             var params = {
                 TableName: tableName,
                 FilterExpression: 'gender = :gender OR genderSpouse = :gender',
                 ExpressionAttributeValues: {
-                    ':gender': {S: 'f'}
-                }
-            };
-
-            dynamoDB.scan(params, function (err, data) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(jmDBUtils.arrayConverter(data.Items));
-                }
-            });
-
-            return deferred.promise;
-        };
-
-        this.queryFathers = function () {
-            var deferred = $q.defer();
-
-            var params = {
-                TableName: tableName,
-                FilterExpression: 'gender = :gender OR genderSpouse = :gender',
-                ExpressionAttributeValues: {
-                    ':gender': {S: 'm'}
+                    ':gender': {S: gender}
                 }
             };
 

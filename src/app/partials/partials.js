@@ -182,11 +182,11 @@ angular.module('jmPartials', ['ngMaterial'])
                         $scope.names = buildNames(angular.copy($scope.selectedUser));
                     }
 
-                    jmDB.queryFathers().then(function (resp) {
+                    jmDB.queryParents('m').then(function (resp) {
                         $scope.fathers = parents(resp, 'm');
                     });
 
-                    jmDB.queryMothers().then(function (resp) {
+                    jmDB.queryParents('f').then(function (resp) {
                         $scope.mothers = parents(resp, 'f');
                     });
                 };
