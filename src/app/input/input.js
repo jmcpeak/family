@@ -114,7 +114,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
 
                 $scope.duration = function () {
                     if ($scope.user) {
-                        var from = $scope.from ? moment($scope.user[$scope.from]) : false;
+                        var from = $scope.from && $scope.user[$scope.from] ? moment($scope.user[$scope.from]) : false;
                         var to = $scope.to ? moment($scope.user[$scope.to]) : moment();
                         var split = $scope.split ? $scope.split.split(',') : undefined;
 
