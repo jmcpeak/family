@@ -21,6 +21,14 @@
     "angular-mocks": "^1.4.1",
     "jasmine-jquery": "~2.1.0"
   },
+  "overrides": {
+    "moment": {
+      "main": "min/moment.min.js"
+    },
+    "ng-stats": {
+      "main": "dist/ng-stats.min.js"
+    }
+  },
   "appPath": "app",
   "moduleName": "jmFamily"
 }
