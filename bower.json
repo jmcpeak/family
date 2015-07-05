@@ -2,7 +2,10 @@
   "name": "jmFamily",
   "version": "0.0.1",
   "dependencies": {
+    "moment": "~2.10.3",
     "angular": "^1.4.1",
+    "aws-sdk-js": "~2.1.36",
+    "ng-stats": "~2.3.1",
     "angular-animate": "^1.4.1",
     "angular-cookies": "^1.4.1",
     "angular-messages": "^1.4.1",
@@ -12,10 +15,7 @@
     "angular-touch": "^1.4.1",
     "angular-material": "master",
     "bootstrap": "^3.3.5",
-    "aws-sdk-js": "~2.1.36",
-    "ngstorage": "~0.3.5",
-    "ng-stats": "~2.3.1",
-    "moment": "~2.10.3"
+    "ngstorage": "~0.3.5"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.1",
