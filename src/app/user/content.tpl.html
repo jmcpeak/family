@@ -8,61 +8,38 @@
 
             <div layout="row" layout-align="end center">
                 <md-button ng-click="toggleSearch('search')" class="md-icon-button" aria-label="Menu">
-                    <md-icon md-menu-origin md-svg-src="action:search"
-                             style="width: 32px; height: 32px;"></md-icon>
+                    <md-icon class="jmMenuIcon" md-svg-src="action:search"></md-icon>
                 </md-button>
                 <md-button class="md-icon-button" aria-label="Add" ng-click="add($event)">
-                    <md-icon md-svg-src="social:person_add" style="width: 32px; height: 32px"></md-icon>
+                    <md-icon class="jmMenuIcon" md-svg-src="social:person_add"></md-icon>
                 </md-button>
                 <md-menu md-position-mode="target-right target">
                     <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Menu">
-                        <md-icon md-menu-origin md-svg-src="navigation:menu"
-                                 style="width: 32px; height: 32px;"></md-icon>
+                        <md-icon class="jmMenuIcon" md-svg-src="navigation:menu"></md-icon>
                     </md-button>
                     <md-menu-content width="3">
                         <md-menu-item ng-click="email()">
                             <md-button>
-                                <md-icon md-menu-align-target md-svg-src="communication:email"></md-icon>
+                                <md-icon md-svg-src="communication:email"></md-icon>
                                 E-mail
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-click="export()" hide-sm>
-                            <md-button>
-                                <md-icon md-menu-align-target md-svg-src="content:archive"></md-icon>
-                                Export
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-divider></md-menu-divider>
                         <md-menu-item ng-click="deleteItem()" ng-disabled="isRemoveDisabled()">
                             <md-button>
-                                <md-icon md-menu-align-target md-svg-src="action:delete"></md-icon>
+                                <md-icon md-svg-src="action:delete"></md-icon>
                                 Delete
                             </md-button>
                         </md-menu-item>
-                        <md-menu-divider></md-menu-divider>
-                        <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family/issues/new')">
+                        <md-menu-item ng-click="export()">
                             <md-button>
-                                <md-icon md-menu-align-target md-svg-src="action:bug_report"></md-icon>
-                                Log a bug
+                                <md-icon md-svg-src="content:archive"></md-icon>
+                                Export
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item ng-click="openUrl('https://github.com/jmcpeak/family')">
-                            <md-button>
-                                <md-icon md-menu-align-target md-svg-src="image:edit"></md-icon>
-                                View code
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-divider></md-menu-divider>
                         <md-menu-item ng-click="about($event)">
                             <md-button>
-                                <md-icon md-menu-align-target md-svg-src="action:description"></md-icon>
+                                <md-icon md-svg-src="action:description"></md-icon>
                                 About
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-divider></md-menu-divider>
-                        <md-menu-item ng-click="toggleNgStats()">
-                            <md-button>
-                                {{ngStatsLabel}} ng-stats
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
@@ -83,8 +60,7 @@
                 ng-style="{'opacity': selectedUser ? '1' : '.3', 'pointer-events': selectedUser ? 'auto' : 'none'}">
         <div flex layout="column" layout-fill>
             <md-card class="md-whiteframe-z2">
-                <md-button class="md-accent md-raised" ng-click="putItem(selectedUser)"
-                           style="width: 120px; margin-left: auto; margin-right: auto;"><!-- ng-disabled="isSaveDisabled()" -->
+                <md-button class="md-accent md-raised jmSaveButton" ng-click="putItem(selectedUser)">
                     Save
                 </md-button>
                 <jm-tabs></jm-tabs>

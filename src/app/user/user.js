@@ -3,6 +3,8 @@
 angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
     .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
+        var showNgStats;
+
         $scope.selectedUser = {id: jmDB.guid(), children: [0]};
 
         $scope.cancel = function () {
@@ -11,6 +13,20 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
         $scope.ok = function () {
             $mdDialog.hide($scope.selectedUser);
+        };
+
+        $scope.toggleNgStats = function () {
+            showNgStats = !showNgStats;
+
+            $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
+
+            var options = (showNgStats) ? {
+                position: 'bottomright',
+                logDigest: true,
+                logWatches: true
+            } : false;
+
+            showAngularStats(options);
         };
     })
 
@@ -26,7 +42,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
             templateUrl: 'user/tabs.tpl.html',
             controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
-                var showNgStats;
 
                 var toast = function (msg, isError) {
                     var errorClass = (isError) ? 'class="error"' : undefined;
@@ -225,20 +240,6 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         clickOutsideToClose: true,
                         controller: 'jmDialogController'
                     });
-                };
-
-                $scope.toggleNgStats = function () {
-                    showNgStats = !showNgStats;
-
-                    $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
-
-                    var options = (showNgStats) ? {
-                        position: 'bottomright',
-                        logDigest: true,
-                        logWatches: true
-                    } : false;
-
-                    showAngularStats(options);
                 };
             }
         };

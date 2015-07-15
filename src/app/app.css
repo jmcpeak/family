@@ -2,6 +2,17 @@
     font-size: medium;
 }
 
+.jmMenuIcon {
+    width: 32px;
+    height: 32px
+}
+
+.jmSaveButton {
+    width: 120px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 a {
     text-decoration: none;
 }
