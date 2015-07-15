@@ -46,12 +46,15 @@
                 </md-menu>
             </div>
             <md-sidenav class="md-sidenav-right" md-component-id="search">
-                <div layout="row" layout-align="center center" layout-fill>
-                    <md-button class="md-icon-button" ng-click="toggleSearch('search')" aria-label="Close Search">
+                <div layout="row" layout-align="start center" layout-fill>
+                    <md-button class="md-icon-button" ng-click="toggleSearch()" aria-label="Close Search">
                         <md-icon class="md-accent" md-svg-src="navigation:chevron_right"
                                  style="width: 48px; height: 48px;"></md-icon>
                     </md-button>
-                    <input type="search" placeholder="Search" ng-model="search" size="14">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input md-sidenav-focus type="search" placeholder="Search" ng-model="search" size="20">
+                    <md-button style="left: -46px" class="md-icon-button" aria-label="Menu" ng-click="clear()" ng-disabled="isClear()">
+                        <md-icon class="md-accent" md-svg-src="content:clear"></md-icon>
+                    </md-button>
                 </div>
             </md-sidenav>
         </div>

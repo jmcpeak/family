@@ -159,6 +159,8 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     } else {
                         select();
                     }
+
+                    $scope.closeSearch();
                 };
 
                 $scope.putItem = function (user) {
@@ -228,9 +230,22 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     $scope.selectedTab = Math.max($scope.selectedTab - 1, 0);
                 };
 
-                $scope.toggleSearch = function (id) {
-                    $mdSidenav(id).toggle();
+                $scope.toggleSearch = function () {
+                    $mdSidenav('search').toggle();
                     $scope.search = '';
+                };
+
+                $scope.closeSearch = function () {
+                    $mdSidenav('search').close();
+                    $scope.search = '';
+                };
+
+                $scope.clear = function () {
+                    $scope.search = '';
+                };
+
+                $scope.isClear = function () {
+                    return $scope.search ? !$scope.search.length : 1;
                 };
 
                 $scope.about = function (event) {
