@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jmUser', ['ngMaterial', 'jmPartials'])
+angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
 
     .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
         var showNgStats;
@@ -40,8 +40,9 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
     .directive('jmTabs', function () {
         return {
             templateUrl: 'user/tabs.tpl.html',
-            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, jmDB, jmService, jmConstant) {
+            controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdMedia, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
+                var originatorEv;
 
                 var toast = function (msg, isError) {
                     var errorClass = (isError) ? 'class="error"' : undefined;
@@ -93,7 +94,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                     return jmService.getRequiredForm() && jmService.getRequiredForm().$invalid;
                 };
 
-                $scope.deleteItem = function (event) {
+                $scope.deleteItem = function () {
                     var title = function () {
                         var pre = 'Remove ';
                         var fn = $scope.selectedUser.firstName ? $scope.selectedUser.firstName : '';
@@ -108,7 +109,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                             .content('All the data and the entry itself will be removed')
                             .ok('Remove')
                             .cancel('Cancel')
-                            .targetEvent(event)).then(function () {
+                            .targetEvent(originatorEv)).then(function () {
                             jmDB.deleteItem($scope.selectedUser).then(function () {
                                     // Delete the card
                                     angular.element(jmConstant.userIdHash).remove();
@@ -195,9 +196,10 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
                         $mdDialog.show({
                             controller: 'jmDialogController',
                             templateUrl: 'user/dialog.tpl.html',
+                            template: 'hi',
                             targetEvent: event,
-                            scope: newScope,
-                            focusOnOpen: false
+                            scope: newScope //,
+                            //focusOnOpen: false
                         }).then(function (user) {
                             that.putItem(user);
                         }, function () {
@@ -242,18 +244,76 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials'])
 
                 $scope.clear = function () {
                     $scope.search = '';
+                    angular.element(document.querySelector('#searchBox')).focus();
                 };
 
                 $scope.isClear = function () {
                     return $scope.search ? !$scope.search.length : 1;
                 };
 
-                $scope.about = function (event) {
+                $scope.openMenu = function ($mdOpenMenu, $event) {
+                    originatorEv = $event;
+                    $mdOpenMenu($event);
+                };
+
+                $scope.email = function () {
+                    jmDB.getEmailAddresses().then(function (addresses) {
+                        var emailAddresses;
+                        var sep = $mdMedia('lg') ? '; ' : ', ';
+                        angular.forEach(addresses, function (address) {
+                            emailAddresses = emailAddresses ? emailAddresses + sep + address.email : address.email;
+                        });
+
+                        //window.location.href = 'mailto:' + emailAddresses + '?subject=McPeak%20Family';
+
+                        return $mdDialog.show({
+                            targetEvent: originatorEv,
+                            bindToController: true,
+                            locals: {
+                                emailAddresses: emailAddresses
+                            },
+                            controllerAs: 'dialog',
+                            templateUrl: 'user/email.tpl.html',
+                            controller: function ($mdDialog) {
+                                this.cancel = function () {
+                                    $mdDialog.cancel();
+                                };
+                            }
+                        });
+                    });
+                };
+
+                $scope.about = function () {
+
                     $mdDialog.show({
                         templateUrl: 'user/about.tpl.html',
-                        targetEvent: event,
+                        targetEvent: originatorEv,
                         clickOutsideToClose: true,
-                        controller: 'jmDialogController'
+                        controller: function ($scope, $mdDialog) {
+                            var showNgStats;
+
+                            $scope.cancel = function () {
+                                $mdDialog.cancel();
+                            };
+
+                            $scope.toggleNgStats = function () {
+                                showNgStats = !showNgStats;
+
+                                $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
+
+                                var options = (showNgStats) ? {
+                                    position: 'bottomright',
+                                    logDigest: true,
+                                    logWatches: true
+                                } : false;
+
+                                showAngularStats(options);
+                            };
+
+                            $scope.onOff = function () {
+                                return showNgStats;
+                            };
+                        }
                     });
                 };
             }

@@ -30,6 +30,14 @@ md-card:focus {
     outline: none;
 }
 
+.md-datepicker-input {
+    font-size: medium;
+}
+
+.md-tab {
+    font-size: medium;
+}
+
 md-sidenav,
 md-sidenav.md-locked-open,
 md-sidenav.md-closed.md-locked-open-add-active {

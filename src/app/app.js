@@ -123,6 +123,12 @@ angular.module('jmFamily', [
             .iconSet('toggle', '/assets/toggle-icons.svg', 24);
     })
 
+    //.config(function($mdDateLocaleProvider) {
+    //    $mdDateLocaleProvider.formatDate = function(date) {
+    //        return moment(date).format('YYYY-MM-DD');
+    //    };
+    //})
+
     .config(function ($mdThemingProvider) {
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
@@ -130,7 +136,7 @@ angular.module('jmFamily', [
         $mdThemingProvider.theme('default');
 
         $mdThemingProvider.theme('golf', 'default')
-            .primaryPalette('green')
+            .primaryPalette('teal')
             .accentPalette('indigo');
 
         $mdThemingProvider.theme('golf-dark', 'golf')

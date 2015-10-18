@@ -6,7 +6,7 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
         return {
             replace: true,
             templateUrl: 'list/list.tpl.html',
-            controller: function ($scope, $timeout, $window, $localStorage, $mdMedia, jmDB, jmConstant) {
+            controller: function ($scope, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
                 $scope.users = [];
                 $scope.count = '';
                 $scope.height = 'auto';
@@ -69,18 +69,6 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
 
                 $scope.openUrl = function (url) {
                     $window.open(url, '_blank');
-                };
-
-                $scope.email = function () {
-                    jmDB.getEmailAddresses().then(function (addresses) {
-                        var emailAddresses;
-                        var sep = $mdMedia('lg') ? ';' : ',';
-                        angular.forEach(addresses, function (address) {
-                            emailAddresses = emailAddresses ? emailAddresses + sep + address.email : address.email;
-                        });
-
-                        window.location = 'mailto:' + emailAddresses + '?subject=McPeak%20Family';
-                    });
                 };
 
                 $scope.export = function () {

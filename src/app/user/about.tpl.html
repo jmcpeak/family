@@ -1,12 +1,20 @@
-<md-dialog>
-    <md-dialog-content>
-        <div layout="column" layout-align="center center">
-            <img src="assets/clover.png" alt="shamrocks">
-            <div>McPeak Family</div>
-            <div>version 1.0</div>
-            <div><a href="mailto:jason.mcpeak@gmail.com">jason.mcpeak@gmail.com</a></div>
-            <md-button ng-click="toggleNgStats()">{{ngStatsLabel}} ng-stats</md-button>
-            <md-button class="md-raised" ng-click="cancel()">close</md-button>
-        </div>
+<md-dialog aria-label="About" ng-cloak>
+    <md-dialog-content class="md-dialog-content" role="document" layout="column" layout-align="center center">
+        <img src="assets/clover.png" alt="shamrocks">
+
+        <div>McPeak Family</div>
+        <div>version 2.0</div>
+        <div><a href="mailto:jason.mcpeak@gmail.com" target="_blank">jason.mcpeak@gmail.com</a></div>
+        <div><a href="https://github.com/jmcpeak/family/issues" target="_blank">Report Issue</a></div>
+        <div><a href="https://github.com/jmcpeak/family/" target="_blank">GitHub</a></div>
+        <div><a href="https://travis-ci.org/jmcpeak/family" target="_blank">Travis CI</a></div>
+
+        <md-button ng-click="toggleNgStats()" class="md-icon-button" aria-label="Menu">
+            <md-icon class="jmMenuIcon" ng-if="onOff()" md-svg-src="action:info"></md-icon>
+            <md-icon class="jmMenuIcon" ng-if="!onOff()" md-svg-src="action:info_outline"></md-icon>
+        </md-button>
     </md-dialog-content>
+    <div class="md-actions">
+        <md-button ng-click="cancel()">close</md-button>
+    </div>
 </md-dialog>

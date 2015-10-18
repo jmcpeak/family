@@ -20,7 +20,10 @@ module.exports = function(config) {
         files: [
             // bower:js
             'bower_components/jquery/dist/jquery.js',
+            'bower_components/moment/min/moment.min.js',
             'bower_components/angular/angular.js',
+            'bower_components/aws-sdk-js/dist/aws-sdk.js',
+            'bower_components/ng-stats/dist/ng-stats.min.js',
             'bower_components/angular-animate/angular-animate.js',
             'bower_components/angular-cookies/angular-cookies.js',
             'bower_components/angular-messages/angular-messages.js',
@@ -31,10 +34,8 @@ module.exports = function(config) {
             'bower_components/angular-aria/angular-aria.js',
             'bower_components/angular-material/angular-material.js',
             'bower_components/bootstrap/dist/js/bootstrap.js',
-            'bower_components/aws-sdk-js/dist/aws-sdk.js',
             'bower_components/ngstorage/ngStorage.js',
-            'bower_components/ng-stats/dist/ng-stats.js',
-            'bower_components/moment/moment.js',
+            'bower_components/angular-clipboard/angular-clipboard.js',
             'bower_components/angular-mocks/angular-mocks.js',
             'bower_components/jasmine/lib/jasmine-core/jasmine.js',
             'bower_components/jasmine-jquery/lib/jasmine-jquery.js',

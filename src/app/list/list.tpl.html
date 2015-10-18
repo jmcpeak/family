@@ -8,8 +8,9 @@
     <md-content>
         <md-list layout-fill>
             <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
-                     ng-repeat="user in users | filter:search" ng-click="selectUser(user, $event)"
-                     md-swipe-left="showDelete = !showDelete" class="md-whiteframe-z2 jm-list">
+                     ng-repeat="user in users | filter:search | orderBy:['lastName', 'firstName']"
+                     ng-click="selectUser(user, $event)"
+                     md-swipe-left="showDelete = !showDelete" class="md-whiteframe-z1 jm-list">
                 <div class="md-tile-left" style="padding-left: 10px; min-width: 80px" hide-sm>
                     <md-button class="md-fab" aria-label="User Initials">
                         <h2 style="margin-top: 1px;">
@@ -21,7 +22,8 @@
                     <div style="font-size: x-small; font-style: italic" ng-if="lastUpdatedID === user.id">Last Updated
                     </div>
                     <div>{{user.displayName ? user.displayName : user.firstName + ' ' + user.lastName}}</div>
-                    <div>{{user.address}}{{user.city ? ', ' + user.city : ''}}{{user.theState ? ' ' + user.theState : ''}}
+                    <div>{{user.address}}{{user.city ? ', ' + user.city : ''}}{{user.theState ? ' ' + user.theState :
+                        ''}}
                     </div>
                     <div style="color: #0000cc"><a href="">{{user.email}}</a></div>
                     <div hide-gt-md><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.phone}}</a></div>
