@@ -152,7 +152,7 @@ angular.module('jmFamily', [
 
     .service('jmDB', function ($q, $location, jmDBUtils) {
         var minLengthId = 15;
-        var tableName = $location.$$path === '/prod/' || $location.$$path === '/prod' ? 'mcpeak' : 'test';
+        var tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak';
         var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         this.guid = function () {
