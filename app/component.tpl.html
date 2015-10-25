@@ -1,0 +1,74 @@
+<section layout="row" flex>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z4" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+        <md-toolbar class="md-theme-indigo">
+            <h1 class="md-toolbar-tools">Sidenav Left</h1>
+        </md-toolbar>
+        <md-content layout-padding>
+            <p hide-md show-gt-md>
+                This sidenav is locked open on your device. To go back to the default behavior,
+                narrow your display.
+            </p>
+        </md-content>
+    </md-sidenav>
+    <md-content flex layout-padding>
+        <div layout="column" layout-fill>
+            <h4>This page has both <a href="https://material.angularjs.org/">Angular Material</a> and
+                <a href="http://angular-ui.github.io/bootstrap//">Bootstrap components</a></h4>
+            <br>
+            <h4>Icons are from <a href="https://www.google.com/design/icons/">Material Icons</a> and they use
+                <a href="https://material.angularjs.org/latest/#/api/material.components.icon/service/$mdIconProvider">
+                    $mdIconProvider</a>
+            </h4>
+            <br>
+            <p>
+                The left sidenav will 'lock open' on a medium (>=960px wide) device.
+                <md-button ng-click="rcmComponentCtrl.toggle('left')" class="md-primary" hide-gt-md>
+                    Toggle left
+                </md-button>
+            </p>
+
+            <p>
+                The right sidenav will focus on a specific child element.
+                <md-button class="md-raised" ng-click="rcmComponentCtrl.toggle('right')" class="md-primary">
+                    <md-icon md-svg-src="action:cached"></md-icon>
+                    Toggle right
+                </md-button>
+            </p>
+
+            <div layout="row">
+                <div>
+                    <div>
+                        <md-button class="md-raised" ng-click="rcmComponentCtrl.showToast()">
+                            Show Toast
+                        </md-button>
+                    </div>
+                </div>
+                <div>
+                    <b>Toast Position: "{{rcmComponentCtrl.getToastPosition()}}"</b>
+                    <md-checkbox ng-repeat="(name, isSelected) in rcmComponentCtrl.toastPosition"
+                                 ng-model="rcmComponentCtrl.toastPosition[name]">
+                        {{name}}
+                    </md-checkbox>
+                </div>
+            </div>
+        </div>
+        <div flex></div>
+    </md-content>
+    <md-sidenav class="md-sidenav-right md-whiteframe-z4" md-component-id="right">
+        <md-toolbar class="md-theme-light">
+            <h1 class="md-toolbar-tools">Sidenav Right</h1>
+        </md-toolbar>
+        <md-content layout-padding>
+            <form>
+                <md-input-container>
+                    <label for="testInput">Test input</label>
+                    <input type="text" id="testInput"
+                           ng-model="data" md-sidenav-focus>
+                </md-input-container>
+            </form>
+            <md-button ng-click="rcmComponentCtrl.closeSideNav('right')" class="md-primary">
+                Close Sidenav Right
+            </md-button>
+        </md-content>
+    </md-sidenav>
+</section>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="icon.png">
+    <title>McPeak Family</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+</head>
+
+<body layout="row" ng-app="app" ng-cloak>
+
+<jm-login></jm-login>
+
+<jm-list></jm-list>
+
+<jm-content-area></jm-content-area>
+
+<script type="text/ng-template" id="error-messages">
+    <div ng-message="required">Required</div>
+    <div ng-message="minlength">This field is too short</div>
+    <div ng-message="email">Use a real e-mail address</div>
+    <div ng-message="number">Use a real phone number</div>
+    <div ng-message="tel">Use a phone number</div>
+</script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.11.min.js"></script>
+<script src="vendor.bundle.js"></script>
+<script src="bundle.js"></script>
+
+</body>
+</html>

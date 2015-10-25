@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('jmPartials', ['ngMaterial'])
+export default angular.module('jmPartials', [
+    require('angular-material')])
 
     .service('jmService', function () {
         var card;
@@ -65,7 +66,7 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmRequired', function (jmService, jmDB) {
         return {
             require: '^form',
-            templateUrl: 'partials/required.tpl.html',
+            template: require('../partials/required.tpl.html'),
             controller: function ($scope) {
                 $scope.names = [];
 
@@ -205,7 +206,7 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmAddress', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/address.tpl.html',
+            template: require('../partials/address.tpl.html'),
             controller: 'jmPartialController'
         };
     })
@@ -213,7 +214,7 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmSpouse', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/spouse.tpl.html',
+            template: require('../partials/spouse.tpl.html'),
             controller: 'jmPartialController'
         };
     })
@@ -221,7 +222,7 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmDatesAndPlaces', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/datesAndPlaces.tpl.html',
+            template: require('../partials/datesAndPlaces.tpl.html'),
             controller: 'jmPartialController'
         };
     })
@@ -229,7 +230,7 @@ angular.module('jmPartials', ['ngMaterial'])
     .directive('jmChildren', function () {
         return {
             require: '^form',
-            templateUrl: 'partials/children.tpl.html',
+            template: require('../partials/children.tpl.html'),
             controller: function ($scope) {
                 $scope.fields = ['firstNameChild', 'middleNameChild', 'lastNameChild', 'bithdayChild', 'genderChild'];
 
@@ -252,4 +253,4 @@ angular.module('jmPartials', ['ngMaterial'])
                 });
             }
         };
-    });
+    }).name;

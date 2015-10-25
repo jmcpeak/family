@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('jmInput', ['ngMaterial', 'ngMessages'])
+var moment = require('moment');
+
+export default angular.module('jmInput', [
+    require('angular-material'),
+    require('angular-messages')])
 
     .directive('jmInput', function () {
         return {
@@ -16,7 +20,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'input/input.tpl.html',
+            template: require('../input/input.tpl.html'),
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
 
@@ -40,7 +44,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'input/textarea.tpl.html',
+            template: require('../input/textarea.tpl.html'),
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -57,7 +61,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 user: '='
             },
             require: ['^form'],
-            templateUrl: 'input/switch.tpl.html',
+            template: require('../input/switch.tpl.html'),
             link: function (scope, element, attrs, controls) {
                 scope.form = controls[0];
             }
@@ -80,7 +84,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 repeat: '='
             },
             require: ['^form'],
-            templateUrl: 'input/select.tpl.html',
+            template: require('../input/select.tpl.html'),
             controller: function ($scope) {
                 $scope.selection = function (value) {
                     if ($scope.keydisplay && $scope.keydisplay2) {
@@ -109,7 +113,7 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 prefix: '@',
                 suffix: '@'
             },
-            templateUrl: 'input/duration.tpl.html',
+            template: require('../input/duration.tpl.html'),
             controller: function ($scope) {
 
                 $scope.duration = function () {
@@ -143,4 +147,4 @@ angular.module('jmInput', ['ngMaterial', 'ngMessages'])
                 };
             }
         };
-    });
+    }).name;

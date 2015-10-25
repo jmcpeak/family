@@ -1,8 +1,36 @@
 'use strict';
 
-angular.module('jmFamily', [
-    //replace:templates-app,
-    'ngMaterial', 'ngTouch', 'ngRoute', 'ngResource', 'ngAnimate', 'ngCookies', 'ngStorage', 'ngMessages', 'jmList'])
+require('angular-material/angular-material.min.css');
+var moment = require('moment');
+
+export default angular.module('app', [
+    require('angular-material'),
+    require('angular-messages'),
+    require('ngstorage').name,
+    require('./list')])
+
+    .config(function ($mdIconProvider, $mdDateLocaleProvider) {
+        $mdIconProvider
+            .iconSet('action', require('./assets/action-icons.svg'), 24)
+            .iconSet('alert', require('./assets/alert-icons.svg'), 24)
+            .iconSet('av', require('./assets/av-icons.svg'), 24)
+            .iconSet('communication', require('./assets/communication-icons.svg'), 24)
+            .iconSet('content', require('./assets/content-icons.svg'), 24)
+            .iconSet('device', require('./assets/device-icons.svg'), 24)
+            .iconSet('editor', require('./assets/editor-icons.svg'), 24)
+            .iconSet('file', require('./assets/file-icons.svg'), 24)
+            .iconSet('hardware', require('./assets/hardware-icons.svg'), 24)
+            .iconSet('image', require('./assets/image-icons.svg'), 24)
+            .iconSet('maps', require('./assets/maps-icons.svg'), 24)
+            .iconSet('navigation', require('./assets/navigation-icons.svg'), 24)
+            .iconSet('notification', require('./assets/notification-icons.svg'), 24)
+            .iconSet('social', require('./assets/social-icons.svg'), 24)
+            .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
+
+        $mdDateLocaleProvider.parseDate = function (dateString) {
+            return moment(dateString).toDate();
+        };
+    })
 
     .constant('jmConstant', {
         userIdHash: '#user-',
@@ -102,32 +130,6 @@ angular.module('jmFamily', [
             RoleSessionName: 'web'
         });
     })
-
-    .config(function ($mdIconProvider) {
-        $mdIconProvider
-            .iconSet('action', '/assets/action-icons.svg', 24)
-            .iconSet('alert', '/assets/alert-icons.svg', 24)
-            .iconSet('av', '/assets/av-icons.svg', 24)
-            .iconSet('communication', '/assets/communication-icons.svg', 24)
-            .iconSet('content', '/assets/content-icons.svg', 24)
-            .iconSet('device', '/assets/device-icons.svg', 24)
-            .iconSet('editor', '/assets/editor-icons.svg', 24)
-            .iconSet('file', '/assets/file-icons.svg', 24)
-            .iconSet('hardware', '/assets/hardware-icons.svg', 24)
-            .iconSet('icons', '/assets/icons-icons.svg', 24)
-            .iconSet('image', '/assets/image-icons.svg', 24)
-            .iconSet('maps', '/assets/maps-icons.svg', 24)
-            .iconSet('navigation', '/assets/navigation-icons.svg', 24)
-            .iconSet('notification', '/assets/notification-icons.svg', 24)
-            .iconSet('social', '/assets/social-icons.svg', 24)
-            .iconSet('toggle', '/assets/toggle-icons.svg', 24);
-    })
-
-    //.config(function($mdDateLocaleProvider) {
-    //    $mdDateLocaleProvider.formatDate = function(date) {
-    //        return moment(date).format('YYYY-MM-DD');
-    //    };
-    //})
 
     .config(function ($mdThemingProvider) {
         // Update the theme colors to use themes on font-icons
@@ -540,4 +542,4 @@ angular.module('jmFamily', [
 
             return data_out;
         };
-    });
+    }).name

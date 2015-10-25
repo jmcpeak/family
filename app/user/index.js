@@ -1,6 +1,12 @@
 'use strict';
 
-angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
+require('angular-clipboard');
+var showAngularStats = require('ng-stats');
+
+export default angular.module('jmUser', [
+    require('angular-material'),
+    require('../partials'),
+    'angular-clipboard'])
 
     .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
         var showNgStats;
@@ -33,13 +39,13 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
     .directive('jmContentArea', function () {
         return {
             replace: true,
-            templateUrl: 'user/content.tpl.html'
+            template: require('../user/content.tpl.html')
         };
     })
 
     .directive('jmTabs', function () {
         return {
-            templateUrl: 'user/tabs.tpl.html',
+            template: require('../user/tabs.tpl.html'),
             controller: function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdMedia, jmDB, jmService, jmConstant) {
                 var cachedDisableSaveValue;
                 var originatorEv;
@@ -195,8 +201,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
 
                         $mdDialog.show({
                             controller: 'jmDialogController',
-                            templateUrl: 'user/dialog.tpl.html',
-                            template: 'hi',
+                            template: require('../user/dialog.tpl.html'),
                             targetEvent: event,
                             scope: newScope //,
                             //focusOnOpen: false
@@ -273,7 +278,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
                                 emailAddresses: emailAddresses
                             },
                             controllerAs: 'dialog',
-                            templateUrl: 'user/email.tpl.html',
+                            template: require('../user/email.tpl.html'),
                             controller: function ($mdDialog) {
                                 this.cancel = function () {
                                     $mdDialog.cancel();
@@ -286,7 +291,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
                 $scope.about = function () {
 
                     $mdDialog.show({
-                        templateUrl: 'user/about.tpl.html',
+                        template: require('../user/about.tpl.html'),
                         targetEvent: originatorEv,
                         clickOutsideToClose: true,
                         controller: function ($scope, $mdDialog) {
@@ -323,7 +328,7 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
     .directive('jmLogin', function () {
         return {
             replace: true,
-            templateUrl: 'user/login.tpl.html',
+            template: require('../user/login.tpl.html'),
             controller: function ($scope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
 
                 $scope.genders = jmConstant.genders;
@@ -373,4 +378,4 @@ angular.module('jmUser', ['ngMaterial', 'jmPartials', 'angular-clipboard'])
                 }, 50);
             }
         };
-    });
+    }).name;

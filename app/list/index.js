@@ -1,11 +1,14 @@
 'use strict';
 
-angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
+export default angular.module('jmList', [
+    require('angular-material'),
+    require('../user'),
+    require('../input')])
 
     .directive('jmList', function () {
         return {
             replace: true,
-            templateUrl: 'list/list.tpl.html',
+            template: require('../list/list.tpl.html'),
             controller: function ($scope, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
                 $scope.users = [];
                 $scope.count = '';
@@ -83,4 +86,4 @@ angular.module('jmList', ['ngMaterial', 'jmUser', 'jmInput'])
                 init();
             }
         };
-    });
+    }).name;
