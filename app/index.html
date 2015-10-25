@@ -6,6 +6,54 @@
     <title>McPeak Family</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <style>
+        .jmLoginError [ng-message] {
+            font-size: medium;
+        }
+
+        .jmMenuIcon {
+            width: 32px;
+            height: 32px
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        md-card[md-ink-ripple] {
+            position: relative;
+        }
+
+        md-card.jm-list:hover {
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        md-card:focus {
+            outline: none;
+        }
+
+        .md-datepicker-input {
+            font-size: medium;
+        }
+
+        .md-tab {
+            font-size: medium;
+        }
+
+        md-sidenav,
+        md-sidenav.md-locked-open,
+        md-sidenav.md-closed.md-locked-open-add-active {
+            min-width: 200px !important;
+            width: 33% !important;
+            max-width: 400px !important;
+        }
+
+        md-toast.error {
+            background-color: #ff0000;
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body layout="row" ng-app="app" ng-cloak>

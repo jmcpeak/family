@@ -1,6 +1,7 @@
 'use strict';
 
 require('angular-material/angular-material.min.css');
+/* jshint -W079 */
 var moment = require('moment');
 
 export default angular.module('app', [
@@ -542,4 +543,4 @@ export default angular.module('app', [
 
             return data_out;
         };
-    }).name
+    }).name;
