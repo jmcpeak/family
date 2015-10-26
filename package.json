@@ -11,8 +11,9 @@
   "license": "ISC",
   "scripts": {
     "prestart": "npm install",
+    "": "",
     "start": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base app/ --hot --port 9000",
-    "build": "NODE_ENV=production node node_modules/.bin/webpack && cp -r app/* dist",
+    "build": "rm -rf dist && NODE_ENV=production node node_modules/.bin/webpack && cp app/* dist || mkdir dist/assets && cp app/assets/*.png dist/assets",
     "distserve": "npm install && npm run build && node server/distserver",
     "pretest": "npm install",
     "test": "karma start",
