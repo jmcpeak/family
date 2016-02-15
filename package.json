@@ -61,9 +61,6 @@
     "webpack-core": "^0.6.6",
     "webpack-dev-server": "^1.12.1"
   },
-  "publishConfig": {
-    "registry": "http://artifactory.finra.org/artifactory/api/npm/npm-internal/"
-  },
   "files": [
     "app/**/!(app).js",
     "app/**/*.tpl.html",
@@ -72,13 +69,13 @@
     "README.md"
   ],
   "dependencies": {
-    "angular": "^1.4.7",
-    "angular-animate": "^1.4.7",
-    "angular-aria": "^1.4.7",
-    "angular-clipboard": "^1.1.1",
-    "angular-material": "angular/bower-material",
-    "angular-messages": "^1.4.7",
-    "angular-mocks": "^1.4.7",
+    "angular": "^1.5.0",
+    "angular-animate": "^1.5.0",
+    "angular-aria": "^1.5.0",
+    "angular-clipboard": "^1.3.0",
+    "angular-material": "^1.0.5",
+    "angular-messages": "^1.5.0",
+    "angular-mocks": "^1.5.0",
     "moment": "^2.10.6",
     "ng-stats": "^2.5.2",
     "ngstorage": "^0.3.9"
