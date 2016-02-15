@@ -1,12 +1,13 @@
 'use strict';
 
-var moment = require('moment');
+/* jshint -W079 */
+let moment = require('moment');
 
 export default angular.module('jmInput', [
-    require('angular-material'),
-    require('angular-messages')])
+        require('angular-material'),
+        require('angular-messages')])
 
-    .directive('jmInput', function () {
+    .directive('jmInput', () => {
         return {
             replace: true,
             scope: {
@@ -21,10 +22,10 @@ export default angular.module('jmInput', [
             },
             require: ['^form'],
             template: require('../input/input.tpl.html'),
-            link: function (scope, element, attrs, controls) {
+            link: (scope, element, attrs, controls) => {
                 scope.form = controls[0];
 
-                scope.$on('selectUser', function (event) {
+                scope.$on('selectUser', (event) => {
                     if (event.currentScope.focus) {
                         element.find('input').focus();
                     }
@@ -33,7 +34,7 @@ export default angular.module('jmInput', [
         };
     })
 
-    .directive('jmTextArea', function () {
+    .directive('jmTextArea', () => {
         return {
             replace: true,
             scope: {
@@ -45,15 +46,12 @@ export default angular.module('jmInput', [
             },
             require: ['^form'],
             template: require('../input/textarea.tpl.html'),
-            link: function (scope, element, attrs, controls) {
-                scope.form = controls[0];
-            }
+            link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
 
-    .directive('jmSwitch', function () {
+    .directive('jmSwitch', () => {
         return {
-            //replace: true,
             scope: {
                 field: '@',
                 ddisabled: '@',
@@ -62,13 +60,11 @@ export default angular.module('jmInput', [
             },
             require: ['^form'],
             template: require('../input/switch.tpl.html'),
-            link: function (scope, element, attrs, controls) {
-                scope.form = controls[0];
-            }
+            link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
 
-    .directive('jmSelect', function () {
+    .directive('jmSelect', () => {
         return {
             replace: true,
             scope: {
@@ -86,7 +82,7 @@ export default angular.module('jmInput', [
             require: ['^form'],
             template: require('../input/select.tpl.html'),
             controller: function ($scope) {
-                $scope.selection = function (value) {
+                $scope.selection = (value) => {
                     if ($scope.keydisplay && $scope.keydisplay2) {
                         return value[$scope.keydisplay] + ' ' + value[$scope.keydisplay2];
                     } else if ($scope.keydisplay) {
@@ -96,13 +92,11 @@ export default angular.module('jmInput', [
                     }
                 };
             },
-            link: function (scope, element, attrs, controls) {
-                scope.form = controls[0];
-            }
+            link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
 
-    .directive('jmDuration', function () {
+    .directive('jmDuration', () => {
         return {
             replace: true,
             scope: {
@@ -115,20 +109,19 @@ export default angular.module('jmInput', [
             },
             template: require('../input/duration.tpl.html'),
             controller: function ($scope) {
-
-                $scope.duration = function () {
+                $scope.duration = () => {
                     if ($scope.user) {
-                        var from = $scope.from && $scope.user[$scope.from] ? moment($scope.user[$scope.from]) : false;
-                        var to = $scope.to ? moment($scope.user[$scope.to]) : moment();
-                        var split = $scope.split ? $scope.split.split(',') : undefined;
+                        let from = $scope.from && $scope.user[$scope.from] ? moment($scope.user[$scope.from]) : false,
+                            to = $scope.to ? moment($scope.user[$scope.to]) : moment(),
+                            split = $scope.split ? $scope.split.split(',') : undefined;
 
                         if (split && split.length > 1) {
-                            var dateOne = moment($scope.user[split[0]]);
-                            var dateTwo = moment($scope.user[split[1]]);
+                            let dateOne = moment($scope.user[split[0]]),
+                                dateTwo = moment($scope.user[split[1]]);
                             to = moment(dateOne).isBefore(dateTwo) ? dateOne : dateTwo;
                         }
 
-                        var years = Math.floor(moment.duration(to - from).asYears());
+                        let years = Math.floor(moment.duration(to - from).asYears());
 
                         if (years === 0) {
                             years = 'less than a year';
@@ -138,7 +131,7 @@ export default angular.module('jmInput', [
                             years = years + ' years';
                         }
 
-                        var retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? years : '';
+                        let retVal = (moment.isMoment(from) && moment.isMoment(to)) && !moment(from).isSame(to, 'second') ? years : '';
 
                         $scope.hasValue = retVal.length ? true : false;
 

@@ -79,7 +79,7 @@ export default angular.module('jmList', [
     .directive('jmList', () => {
         return {
             replace: true,
-            template: require('../list/list.tpl.html'),
+            template: require('../list/index.tpl.html'),
             controller: 'jmListController'
         };
     }).name;
