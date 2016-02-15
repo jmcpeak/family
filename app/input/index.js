@@ -111,7 +111,7 @@ export default angular.module('jmInput', [
             controller: function ($scope) {
                 $scope.duration = () => {
                     if ($scope.user) {
-                        let from = $scope.from && $scope.user[$scope.from] ? moment($scope.user[$scope.from]) : false,
+                        let from = $scope.from && $scope.user[$scope.from] ? moment(new Date($scope.user[$scope.from])) : false,
                             to = $scope.to ? moment($scope.user[$scope.to]) : moment(),
                             split = $scope.split ? $scope.split.split(',') : undefined;
 
