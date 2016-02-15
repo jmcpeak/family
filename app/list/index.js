@@ -7,13 +7,13 @@ export default angular.module('jmList', [
 
     .controller('jmListController', function ($scope, $document, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
         let user,
-            init = () => {
-                jmDB.getItem('lastUpdateDate').then((data) => {
-                    $timeout(() => {
-                        $scope.lastUpdate = data.lastUpdated;
-                        $scope.lastUpdatedID = data.lastUpdatedID;
-                    });
-                });
+            init = async() => {
+                try {
+                    let data = await jmDB.getItem('lastUpdateDate');
+                    $scope.lastUpdate = data.lastUpdated;
+                    $scope.lastUpdatedID = data.lastUpdatedID;
+                } catch (reason) {
+                }
 
                 $scope.refresh($localStorage.user, true);
             },
@@ -22,23 +22,6 @@ export default angular.module('jmList', [
                 link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
                 link.setAttribute('download', 'McPeak Family.csv');
                 link.click();
-            },
-            refreshResolve = (data) => {
-                $scope.users = data;
-
-                if (user) {
-                    $scope.selectUser(user);
-                    let element = $document.find(jmConstant.userIdHash + user.id);
-                    if (element.length) {
-                        $timeout(() => element.click()[0].scrollIntoView(false), 200);
-                    }
-                } else {
-                    $scope.queryAllInProgress = false;
-                }
-            },
-            refreshReject = (reason) => {
-                $scope.queryAllInProgress = true;
-                $scope.queryAllError = reason.message ? reason.message : 'Unknown Error';
             };
 
         $scope.users = [];
@@ -66,14 +49,32 @@ export default angular.module('jmList', [
             return data.length + additional;
         };
 
-        $scope.refresh = (userarg, init) => {
+        $scope.refresh = async(userarg, init) => {
             user = userarg;
 
             if (!init) {
                 $scope.queryAllInProgress = true;
             }
 
-            return jmDB.queryAll().then(refreshResolve, refreshReject);
+            try {
+                let data = await jmDB.queryAll();
+
+                $scope.users = data;
+
+                if (user) {
+                    $scope.selectUser(user);
+                    let element = $document.find(jmConstant.userIdHash + user.id);
+                    if (element.length) {
+                        $timeout(() => element.click()[0].scrollIntoView(false), 200);
+                    }
+                } else {
+                    $scope.queryAllInProgress = false;
+                }
+            }
+            catch (reason) {
+                $scope.queryAllInProgress = true;
+                $scope.queryAllError = reason.message ? reason.message : 'Unknown Error';
+            }
         };
 
         init();
