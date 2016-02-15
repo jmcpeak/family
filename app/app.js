@@ -83,7 +83,9 @@ export default angular.module('app', [
         ]
     })
 
-    .config(function ($mdIconProvider, $mdDateLocaleProvider) {
+    .config(function ($mdIconProvider, $mdDateLocaleProvider, $mdThemingProvider) {
+        $mdDateLocaleProvider.parseDate = (dateString) => moment(dateString).toDate();
+
         $mdIconProvider
             .iconSet('action', require('./assets/action-icons.svg'), 24)
             .iconSet('alert', require('./assets/alert-icons.svg'), 24)
@@ -101,13 +103,7 @@ export default angular.module('app', [
             .iconSet('social', require('./assets/social-icons.svg'), 24)
             .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
 
-        $mdDateLocaleProvider.parseDate = function (dateString) {
-            return moment(dateString).toDate();
-        };
-    })
-
-    .config(function () {
-
+        // Add to string prototype
         String.prototype.hashCode = function () {
             let hash = 0, i, chr, len;
             if (this.length === 0) {
@@ -130,9 +126,7 @@ export default angular.module('app', [
             RoleArn: 'arn:aws:iam::754934490052:role/Cognito_mcpeakfamilyUnauth_DefaultRole',
             RoleSessionName: 'web'
         });
-    })
 
-    .config(function ($mdThemingProvider) {
         // Update the theme colors to use themes on font-icons
         // red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime,
         // yellow, amber, orange, deep-orange, brown, grey, blue-grey
@@ -154,9 +148,9 @@ export default angular.module('app', [
     })
 
     .service('jmDB', function ($q, $location, jmDBUtils) {
-        let minLengthId = 15;
-        let tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak';
-        let dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
+        let minLengthId = 15,
+            tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak',
+            dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
         this.guid = () => {
             let s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -164,25 +158,25 @@ export default angular.module('app', [
         };
 
         this.queryAll = () => {
-            let deferred = $q.defer();
+            let defer = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    FilterExpression: 'size(id) > :size',
+                    ExpressionAttributeValues: {
+                        ':size': {N: minLengthId.toString()}
+                    }
+                },
+                callback = (err, data) => {
+                    if (err) {
+                        defer.reject(err);
+                    } else {
+                        defer.resolve(jmDBUtils.arrayConverter(data.Items));
+                    }
+                };
 
-            let params = {
-                TableName: tableName,
-                FilterExpression: 'size(id) > :size',
-                ExpressionAttributeValues: {
-                    ':size': {N: minLengthId.toString()}
-                }
-            };
+            dynamoDB.scan(params, callback);
 
-            dynamoDB.scan(params, (err, data) => {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(jmDBUtils.arrayConverter(data.Items));
-                }
-            });
-
-            return deferred.promise;
+            return defer.promise;
         };
 
         this.queryParents = (gender) => {
