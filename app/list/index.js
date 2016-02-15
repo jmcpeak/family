@@ -5,7 +5,7 @@ export default angular.module('jmList', [
         require('../user'),
         require('../input')])
 
-    .controller('jmListController', function ($scope, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
+    .controller('jmListController', function ($scope, $document, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
         let user,
             init = () => {
                 jmDB.getItem('lastUpdateDate').then((data) => {
@@ -28,7 +28,10 @@ export default angular.module('jmList', [
 
                 if (user) {
                     $scope.selectUser(user);
-                    $timeout(() => angular.element(jmConstant.userIdHash + user.id).click()[0].scrollIntoView(false), 200);
+                    let element = $document.find(jmConstant.userIdHash + user.id);
+                    if (element.length) {
+                        $timeout(() => element.click()[0].scrollIntoView(false), 200);
+                    }
                 } else {
                     $scope.queryAllInProgress = false;
                 }

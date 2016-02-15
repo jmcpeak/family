@@ -1,3 +1,4 @@
+var isProd = process.env.NODE_ENV === 'production';
 var webpack = require('webpack');
 var path = require('path');
 var vendor = [
@@ -14,10 +15,10 @@ var vendor = [
 var plugins = [
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js', Infinity)
+    new webpack.optimize.CommonsChunkPlugin('common', 'common.js')
 ];
 
-if (process.env.NODE_ENV === 'production') {
+if (isProd) {
     plugins.splice(2, 0, new webpack.optimize.UglifyJsPlugin({
         mangle: false,
         sourceMap: false,
@@ -28,23 +29,23 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-    context: path.join(__dirname, '/app'),
+    context: path.resolve(__dirname, 'app'),
     entry: {
         vendor: vendor,
-        app: process.env.NODE_ENV === 'production' ? ['angular', './app.js'] : ['webpack/hot/dev-server', 'angular', './app.js']
+        bundle: isProd ? ['./app.js'] : ['webpack/hot/dev-server', './app.js']
     },
-    devtool: process.env.NODE_ENV === 'production' ? '' : 'source-map',
+    devtool: isProd ? '' : 'source-map',
     output: {
-        path: process.env.NODE_ENV === 'production' ? './dist' : './app',
-        filename: 'bundle.js'
+        path: isProd ? './dist' : './app',
+        filename: '[name].js'
     },
     plugins: plugins,
     module: {
         loaders: [
-            {test: /angular.js$/, loader: 'imports?jquery'}, // inserts into angular require jquery
+            {test: /app.js$/, loader: 'imports?bgen=babel-polyfill'}, // inserts into angular require jquery
             {test: /angular-[^\.]+.js$/, loader: 'imports?angular'}, // inserts in app files require angular
             {test: /jquery.js$/, loader: 'expose?$!expose?jQuery'}, // makes global variables $, jQuery
-            {test: /\.js$/, loader: 'babel!imports?angular', include: /app/}, // inserts in app files require angular
+            {test: /\.js$/, loader: 'babel!imports?angular', include: /app|test/}, // inserts in app files require angular
             {test: /\.woff$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
             {test: /\.woff2$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
             {test: /\.ttf$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream'},

@@ -30,7 +30,7 @@ export default angular.module('jmUser', [
         };
     })
 
-    .controller('jmTabsController', function ($scope, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdMedia, jmDB, jmService, jmConstant) {
+    .controller('jmTabsController', function ($scope, $document, $mdDialog, $mdToast, $localStorage, $mdSidenav, $mdMedia, jmDB, jmService, jmConstant) {
         let cachedDisableSaveValue,
             originatorEv,
             toast = (msg, isError) => {
@@ -126,7 +126,8 @@ export default angular.module('jmUser', [
                 $scope.selectedTab = 0;
 
                 jmService.resetPreviousCard();
-                jmService.setSelectedCard(angular.element(jmConstant.userIdHash + user.id));
+
+                jmService.setSelectedCard(angular.element($document.find(jmConstant.userIdHash + user.id)));
 
                 $scope.$broadcast('selectUser', user);
             };
