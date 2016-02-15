@@ -42,10 +42,7 @@ module.exports = {
     plugins: plugins,
     module: {
         loaders: [
-            {test: /app.js$/, loader: 'imports?bgen=babel-polyfill'}, // inserts into angular require jquery
-            {test: /angular-[^\.]+.js$/, loader: 'imports?angular'}, // inserts in app files require angular
-            {test: /jquery.js$/, loader: 'expose?$!expose?jQuery'}, // makes global variables $, jQuery
-            {test: /\.js$/, loader: 'babel!imports?angular', include: /app|test/}, // inserts in app files require angular
+            {test: /\.js$/, loader: 'babel!imports?angular,bgen=babel-polyfill', include: /app|test/, exclude: /node_modules/}, // inserts in app files require angular
             {test: /\.woff$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
             {test: /\.woff2$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
             {test: /\.ttf$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream'},
