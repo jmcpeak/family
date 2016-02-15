@@ -8,7 +8,9 @@ export default angular.module('app', [
         require('angular-material'),
         require('angular-messages'),
         require('ngstorage').name,
-        require('./list')])
+        require('./input'),
+        require('./list'),
+        require('./user')])
 
     .constant('jmConstant', {
         userIdHash: '#user-',

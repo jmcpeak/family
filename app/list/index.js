@@ -1,9 +1,7 @@
 'use strict';
 
 export default angular.module('jmList', [
-        require('angular-material'),
-        require('../user'),
-        require('../input')])
+        require('angular-material')])
 
     .controller('jmListController', function ($scope, $document, $timeout, $window, $localStorage, $mdMedia, $mdDialog, jmDB, jmConstant) {
         let user,
