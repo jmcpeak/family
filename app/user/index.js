@@ -281,12 +281,12 @@ export default angular.module('jmUser', [
         $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
         $scope.showLoginFields = (!$sessionStorage.sessionToken);
 
-        $scope.login = ()=> {
-            if (this.loginForm.question.$modelValue.toLowerCase().hashCode() === 463258776) {
-                this.displayCircularProgressIndicator = true;
-                this.showLoginFields = false;
+        $scope.login = () => {
+            if ($scope.city.toLowerCase().hashCode() === 463258776) {
+                $scope.displayCircularProgressIndicator = true;
+                $scope.showLoginFields = false;
 
-                angular.bind(this, AWS.config.credentials.get((error) => {
+                angular.bind($scope, AWS.config.credentials.get((error) => {
                     $timeout(()=> {
                         $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
 
@@ -311,7 +311,7 @@ export default angular.module('jmUser', [
                     });
                 }));
             } else {
-                this.error = {badPassword: true};
+                $scope.error = {badPassword: true};
             }
         };
 
