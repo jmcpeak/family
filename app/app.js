@@ -2,36 +2,13 @@
 
 require('angular-material/angular-material.min.css');
 /* jshint -W079 */
-var moment = require('moment');
+let moment = require('moment');
 
 export default angular.module('app', [
-    require('angular-material'),
-    require('angular-messages'),
-    require('ngstorage').name,
-    require('./list')])
-
-    .config(function ($mdIconProvider, $mdDateLocaleProvider) {
-        $mdIconProvider
-            .iconSet('action', require('./assets/action-icons.svg'), 24)
-            .iconSet('alert', require('./assets/alert-icons.svg'), 24)
-            .iconSet('av', require('./assets/av-icons.svg'), 24)
-            .iconSet('communication', require('./assets/communication-icons.svg'), 24)
-            .iconSet('content', require('./assets/content-icons.svg'), 24)
-            .iconSet('device', require('./assets/device-icons.svg'), 24)
-            .iconSet('editor', require('./assets/editor-icons.svg'), 24)
-            .iconSet('file', require('./assets/file-icons.svg'), 24)
-            .iconSet('hardware', require('./assets/hardware-icons.svg'), 24)
-            .iconSet('image', require('./assets/image-icons.svg'), 24)
-            .iconSet('maps', require('./assets/maps-icons.svg'), 24)
-            .iconSet('navigation', require('./assets/navigation-icons.svg'), 24)
-            .iconSet('notification', require('./assets/notification-icons.svg'), 24)
-            .iconSet('social', require('./assets/social-icons.svg'), 24)
-            .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
-
-        $mdDateLocaleProvider.parseDate = function (dateString) {
-            return moment(dateString).toDate();
-        };
-    })
+        require('angular-material'),
+        require('angular-messages'),
+        require('ngstorage').name,
+        require('./list')])
 
     .constant('jmConstant', {
         userIdHash: '#user-',
@@ -106,10 +83,33 @@ export default angular.module('app', [
         ]
     })
 
+    .config(function ($mdIconProvider, $mdDateLocaleProvider) {
+        $mdIconProvider
+            .iconSet('action', require('./assets/action-icons.svg'), 24)
+            .iconSet('alert', require('./assets/alert-icons.svg'), 24)
+            .iconSet('av', require('./assets/av-icons.svg'), 24)
+            .iconSet('communication', require('./assets/communication-icons.svg'), 24)
+            .iconSet('content', require('./assets/content-icons.svg'), 24)
+            .iconSet('device', require('./assets/device-icons.svg'), 24)
+            .iconSet('editor', require('./assets/editor-icons.svg'), 24)
+            .iconSet('file', require('./assets/file-icons.svg'), 24)
+            .iconSet('hardware', require('./assets/hardware-icons.svg'), 24)
+            .iconSet('image', require('./assets/image-icons.svg'), 24)
+            .iconSet('maps', require('./assets/maps-icons.svg'), 24)
+            .iconSet('navigation', require('./assets/navigation-icons.svg'), 24)
+            .iconSet('notification', require('./assets/notification-icons.svg'), 24)
+            .iconSet('social', require('./assets/social-icons.svg'), 24)
+            .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
+
+        $mdDateLocaleProvider.parseDate = function (dateString) {
+            return moment(dateString).toDate();
+        };
+    })
+
     .config(function () {
 
         String.prototype.hashCode = function () {
-            var hash = 0, i, chr, len;
+            let hash = 0, i, chr, len;
             if (this.length === 0) {
                 return hash;
             }
@@ -154,25 +154,19 @@ export default angular.module('app', [
     })
 
     .service('jmDB', function ($q, $location, jmDBUtils) {
-        var minLengthId = 15;
-        var tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak';
-        var dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
+        let minLengthId = 15;
+        let tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak';
+        let dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
 
-        this.guid = function () {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
+        this.guid = () => {
+            let s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         };
 
-        this.queryAll = function () {
-            var deferred = $q.defer();
+        this.queryAll = () => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 FilterExpression: 'size(id) > :size',
                 ExpressionAttributeValues: {
@@ -180,7 +174,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.scan(params, function (err, data) {
+            dynamoDB.scan(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -191,10 +185,10 @@ export default angular.module('app', [
             return deferred.promise;
         };
 
-        this.queryParents = function (gender) {
-            var deferred = $q.defer();
+        this.queryParents = (gender) => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 FilterExpression: 'gender = :gender OR genderSpouse = :gender',
                 ExpressionAttributeValues: {
@@ -202,7 +196,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.scan(params, function (err, data) {
+            dynamoDB.scan(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -213,10 +207,10 @@ export default angular.module('app', [
             return deferred.promise;
         };
 
-        this.getEmailAddresses = function () {
-            var deferred = $q.defer();
+        this.getEmailAddresses = () => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 ProjectionExpression: 'email',
                 FilterExpression: 'attribute_exists(email) AND size(email) > :size',
@@ -225,7 +219,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.scan(params, function (err, data) {
+            dynamoDB.scan(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                     console.log(err.message);
@@ -237,39 +231,22 @@ export default angular.module('app', [
             return deferred.promise;
         };
 
-        this.exportToCSV = function () {
-            var deferred = $q.defer();
-            var headers = [];
-            var query = {
-                TableName: tableName,
-                ProjectionExpression: 'firstName, lastName, email, phone, address, address2, city, theState, zipcode, country',
-                FilterExpression: 'size(id) > :size',
-                ExpressionAttributeValues: {
-                    ':size': {N: minLengthId.toString()}
-                }
-            };
-
-            var scanDynamoDB = function () {
-                dynamoDB.scan(query, function (err, data) {
-                    if (!err) {
-                        if (data.LastEvaluatedKey) {
-                            query.ExclusiveStartKey = data.LastEvaluatedKey;
-                            scanDynamoDB(query);
-                        }
-                        deferred.resolve(printout(data.Items));
-                    } else {
-                        deferred.reject(err);
-                        console.log(err.message);
+        this.exportToCSV = () => {
+            let deferred = $q.defer(),
+                headers = [],
+                query = {
+                    TableName: tableName,
+                    ProjectionExpression: 'firstName, lastName, email, phone, address, address2, city, theState, zipcode, country',
+                    FilterExpression: 'size(id) > :size',
+                    ExpressionAttributeValues: {
+                        ':size': {N: minLengthId.toString()}
                     }
-                });
+                };
 
-                return deferred.promise;
-            };
+            let arrayToCSV = (array_input) => {
+                let string_output = '';
 
-            var arrayToCSV = function (array_input) {
-                var string_output = '';
-
-                for (var i = 0; i < array_input.length; i++) {
+                for (let i = 0; i < array_input.length; i++) {
 
                     try {
                         string_output += ('"' + array_input[i].replace('"', '\"') + '"');
@@ -285,29 +262,29 @@ export default angular.module('app', [
                 return string_output;
             };
 
-            var printout = function (items) {
-                var headersMap = {};
-                var values = [];
-                var header;
-                var value;
+            let printout = (items) => {
+                let headersMap = {};
+                let values = [];
+                let header;
+                let value;
 
                 if (headers.length === 0) {
                     if (items.length > 0) {
-                        for (var j = 0; j < items.length; j++) {
-                            for (var key in items[j]) {
+                        for (let j = 0; j < items.length; j++) {
+                            for (let key in items[j]) {
                                 headersMap[key] = true;
                             }
                         }
                     }
 
-                    for (var key2 in headersMap) {
+                    for (let key2 in headersMap) {
                         headers.push(key2);
                     }
                 }
 
-                for (var index in items) {
-                    var line = [];
-                    for (var i = 0; i < headers.length; i++) {
+                for (let index in items) {
+                    let line = [];
+                    for (let i = 0; i < headers.length; i++) {
                         value = '';
                         header = headers[i];
 
@@ -329,43 +306,56 @@ export default angular.module('app', [
                 return arrayToCSV(headers) + '\r\n' + values;
             };
 
+            let scanDynamoDB = () => {
+                dynamoDB.scan(query, (err, data) => {
+                    if (!err) {
+                        if (data.LastEvaluatedKey) {
+                            query.ExclusiveStartKey = data.LastEvaluatedKey;
+                            scanDynamoDB(query);
+                        }
+                        deferred.resolve(printout(data.Items));
+                    } else {
+                        deferred.reject(err);
+                        console.log(err.message);
+                    }
+                });
+
+                return deferred.promise;
+            };
+
             return scanDynamoDB();
         };
 
-        this.putItem = function (user) {
-            var deferred = $q.defer();
-            var that = this;
+        this.putItem = (user) => {
+            let deferred = $q.defer();
 
             if (user.$$hashKey) {
                 delete user.$$hashKey;
             }
 
-            var convertedItem = jmDBUtils.convertFromJson(user);
+            let convertedItem = jmDBUtils.convertFromJson(user);
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 Item: convertedItem
             };
 
-            dynamoDB.putItem(params, function (err, data) {
+            dynamoDB.putItem(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                    that.setLastUpdateDate(convertedItem.id).then(undefined,
-                        function () {
-                            console.warn('error setting last update date');
-                        });
+                    this.setLastUpdateDate(convertedItem.id).then(undefined, () => console.warn('error setting last update date'));
                 }
             });
 
             return deferred.promise;
         };
 
-        this.setLastUpdateDate = function (id) {
-            var deferred = $q.defer();
+        this.setLastUpdateDate = (id) => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 Key: {id: {S: 'lastUpdateDate'}},
                 UpdateExpression: 'set lastUpdated = :num, lastUpdatedID = :id',
@@ -375,7 +365,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.updateItem(params, function (err, data) {
+            dynamoDB.updateItem(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -386,10 +376,10 @@ export default angular.module('app', [
             return deferred.promise;
         };
 
-        this.deleteItem = function (user) {
-            var deferred = $q.defer();
+        this.deleteItem = (user) => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 Key: {
                     id: {
@@ -398,7 +388,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.deleteItem(params, function (err, data) {
+            dynamoDB.deleteItem(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -409,10 +399,10 @@ export default angular.module('app', [
             return deferred.promise;
         };
 
-        this.getItem = function (id) {
-            var deferred = $q.defer();
+        this.getItem = (id) => {
+            let deferred = $q.defer();
 
-            var params = {
+            let params = {
                 TableName: tableName,
                 Key: {
                     id: {
@@ -421,7 +411,7 @@ export default angular.module('app', [
                 }
             };
 
-            dynamoDB.getItem(params, function (err, data) {
+            dynamoDB.getItem(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
                 } else {
@@ -435,29 +425,29 @@ export default angular.module('app', [
 
     .service('jmDBUtils', function () {
 
-        this.arrayConverter = function (data) {
-            var data_out = [];
+        this.arrayConverter = (data) => {
+            let data_out = [];
 
             if (!data) {
                 return data_out;
             }
 
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 data_out.push(this.objectConverter(data[i]));
             }
 
             return data_out;
         };
 
-        this.objectConverter = function (data) {
-            var data_out = {};
+        this.objectConverter = (data) => {
+            let data_out = {};
 
             if (!data) {
                 return data_out;
             }
 
-            Object.keys(data).forEach(function (key) {
-                var val = data[key];
+            Object.keys(data).forEach((key) => {
+                let val = data[key];
 
                 if (!!val.S) {
                     data_out[key] = val.S;
@@ -468,15 +458,15 @@ export default angular.module('app', [
                 } else if (!!val.SS) {
                     data_out[key] = val.SS;
                 } else if (!!val.NS) {
-                    var val_arr = [];
-                    for (var j = 0; j < val.NS.length; j++) {
+                    let val_arr = [];
+                    for (let j = 0; j < val.NS.length; j++) {
                         val_arr.push(parseInt(val.NS[j]));
                     }
                     data_out[key] = val_arr;
                 } else if (!!val.BS) {
-                    var val_arr2 = [];
-                    for (var jj = 0; jj < val.BS.length; jj++) {
-                        val_arr2.push((val.BS[jj].toLowerCase() === 'true'));
+                    let val_arr2 = [];
+                    for (let j = 0; j < val.BS.length; j++) {
+                        val_arr2.push((val.BS[j].toLowerCase() === 'true'));
                     }
                     data_out[key] = val_arr2;
                 }
@@ -485,17 +475,17 @@ export default angular.module('app', [
             return data_out;
         };
 
-        this.convertFromJson = function (data) {
+        this.convertFromJson = (data) => {
             /* jshint -W109 */
-            var data_out = {};
+            let data_out = {};
             if (!data) {
                 return data_out;
             }
 
-            Object.keys(data).forEach(function (key) {
-                var subObj = {};
-                var val = data[key];
-                // if
+            Object.keys(data).forEach((key) => {
+                let subObj = {};
+                let val = data[key];
+
                 if (!(typeof val === 'undefined' || (!val && typeof val !== 'boolean'))) {
                     subObj = null;
                 }
@@ -504,7 +494,7 @@ export default angular.module('app', [
                     subObj = {'BOOL': val};
                 }
                 else if (typeof val === 'string') {
-                    var value = val.toString();
+                    let value = val.toString();
                     subObj = (value === '') ? {"NULL": true} : {"S": value};
                 }
                 else if (typeof val === 'number') {
@@ -512,7 +502,7 @@ export default angular.module('app', [
                 }
                 else if (typeof val === 'object') {
                     if (Array.isArray(val) && val.length >= 1) {
-                        var subObjKey = null;
+                        let subObjKey = null;
                         subObj = {};
                         if (typeof val[0] === 'boolean') {
                             subObjKey = "BS";
@@ -525,8 +515,8 @@ export default angular.module('app', [
                         }
 
                         if (!!subObjKey) {
-                            var subObjArr = [];
-                            for (var i = 0; i < val.length; i++) {
+                            let subObjArr = [];
+                            for (let i = 0; i < val.length; i++) {
                                 subObjArr.push(val[i].toString());
                             }
                             subObj[subObjKey] = subObjArr;
