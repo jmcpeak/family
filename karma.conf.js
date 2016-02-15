@@ -3,7 +3,7 @@ var path = require('path');
 
 var hasCoverage = global.process.argv.reduce(function (result, arg) {
     return arg.indexOf('coverage') !== -1 || result;
-},false);
+}, false);
 
 var include = [
     path.resolve('./app')
@@ -76,8 +76,11 @@ module.exports = function (config) {
         logLevel: config.ERROR,
 
         preprocessors: {
-            'spec.js': ['webpack','sourcemap']
-            //'app/index.js': ['coverage']
+            'spec.js': ['webpack', 'sourcemap'],
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
+            'src/*.js': ['coverage']
         },
 
         // enable / disable watching file and executing tests whenever any file changes
