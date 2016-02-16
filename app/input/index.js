@@ -1,15 +1,13 @@
 'use strict';
 
-/* jshint -W079 */
-let moment = require('moment');
+import moment from "moment";
+import md from "angular-material";
+import messages from "angular-messages";
 
-export default angular.module('jmInput', [
-        require('angular-material'),
-        require('angular-messages')])
+export default angular.module('jmInput', [md, messages])
 
     .directive('jmInput', () => {
         return {
-            replace: true,
             scope: {
                 label: '@',
                 field: '@',
@@ -36,7 +34,6 @@ export default angular.module('jmInput', [
 
     .directive('jmTextArea', () => {
         return {
-            replace: true,
             scope: {
                 label: '@',
                 field: '@',
@@ -66,7 +63,6 @@ export default angular.module('jmInput', [
 
     .directive('jmSelect', () => {
         return {
-            replace: true,
             scope: {
                 placeholder: '@',
                 field: '@',
@@ -98,7 +94,6 @@ export default angular.module('jmInput', [
 
     .directive('jmDuration', () => {
         return {
-            replace: true,
             scope: {
                 user: '=',
                 from: '@',

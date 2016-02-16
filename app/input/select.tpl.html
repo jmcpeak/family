@@ -1,8 +1,9 @@
 <md-input-container>
     <label>{{placeholder}}</label>
-    <md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}}" tabindex="{{taborder}}">
+    <md-select ng-model="user[field]" placeholder="{{placeholder}}" aria-label="{{placeholder}}"
+               tabindex="{{taborder}}">
         <md-option ng-value="keyvalue !== undefined ? value[keyvalue] : value"
-                   ng-repeat="value in repeat | orderBy:orderclause" >
+                   ng-repeat="value in repeat | orderBy:orderclause">
             {{selection(value)}}
         </md-option>
     </md-select>

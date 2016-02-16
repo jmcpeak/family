@@ -1,12 +1,11 @@
 'use strict';
 
-require('angular-clipboard');
-let showAngularStats = require('ng-stats');
+import md from "angular-material";
+import partials from "../partials";
+import showAngularStats from "ng-stats";
+import "angular-clipboard";
 
-export default angular.module('jmUser', [
-        require('angular-material'),
-        require('../partials'),
-        'angular-clipboard'])
+export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
     .controller('jmDialogController', function ($mdDialog, jmDB) {
         let showNgStats;
@@ -318,6 +317,35 @@ export default angular.module('jmUser', [
     .directive('jmContentArea', () => {
         return {
             replace: true,
+            controller: function ($scope) {
+                let exportResolve = (entries) => {
+                    let link = document.createElement('a');
+                    link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
+                    link.setAttribute('download', 'McPeak Family.csv');
+                    link.click();
+                };
+
+                $scope.export = () => jmDB.exportToCSV().then(exportResolve);
+
+                $scope.getCount = (data) => {
+                    if (data) {
+                        let additional = 0;
+                        angular.forEach(data, (entry) => {
+                            if (entry.firstNameSpouse && entry.firstNameSpouse.length >= 1) {
+                                additional++;
+                            }
+
+                            angular.forEach(entry.children, (child) => {
+                                if (entry['firstNameChild' + child] && entry['firstNameChild' + child].length >= 1) {
+                                    additional++;
+                                }
+                            });
+                        });
+
+                        return data.length + additional;
+                    }
+                };
+            },
             template: require('../user/content.tpl.html')
         };
     })

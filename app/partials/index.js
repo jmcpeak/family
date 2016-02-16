@@ -1,7 +1,8 @@
 'use strict';
 
-export default angular.module('jmPartials', [
-        require('angular-material')])
+import md from "angular-material";
+
+export default angular.module('jmPartials', [md])
 
     .service('jmService', function () {
         let card, form, outline, previousForm;

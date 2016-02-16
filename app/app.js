@@ -1,15 +1,15 @@
 'use strict';
 
-import 'angular-material/angular-material.min.css'
-import moment from 'moment';
+import moment from "moment";
+import user from "./user";
+import md from "angular-material";
+import messages from "angular-messages";
+import input from "./input";
+import list from "./list";
+import "ngstorage";
+import "angular-material/angular-material.min.css";
 
-export default angular.module('app', [
-        require('angular-material'),
-        require('angular-messages'),
-        require('ngstorage').name,
-        require('./input'),
-        require('./list'),
-        require('./user')])
+angular.module('app', [md, messages, input, list, user, 'ngStorage'])
 
     .constant('jmConstant', {
         userIdHash: '#user-',
@@ -395,24 +395,24 @@ export default angular.module('app', [
         };
 
         this.getItem = (id) => {
-            let deferred = $q.defer();
-
-            let params = {
-                TableName: tableName,
-                Key: {
-                    id: {
-                        S: id.toString()
+            let deferred = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    Key: {
+                        id: {
+                            S: id.toString()
+                        }
                     }
-                }
-            };
+                },
+                callback = (err, data) => {
+                    if (err) {
+                        deferred.reject(err);
+                    } else {
+                        deferred.resolve(jmDBUtils.objectConverter(data.Item));
+                    }
+                };
 
-            dynamoDB.getItem(params, (err, data) => {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                }
-            });
+            dynamoDB.getItem(params, callback);
 
             return deferred.promise;
         };
@@ -528,4 +528,4 @@ export default angular.module('app', [
 
             return data_out;
         };
-    }).name;
+    });
