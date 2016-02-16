@@ -8,40 +8,31 @@ export default angular.module('jmInput', [md, messages])
 
     .directive('jmInput', () => {
         return {
+            require: ['^form'],
             scope: {
+                user: '=',
                 label: '@',
                 field: '@',
                 required: '@',
                 type: '@',
                 placeholder: '@',
-                taborder: '@',
-                focus: '=',
-                user: '='
+                taborder: '@'
             },
-            require: ['^form'],
             template: require('../input/input.tpl.html'),
-            link: (scope, element, attrs, controls) => {
-                scope.form = controls[0];
-
-                scope.$on('selectUser', (event) => {
-                    if (event.currentScope.focus) {
-                        element.find('input').focus();
-                    }
-                });
-            }
+            link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
 
     .directive('jmTextArea', () => {
         return {
+            require: ['^form'],
             scope: {
+                user: '=',
                 label: '@',
                 field: '@',
                 placeholder: '@',
-                taborder: '@',
-                user: '='
+                taborder: '@'
             },
-            require: ['^form'],
             template: require('../input/textarea.tpl.html'),
             link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
@@ -49,13 +40,13 @@ export default angular.module('jmInput', [md, messages])
 
     .directive('jmSwitch', () => {
         return {
+            require: ['^form'],
             scope: {
+                user: '=',
                 field: '@',
                 ddisabled: '@',
-                taborder: '@',
-                user: '='
+                taborder: '@'
             },
-            require: ['^form'],
             template: require('../input/switch.tpl.html'),
             link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
@@ -63,19 +54,19 @@ export default angular.module('jmInput', [md, messages])
 
     .directive('jmSelect', () => {
         return {
+            require: ['^form'],
             scope: {
+                user: '=',
+                repeat: '=',
+                required: '=',
                 placeholder: '@',
                 field: '@',
                 keyvalue: '@',
                 keydisplay: '@',
                 keydisplay2: '@',
                 orderclause: '@',
-                taborder: '@',
-                required: '=',
-                user: '=',
-                repeat: '='
+                taborder: '@'
             },
-            require: ['^form'],
             template: require('../input/select.tpl.html'),
             controller: function ($scope) {
                 $scope.selection = (value) => {
