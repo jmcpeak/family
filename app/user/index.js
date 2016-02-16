@@ -8,23 +8,22 @@ export default angular.module('jmUser', [
         require('../partials'),
         'angular-clipboard'])
 
-    .controller('jmDialogController', function ($scope, $mdDialog, jmDB) {
+    .controller('jmDialogController', function ($mdDialog, jmDB) {
         let showNgStats;
 
-        $scope.selectedUser = {id: jmDB.guid(), children: [0]};
-        $scope.cancel = () => $mdDialog.cancel();
-        $scope.ok = () => $mdDialog.hide($scope.selectedUser);
-
-        $scope.toggleNgStats = () => {
-            showNgStats = !showNgStats;
-
-            $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
-
+        this.selectedUser = {id: jmDB.guid(), children: [0]};
+        this.cancel = () => $mdDialog.cancel();
+        this.ok = () => $mdDialog.hide(this.selectedUser);
+        this.toggleNgStats = () => {
             let options = (showNgStats) ? {
                 position: 'bottomright',
                 logDigest: true,
                 logWatches: true
             } : false;
+
+            showNgStats = !showNgStats;
+
+            this.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
 
             showAngularStats(options);
         };
@@ -168,14 +167,12 @@ export default angular.module('jmUser', [
 
         $scope.add = (event) => {
             let add = ()=> {
-                let newScope = $scope.$new();
-                newScope.addUser = true;
-
                 $mdDialog.show({
-                    controller: 'jmDialogController',
-                    template: require('../user/dialog.tpl.html'),
                     targetEvent: event,
-                    scope: newScope
+                    bindToController: true,
+                    template: require('../user/dialog.tpl.html'),
+                    controller: 'jmDialogController',
+                    controllerAs: 'jmDialogCtrl'
                 }).then((user) => this.putItem(user), ()=> {
                     $scope.addUser = false;
                     jmService.usePreviousForm();
@@ -232,8 +229,8 @@ export default angular.module('jmUser', [
                     locals: {
                         emailAddresses: emailAddresses
                     },
-                    controllerAs: 'dialog',
                     template: require('../user/email.tpl.html'),
+                    controllerAs: 'dialog',
                     controller: function ($mdDialog) {
                         this.cancel = ()=> $mdDialog.cancel();
                     }
