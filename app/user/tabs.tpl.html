@@ -2,11 +2,11 @@
     <md-tab label="{{tab.name}}" ng-repeat="tab in tabs">
         <md-tab-body>
             <ng-form novalidate name="{{'userForm' + $index}}">
-                <jm-required ng-if="tab.position === 0"></jm-required>
-                <jm-address ng-if="tab.position === 1"></jm-address>
-                <jm-spouse ng-if="tab.position === 2"></jm-spouse>
-                <jm-dates-and-places ng-if="tab.position === 3"></jm-dates-and-places>
-                <jm-children ng-if="tab.position === 4"></jm-children>
+                <jm-required user="selectedUser" form="userForm0" ng-if="tab.position === 0"></jm-required>
+                <jm-address user="selectedUser" ng-if="tab.position === 1"></jm-address>
+                <jm-spouse user="selectedUser" ng-if="tab.position === 2"></jm-spouse>
+                <jm-dates-and-places user="selectedUser" ng-if="tab.position === 3"></jm-dates-and-places>
+                <jm-children user="selectedUser" ng-if="tab.position === 4"></jm-children>
             </ng-form>
         </md-tab-body>
     </md-tab>

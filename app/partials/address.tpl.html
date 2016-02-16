@@ -3,14 +3,14 @@
     <div layout="row" layout-sm="column" aria-label="Email and Gender">
         <jm-input label="E-mail"
                   field="email"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="email"
                   taborder="1">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
         <jm-input label="Phone"
                   field="phone"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="tel"
                   taborder="2">
         </jm-input>
@@ -19,14 +19,14 @@
     <div layout="row" layout-sm="column" aria-label="Address">
         <jm-input label="Address"
                   field="address"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="text"
                   taborder="3">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
         <jm-input label="Address Line 2"
                   field="address2"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   required="false"
                   type="text"
                   taborder="4">
@@ -34,15 +34,15 @@
         &nbsp;&nbsp;&nbsp;
         <jm-input label="City"
                   field="city"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="text"
                   taborder="5">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
         <jm-select placeholder="State"
                    field="theState"
-                   user="selectedUser"
-                   repeat="states"
+                   user="jmPartialCtrl.user"
+                   repeat="jmPartialCtrl.states"
                    keyvalue="abbreviation"
                    keydisplay="name"
                    orderclause="name"
@@ -53,21 +53,21 @@
     <div layout="row" layout-sm="column" aria-label="Address Continued">
         <jm-input label="ZipCode"
                   field="zipcode"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="text"
                   taborder="7">
         </jm-input>
         &nbsp;&nbsp;&nbsp;
         <jm-input label="Country"
                   field="country"
-                  user="selectedUser"
+                  user="jmPartialCtrl.user"
                   type="text"
                   taborder="8">
         </jm-input>
     </div>
 
-    <div ng-if="addressDefined()" layout="row" layout-sm="column" layout-align="center center" aria-label="street view">
-        <a ng-href="{{getGoogleMapsURL()}}" target="_blank"><img ng-src="{{getStreetViewURL()}}"></a>
+    <div ng-if="jmPartialCtrl.addressDefined()" layout="row" layout-sm="column" layout-align="center center" aria-label="street view">
+        <a ng-href="{{jmPartialCtrl.getGoogleMapsURL()}}" target="_blank"><img ng-src="{{jmPartialCtrl.getStreetViewURL()}}"></a>
     </div>
 
 </div>

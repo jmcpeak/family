@@ -7,6 +7,30 @@ import "angular-clipboard";
 
 export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
+    .service('jmService', function () {
+        let card, form, outline, previousForm;
+
+        this.getRequiredForm = () => form;
+        this.usePreviousForm = () => form = previousForm;
+
+        this.setRequiredForm = (value) => {
+            previousForm = form;
+            form = value;
+        };
+
+        this.resetPreviousCard = () => {
+            if (card) {
+                card.css('outline', outline);
+            }
+        };
+
+        this.setSelectedCard = (value) => {
+            card = value;
+            outline = card.css('outline');
+            card.css('outline', '4px auto -webkit-focus-ring-color');
+        };
+    })
+
     .controller('jmDialogController', function ($mdDialog, jmDB) {
         let showNgStats;
 

@@ -5,50 +5,50 @@
             This is for children still living at home. If they have an address, they should have their own entry.<br>&nbsp;
         </span>
     </div>
-    <div layout="row" layout-sm="column" aria-label="Name" ng-repeat="child in selectedUser.children track by $index ">
+    <div layout="row" layout-sm="column" aria-label="Name" ng-repeat="child in jmChildrenCtrl.user.children track by $index ">
         <div layout="column" flex>
             <div layout="rows">
                 <jm-input label="First Name"
-                          field="{{fields[0] + child}}"
-                          user="selectedUser"
+                          field="{{jmChildrenCtrl.fields[0] + child}}"
+                          user="jmChildrenCtrl.user"
                           type="text"
                           focus="true">
                 </jm-input>
                 &nbsp;&nbsp;&nbsp;
                 <jm-input label="Middle Name"
-                          field="{{fields[1] + child}}"
-                          user="selectedUser"
+                          field="{{jmChildrenCtrl.fields[1] + child}}"
+                          user="jmChildrenCtrl.user"
                           type="text">
                 </jm-input>
                 &nbsp;&nbsp;&nbsp;
                 <jm-input label="Last Name"
-                          field="{{fields[2] + child}}"
-                          user="selectedUser"
+                          field="{{jmChildrenCtrl.fields[2] + child}}"
+                          user="jmChildrenCtrl.user"
                           type="text">
                 </jm-input>
                 <jm-input label="Birthday"
-                          field="{{fields[3] + child}}"
-                          user="selectedUser"
+                          field="{{jmChildrenCtrl.fields[3] + child}}"
+                          user="jmChildrenCtrl.user"
                           type="text">
                 </jm-input>
                 &nbsp;&nbsp;&nbsp;
                 <jm-select placeholder="Gender"
-                           field="{{fields[4] + child}}"
+                           field="{{jmChildrenCtrl.fields[4] + child}}"
                            required="true"
-                           user="selectedUser"
+                           user="jmChildrenCtrl.user"
                            repeat="genders"
                            keyvalue="key"
                            keydisplay="name">
                 </jm-select>
-                <jm-duration user="selectedUser" from="{{fields[3] + child}}" suffix="old"></jm-duration>
+                <jm-duration user="jmChildrenCtrl.user" from="{{jmChildrenCtrl.fields[3] + child}}" suffix="old"></jm-duration>
             </div>
         </div>
         <div layout="column">
-            <md-button ng-show="child" ng-click="removeChild($event, child)" class="md-icon-button"
+            <md-button ng-show="child" ng-click="jmChildrenCtrl.removeChild(child)" class="md-icon-button"
                        aria-label="Remove">
                 <md-icon md-svg-src="content:remove_circle"></md-icon>
             </md-button>
-            <md-button ng-show="$index === selectedUser.children.length - 1" ng-click="addChild($event)"
+            <md-button ng-show="$index === jmChildrenCtrl.user.children.length - 1" ng-click="jmChildrenCtrl.addChild($event)"
                        class="md-icon-button" aria-label="Add">
                 <md-icon md-svg-src="content:add_circle"></md-icon>
             </md-button>
@@ -57,7 +57,7 @@
     <div layout="row" aria-label="Pets">
         <jm-text-area label="Pets"
                       field="pets"
-                      user="selectedUser">
+                      user="jmChildrenCtrl.user">
         </jm-text-area>
     </div>
 </div>

@@ -3,18 +3,18 @@
     <div layout="column" layout-padding>
         <jm-select placeholder="Father"
                    field="father"
-                   user="selectedUser"
-                   repeat="fathers"
+                   user="jmRequiredCtrl.user"
+                   repeat="jmRequiredCtrl.fathers"
                    keyvalue="id"
                    keydisplay="firstName"
                    keydisplay2="lastName"
-                   ng-click="update()"
+                   ng-click="jmRequiredCtrl.update()"
                    orderclause="lastName"
                    taborder="11">
         </jm-select>
         <jm-input label="First Name"
                   field="firstName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   required="true"
                   type="text"
                   focus="true"
@@ -22,19 +22,19 @@
         </jm-input>
         <jm-input label="Middle Name"
                   field="middleName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   type="text"
                   taborder="4">
         </jm-input>
         <jm-input label="Title ('Dr.')"
                   field="titleName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   type="text"
                   taborder="7">
         </jm-input>
         <jm-text-area label="Occupation and/or Hobbies"
                       field="hobbies"
-                      user="selectedUser"
+                      user="jmRequiredCtrl.user"
                       taborder="10">
         </jm-text-area>
     </div>
@@ -42,31 +42,31 @@
     <div layout="column" layout-padding>
         <jm-select placeholder="Mother"
                    field="mother"
-                   user="selectedUser"
-                   repeat="mothers"
+                   user="jmRequiredCtrl.user"
+                   repeat="jmRequiredCtrl.mothers"
                    keyvalue="id"
                    keydisplay="firstName"
                    keydisplay2="lastName"
-                   ng-click="update()"
+                   ng-click="jmRequiredCtrl.update()"
                    orderclause="lastName"
                    taborder="12">
         </jm-select>
         <jm-input label="Last Name"
                   field="lastName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   required="true"
                   type="text"
                   taborder="2">
         </jm-input>
         <jm-input label="Maiden Name"
                   field="maidenName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   type="text"
                   taborder="5">
         </jm-input>
         <jm-input label="Suffix ('Jr.')"
                   field="suffixName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   type="text"
                   taborder="8">
         </jm-input>
@@ -77,7 +77,7 @@
         <jm-select placeholder="Gender"
                    field="gender"
                    required="true"
-                   user="selectedUser"
+                   user="jmRequiredCtrl.user"
                    repeat="genders"
                    keyvalue="key"
                    keydisplay="name"
@@ -85,17 +85,17 @@
         </jm-select>
         <jm-input label="Nickname"
                   field="nickName"
-                  user="selectedUser"
+                  user="jmRequiredCtrl.user"
                   type="text"
                   taborder="6">
         </jm-input>
         <jm-select placeholder="How should the name appear?"
                    field="displayName"
-                   user="selectedUser"
-                   repeat="names"
+                   user="jmRequiredCtrl.user"
+                   repeat="jmRequiredCtrl.names()"
                    keyvalue="display"
                    keydisplay="display"
-                   ng-click="update()"
+                   ng-click="jmRequiredCtrl.update()"
                    taborder="9">
         </jm-select>
     </div>
