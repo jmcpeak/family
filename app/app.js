@@ -1,8 +1,7 @@
 'use strict';
 
-require('angular-material/angular-material.min.css');
-/* jshint -W079 */
-let moment = require('moment');
+import 'angular-material/angular-material.min.css'
+import moment from 'moment';
 
 export default angular.module('app', [
         require('angular-material'),
