@@ -6,12 +6,12 @@
     </md-toolbar>
     <md-dialog-content class="md-dialog-content" role="document">
         <md-input-container flex>
-            <textarea md-autofocus>{{dialog.emailAddresses}}</textarea>
+            <textarea md-autofocus aria-label="address">{{dialog.emailAddresses}}</textarea>
         </md-input-container>
     </md-dialog-content>
-    <div class="md-actions">
+    <md-dialog-actions>
         <md-button class="md-primary" clipboard text="dialog.emailAddresses" on-copied="dialog.cancel()">
             Copy and close
         </md-button>
-    </div>
+    </md-dialog-actions>
 </md-dialog>
