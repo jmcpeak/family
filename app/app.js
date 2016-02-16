@@ -84,7 +84,7 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         ]
     })
 
-    .config(function ($mdIconProvider, $mdDateLocaleProvider, $mdThemingProvider) {
+    .config(($mdIconProvider, $mdDateLocaleProvider, $mdThemingProvider) => {
         $mdDateLocaleProvider.parseDate = (dateString) => moment(dateString).toDate();
 
         $mdIconProvider
@@ -105,7 +105,7 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
             .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
 
         // Add to string prototype
-        String.prototype.hashCode = function () {
+        String.prototype.hashCode = () => {
             let hash = 0, i, chr, len;
             if (this.length === 0) {
                 return hash;
