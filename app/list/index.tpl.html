@@ -6,34 +6,32 @@
         </div>
     </md-toolbar>
     <md-content>
-        <md-list layout-fill>
-            <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
-                     ng-repeat="user in users | filter:search | orderBy:['lastName', 'firstName']"
-                     ng-click="selectUser(user, $event)" class="md-whiteframe-z1 jm-list">
-                <div class="md-tile-left" style="padding-left: 10px; min-width: 80px" hide-sm>
-                    <md-button class="md-fab" aria-label="User Initials">
-                        <h2 style="margin-top: 1px;">
-                            {{user.firstName[0] + user.lastName[0] | uppercase}}
-                        </h2>
-                    </md-button>
-                </div>
-                <div class="md-tile-content" style="white-space: nowrap; overflow: hidden">
-                    <div style="font-size: x-small; font-style: italic" ng-if="lastUpdatedID === user.id">Last Updated
+        <md-virtual-repeat-container style="height: 100vh;">
+            <md-list layout-fill>
+                <md-card layout="row" layout-align="start center" layout-padding md-ink-ripple id="user-{{user.id}}"
+                         md-virtual-repeat="user in ::users | filter:search | orderBy:['lastName', 'firstName']"
+                         ng-click="::selectUser(user, $event)" class="md-whiteframe-z1 jm-list">
+                    <div class="md-tile-left" style="padding-left: 10px; min-width: 80px" hide-sm>
+                        <md-button class="md-fab" aria-label="User Initials">
+                            <h2 style="margin-top: 1px;">
+                                {{user.firstName[0] + user.lastName[0] | uppercase}}
+                            </h2>
+                        </md-button>
                     </div>
-                    <div>{{user.displayName ? user.displayName : user.firstName + ' ' + user.lastName}}</div>
-                    <div>{{user.address}}{{user.city ? ', ' + user.city : ''}}{{user.theState ? ' ' + user.theState :
-                        ''}}
+                    <div class="md-tile-content" style="white-space: nowrap; overflow: hidden">
+                        <div style="font-size: x-small; font-style: italic" ng-if="::lastUpdatedID === user.id">Last
+                            Updated
+                        </div>
+                        <div>{{user.displayName ? user.displayName : user.firstName + ' ' + user.lastName}}</div>
+                        <div>
+                            {{user.address}}{{user.city ? ', ' + user.city : ''}}{{user.theState ? ' ' + user.theState : ''}}
+                        </div>
+                        <div style="color: #0000cc"><a href="">{{user.email}}</a></div>
+                        <div hide-gt-md><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.phone}}</a>
+                        </div>
                     </div>
-                    <div style="color: #0000cc"><a href="">{{user.email}}</a></div>
-                    <div hide-gt-md><a href="mailto:{{user.email}}?Subject=McPeak%20Family%20">{{user.phone}}</a></div>
-                </div>
-                <!--<div class="md-tile-right">-->
-                    <!--<md-button class="md-raised md-warn jm-remove-button" aria-label="Remove"-->
-                               <!--ng-show="showDelete"-->
-                               <!--ng-click="showDelete = !showDelete">Remove-->
-                    <!--</md-button>-->
-                <!--</div>-->
-            </md-card>
-        </md-list>
+                </md-card>
+            </md-list>
+        </md-virtual-repeat-container>
     </md-content>
 </md-sidenav>

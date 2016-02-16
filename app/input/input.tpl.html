@@ -1,10 +1,10 @@
 <md-input-container>
-    <label>{{label}}</label>
-    <input name="{{field}}"
-           type="{{type}}"
-           tabindex="{{taborder}}"
+    <label>{{::label}}</label>
+    <input name="{{::field}}"
+           type="{{::type}}"
+           tabindex="{{::taborder}}"
            ng-model="user[field]"
-           ng-required="required === 'true'">
+           ng-required="::required === 'true'">
     <div ng-messages="form[field].$error">
         <div ng-messages-include="error-messages"></div>
     </div>

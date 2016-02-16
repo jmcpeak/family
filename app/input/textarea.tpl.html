@@ -1,6 +1,6 @@
 <md-input-container>
-    <label>{{label}}</label>
-    <textarea name="{{field}}" type="{{type}}" ng-model="user[field]" tabindex="{{taborder}}"></textarea>
+    <label>{{::label}}</label>
+    <textarea name="{{::field}}" type="{{::type}}" ng-model="user[field]" tabindex="{{::taborder}}"></textarea>
     <div ng-messages="form[field].$error">
         <div ng-messages-include="error-messages"></div>
     </div>

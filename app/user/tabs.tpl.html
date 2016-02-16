@@ -1,5 +1,5 @@
 <md-tabs md-selected="selectedTab" md-dynamic-height md-stretch-tabs="always">
-    <md-tab label="{{tab.name}}" ng-repeat="tab in tabs">
+    <md-tab label="{{tab.name}}" ng-repeat="tab in ::tabs">
         <md-tab-body>
             <ng-form novalidate name="{{'userForm' + $index}}">
                 <jm-required user="selectedUser" form="userForm0" ng-if="tab.position === 0"></jm-required>

@@ -105,7 +105,7 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
             .iconSet('toggle', require('./assets/toggle-icons.svg'), 24);
 
         // Add to string prototype
-        String.prototype.hashCode = () => {
+        String.prototype.hashCode = function () {
             let hash = 0, i, chr, len;
             if (this.length === 0) {
                 return hash;
