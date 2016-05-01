@@ -260,34 +260,6 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
                 });
             });
         };
-
-        $scope.about = ()=> {
-            $mdDialog.show({
-                template: require('../user/about.tpl.html'),
-                targetEvent: originatorEv,
-                clickOutsideToClose: true,
-                controller: function ($scope, $mdDialog) {
-                    let showNgStats;
-
-                    $scope.cancel = ()=> $mdDialog.cancel();
-                    $scope.onOff = ()=> showNgStats;
-
-                    $scope.toggleNgStats = ()=> {
-                        showNgStats = !showNgStats;
-
-                        $scope.ngStatsLabel = (showNgStats) ? 'Hide' : 'Show';
-
-                        let options = (showNgStats) ? {
-                            position: 'bottomright',
-                            logDigest: true,
-                            logWatches: true
-                        } : false;
-
-                        showAngularStats(options);
-                    };
-                }
-            });
-        };
     })
 
     .controller('jmLoginController', function ($scope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
@@ -340,7 +312,7 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
     .directive('jmContentArea', () => {
         return {
-            replace: true,
+            //replace: true,
             controller: function ($scope) {
                 let exportResolve = (entries) => {
                     let link = document.createElement('a');
@@ -383,7 +355,7 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
     .directive('jmLogin', () => {
         return {
-            replace: true,
+            //replace: true,
             template: require('../user/login.tpl.html'),
             controller: 'jmLoginController'
         };

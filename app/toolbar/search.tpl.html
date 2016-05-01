@@ -1,0 +1,17 @@
+<md-sidenav class="jm-side-sheet md-sidenav-right" md-component-id="search">
+    <md-toolbar flex>
+        <div class="md-toolbar-tools">
+            <md-button class="md-icon-button" ng-click="$ctrl.toggleSearch()" aria-label="Back">
+                <md-icon>arrow_forward</md-icon>
+            </md-button>
+
+            <md-input-container md-no-float class="md-block" style="margin-left: 10px;">
+                <input type="text" placeholder="Search" ng-model="$ctrl.search" md-select-on-focus
+                       style="margin-top: 22px;">
+            </md-input-container>
+            <md-button style="left: -46px" class="md-icon-button" aria-label="Clear" ng-click="$ctrl.search = ''">
+                <md-icon style="color: darkgray">clear</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+</md-sidenav>

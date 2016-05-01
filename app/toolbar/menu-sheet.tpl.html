@@ -1,0 +1,34 @@
+<md-bottom-sheet class="md-list" ng-cloak>
+    <md-list>
+        <md-list-item>
+            <md-button class="jm-bottom-button md-list-item-content" ng-click="$ctrl.deleteSheet()"
+                       ng-disabled="$ctrl.isRemoveDisabled()">
+                <span>Delete</span>
+            </md-button>
+        </md-list-item>
+
+        <md-list-item>
+            <md-button class="jm-bottom-button md-list-item-content" ng-click="$ctrl.email()">
+                <span>E-mail All</span>
+            </md-button>
+        </md-list-item>
+
+        <md-list-item>
+            <md-button class="jm-bottom-button md-list-item-content" ng-click="$ctrl.theme()">
+                <span>Use dark theme</span>
+            </md-button>
+        </md-list-item>
+
+        <md-list-item>
+            <md-button class="jm-bottom-button md-list-item-content" ng-click="$ctrl.about()">
+                <span>About</span>
+            </md-button>
+        </md-list-item>
+
+        <md-list-item>
+            <md-button class="jm-bottom-button md-list-item-content" ng-click="$ctrl.bottomSheetCancel()">
+                <span>Cancel</span>
+            </md-button>
+        </md-list-item>
+    </md-list>
+</md-bottom-sheet>

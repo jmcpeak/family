@@ -1,0 +1,21 @@
+<md-bottom-sheet class="md-grid" layout="column" ng-cloak>
+    <div layout="row" layout-align="center center">
+        <h3>Are you sure you want to delete Julie's {{$ctrl.userName}} information?</h3>
+    </div>
+    <div>
+        <md-list flex layout="row" layout-align="center center">
+            <md-list-item>
+                    <md-button class="md-grid-item-content" ng-click="">
+                        <md-icon md-svg-src="action:delete" style="height: 48px; width: 48px;"></md-icon>
+                        <div class="md-grid-text">Delete</div>
+                    </md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button class="md-grid-item-content" ng-click="$ctrl.bottomSheetCancel()">
+                    <md-icon md-svg-src="navigation:close" style="height: 48px; width: 48px;"></md-icon>
+                    <div class="md-grid-text">Cancel</div>
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </div>
+</md-bottom-sheet>

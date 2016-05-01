@@ -1,0 +1,130 @@
+<md-toolbar flex>
+    <div class="md-toolbar-tools">
+
+        <!-- Mobile Menu -->
+        <md-button hide-gt-sm class="md-icon-button" ng-click="$ctrl.toggle('mobileMenu')" ng-if="!$ctrl.showEdit"
+                   aria-label="Menu">
+            <md-icon md-svg-src="navigation:menu"></md-icon>
+        </md-button>
+
+        <h3>McPeak Family</h3>
+
+        <!-- Stats -->
+        <em style="font-size: medium; margin-left: 45px;" hide show-gt-sm>
+            Last Update: {{lastUpdate | date : 'fullDate' }} with {{getCount(users)}} family members
+        </em>
+
+        <!-- Spacer -->
+        <span flex></span>
+
+        <!-- Buttons / Menus -->
+        <div>
+            <!-- Mobile -->
+            <div hide-gt-sm>
+
+                <!-- Search -->
+                <md-button class="md-icon-button" ng-click="$ctrl.toggle('search')" aria-label="Search">
+                    <md-icon>search</md-icon>
+                </md-button>
+
+                <!-- Edit -->
+                <md-button class="md-icon-button" ng-click="$ctrl.editMode()" ng-if="$ctrl.showEdit" aria-label="Edit">
+                    <md-icon md-svg-src="editor:mode_edit"></md-icon>
+                </md-button>
+
+                <!-- Kabob -->
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" ng-click="$ctrl.openMenu($mdOpenMenu, $event)" aria-label="More">
+                        <md-icon>more_vert</md-icon>
+                    </md-button>
+                    <md-menu-content width="5">
+
+                        <!-- Add -->
+                        <md-menu-item ng-click="$ctrl.add()" ng-if="!$ctrl.showEdit">
+                            <md-button>
+                                <md-icon>add</md-icon>
+                                Add
+                            </md-button>
+                        </md-menu-item>
+
+                        <!-- Sort -->
+                        <md-menu-item ng-click="$ctrl.sortSheet()" ng-if="!$ctrl.showEdit">
+                            <md-button>
+                                <md-icon>sort</md-icon>
+                                Sort by...
+                            </md-button>
+                        </md-menu-item>
+
+                        <!-- Edit -->
+                        <md-menu-item ng-click="$ctrl.edit()" ng-if="$ctrl.showEdit">
+                            <md-button>
+                                <md-icon>mode_edit</md-icon>
+                                Edit
+                            </md-button>
+                        </md-menu-item>
+
+                        <!-- Delete -->
+                        <md-menu-item ng-click="$ctrl.deleteSheet()" ng-if="$ctrl.showEdit">
+                            <md-button>
+                                <md-icon>delete</md-icon>
+                                Delete
+                            </md-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
+            </div ng-if>
+
+            <!-- Desktop -->
+            <div hide show-gt-sm>
+
+                <!-- Search -->
+                <md-button class="md-icon-button" ng-click="$ctrl.toggle('search')" aria-label="Search">
+                    <md-icon>search</md-icon>
+                </md-button>
+
+                <!-- Add -->
+                <md-button class="md-icon-button" aria-label="Add">
+                    <md-icon md-svg-src="social:person_add"></md-icon>
+                </md-button>
+
+                <!-- Hamburger -->
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" ng-click="$ctrl.openMenu($mdOpenMenu, $event)" aria-label="Menu">
+                        <md-icon md-svg-src="navigation:menu"></md-icon>
+                    </md-button>
+                    <md-menu-content width="3">
+                        <md-menu-item ng-click="email()">
+                            <md-button>
+                                <md-icon md-svg-src="communication:email"></md-icon>
+                                E-mail
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-click="$ctrl.deleteDialog()" ng-disabled="$ctrl.isRemoveDisabled()">
+                            <md-button>
+                                <md-icon md-svg-src="action:delete"></md-icon>
+                                Delete
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-click="export()">
+                            <md-button>
+                                <md-icon md-svg-src="content:archive"></md-icon>
+                                Export
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-click="$ctrl.aboutDialog()">
+                            <md-button>
+                                <md-icon md-svg-src="action:description"></md-icon>
+                                About
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </div>
+
+        <!-- Search sideNav -->
+        <jm-search search="$ctrl.filter"></jm-search>
+    </div>
+</md-toolbar>
+

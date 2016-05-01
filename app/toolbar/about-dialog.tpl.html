@@ -3,18 +3,14 @@
         <img src="assets/clover.png" alt="shamrocks">
 
         <div>McPeak Family</div>
-        <div>version 2.0</div>
+        <div>version 3.0</div>
         <div><a href="mailto:jason.mcpeak@gmail.com" target="_blank">jason.mcpeak@gmail.com</a></div>
         <div><a href="https://github.com/jmcpeak/family/issues" target="_blank">Report Issue</a></div>
         <div><a href="https://github.com/jmcpeak/family/" target="_blank">GitHub</a></div>
         <div><a href="https://travis-ci.org/jmcpeak/family" target="_blank">Travis CI</a></div>
 
-        <md-button ng-click="::toggleNgStats()" class="md-icon-button" aria-label="Menu">
-            <md-icon class="jmMenuIcon" ng-if="onOff()" md-svg-src="action:info"></md-icon>
-            <md-icon class="jmMenuIcon" ng-if="!onOff()" md-svg-src="action:info_outline"></md-icon>
-        </md-button>
     </md-dialog-content>
     <md-dialog-actions>
-        <md-button ng-click="::cancel()">close</md-button>
+        <md-button ng-click="$ctrl.dialogCancel()">close</md-button>
     </md-dialog-actions>
 </md-dialog>

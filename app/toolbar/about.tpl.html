@@ -1,0 +1,36 @@
+<md-sidenav class="jm-side-sheet md-sidenav-right" md-component-id="about">
+
+    <md-toolbar flex style="max-height: 56px !important;">
+        <div class="md-toolbar-tools">
+            <h2><span>About</span></h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="$ctrl.toggle('about')" aria-label="Back">
+                <md-icon>close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+
+    <div layout="column" layout-align="center center">
+        <img src="assets/clover.png" alt="shamrocks">
+        <h5>version 3.0 - build 25</h5>
+    </div>
+
+    <md-list>
+        <md-list-item href="mailto:jason.mcpeak@gmail.com">
+            E-mail
+        </md-list-item>
+
+        <md-list-item href="https://github.com/jmcpeak/family/issues" target="_blank">
+            Report Issue
+        </md-list-item>
+
+        <md-list-item href="https://github.com/jmcpeak/family/" target="_blank">
+            View source on GitHub
+        </md-list-item>
+
+        <md-list-item href="https://travis-ci.org/jmcpeak/family" target="_blank">
+            View builds on Travis CI
+        </md-list-item>
+    </md-list>
+
+</md-sidenav>

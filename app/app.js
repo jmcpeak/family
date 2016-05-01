@@ -1,15 +1,16 @@
 'use strict';
 
-import moment from "moment";
-import user from "./user";
-import md from "angular-material";
-import messages from "angular-messages";
-import input from "./input";
-import list from "./list";
-import "ngstorage";
-import "angular-material/angular-material.min.css";
+import moment from 'moment';
+import md from 'angular-material';
+import messages from 'angular-messages';
+import input from './input';
+import toolbar from './toolbar';
+import user from './user';
+import users from './users';
+import 'ngstorage';
+import 'angular-material/angular-material.min.css';
 
-angular.module('app', [md, messages, input, list, user, 'ngStorage'])
+angular.module('app', [md, messages, input, users, user, toolbar, 'ngStorage'])
 
     .constant('jmConstant', {
         userIdHash: '#user-',
@@ -148,7 +149,7 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         $mdThemingProvider.setDefaultTheme('golf');
     })
 
-    .service('jmDB', function ($q, $location, jmDBUtils) {
+    .service('jmDB', function ($q, $location, $log, jmDBUtils) {
         let minLengthId = 15,
             tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak',
             dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
@@ -181,46 +182,42 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         };
 
         this.queryParents = (gender) => {
-            let deferred = $q.defer();
-
-            let params = {
-                TableName: tableName,
-                FilterExpression: 'gender = :gender OR genderSpouse = :gender',
-                ExpressionAttributeValues: {
-                    ':gender': {S: gender}
-                }
-            };
+            let deferred = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    FilterExpression: 'gender = :gender OR genderSpouse = :gender',
+                    ExpressionAttributeValues: {
+                        ':gender': {S: gender}
+                    }
+                };
 
             dynamoDB.scan(params, (err, data) => {
-                if (err) {
+                if (err)
                     deferred.reject(err);
-                } else {
+                else
                     deferred.resolve(jmDBUtils.arrayConverter(data.Items));
-                }
             });
 
             return deferred.promise;
         };
 
         this.getEmailAddresses = () => {
-            let deferred = $q.defer();
-
-            let params = {
-                TableName: tableName,
-                ProjectionExpression: 'email',
-                FilterExpression: 'attribute_exists(email) AND size(email) > :size',
-                ExpressionAttributeValues: {
-                    ':size': {N: '4'}
-                }
-            };
+            let deferred = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    ProjectionExpression: 'email',
+                    FilterExpression: 'attribute_exists(email) AND size(email) > :size',
+                    ExpressionAttributeValues: {
+                        ':size': {N: '4'}
+                    }
+                };
 
             dynamoDB.scan(params, (err, data) => {
                 if (err) {
                     deferred.reject(err);
-                    console.log(err.message);
-                } else {
+                    $log.error(err.message);
+                } else
                     deferred.resolve(jmDBUtils.arrayConverter(data.Items));
-                }
             });
 
             return deferred.promise;
@@ -236,109 +233,101 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
                     ExpressionAttributeValues: {
                         ':size': {N: minLengthId.toString()}
                     }
+                },
+                arrayToCSV = (array_input) => {
+                    let string_output = '';
+
+                    for (let i = 0; i < array_input.length; i++) {
+
+                        try {
+                            string_output += ('"' + array_input[i].replace('"', '\"') + '"');
+                        } catch (e) {
+                            $log.error(e);
+                        }
+
+                        if (i !== array_input.length - 1)
+                            string_output += ',';
+                    }
+
+                    return string_output;
+                },
+                printout = (items) => {
+                    let headersMap = {},
+                        values = [],
+                        header,
+                        value;
+
+                    if (headers.length === 0) {
+                        if (items.length > 0) {
+                            for (let j = 0; j < items.length; j++) {
+                                for (let key in items[j]) {
+                                    headersMap[key] = true;
+                                }
+                            }
+                        }
+
+                        for (let key2 in headersMap) {
+                            headers.push(key2);
+                        }
+                    }
+
+                    for (let index in items) {
+                        let line = [];
+                        for (let i = 0; i < headers.length; i++) {
+                            value = '';
+                            header = headers[i];
+
+                            // Loop through the header rows, adding values if they exist
+                            if (items[index].hasOwnProperty(header)) {
+                                if (items[index][header].N)
+                                    value = items[index][header].N;
+                                else if (items[index][header].S)
+                                    value = items[index][header].S;
+                                else if (items[index][header].SS)
+                                    value = items[index][header].SS.toString();
+                            }
+                            line.push(value);
+                        }
+                        values += arrayToCSV(line) + '\r\n';
+                    }
+
+                    return arrayToCSV(headers) + '\r\n' + values;
+                },
+                scanDynamoDB = () => {
+                    dynamoDB.scan(query, (err, data) => {
+                        if (!err) {
+                            if (data.LastEvaluatedKey) {
+                                query.ExclusiveStartKey = data.LastEvaluatedKey;
+                                scanDynamoDB(query);
+                            }
+                            deferred.resolve(printout(data.Items));
+                        } else {
+                            deferred.reject(err);
+                            $log.error(err.message);
+                        }
+                    });
+
+                    return deferred.promise;
                 };
-
-            let arrayToCSV = (array_input) => {
-                let string_output = '';
-
-                for (let i = 0; i < array_input.length; i++) {
-
-                    try {
-                        string_output += ('"' + array_input[i].replace('"', '\"') + '"');
-                    } catch (e) {
-                        console.log(e);
-                    }
-
-                    if (i !== array_input.length - 1) {
-                        string_output += ',';
-                    }
-                }
-
-                return string_output;
-            };
-
-            let printout = (items) => {
-                let headersMap = {};
-                let values = [];
-                let header;
-                let value;
-
-                if (headers.length === 0) {
-                    if (items.length > 0) {
-                        for (let j = 0; j < items.length; j++) {
-                            for (let key in items[j]) {
-                                headersMap[key] = true;
-                            }
-                        }
-                    }
-
-                    for (let key2 in headersMap) {
-                        headers.push(key2);
-                    }
-                }
-
-                for (let index in items) {
-                    let line = [];
-                    for (let i = 0; i < headers.length; i++) {
-                        value = '';
-                        header = headers[i];
-
-                        // Loop through the header rows, adding values if they exist
-                        if (items[index].hasOwnProperty(header)) {
-                            if (items[index][header].N) {
-                                value = items[index][header].N;
-                            } else if (items[index][header].S) {
-                                value = items[index][header].S;
-                            } else if (items[index][header].SS) {
-                                value = items[index][header].SS.toString();
-                            }
-                        }
-                        line.push(value);
-                    }
-                    values += arrayToCSV(line) + '\r\n';
-                }
-
-                return arrayToCSV(headers) + '\r\n' + values;
-            };
-
-            let scanDynamoDB = () => {
-                dynamoDB.scan(query, (err, data) => {
-                    if (!err) {
-                        if (data.LastEvaluatedKey) {
-                            query.ExclusiveStartKey = data.LastEvaluatedKey;
-                            scanDynamoDB(query);
-                        }
-                        deferred.resolve(printout(data.Items));
-                    } else {
-                        deferred.reject(err);
-                        console.log(err.message);
-                    }
-                });
-
-                return deferred.promise;
-            };
 
             return scanDynamoDB();
         };
 
         this.putItem = (user) => {
-            let deferred = $q.defer();
+            let deferred = $q.defer(),
+                convertedItem = jmDBUtils.convertFromJson(user),
+                params = {
+                    TableName: tableName,
+                    Item: convertedItem
+                };
 
-            if (user.$$hashKey) {
+            if (user.$$hashKey)
                 delete user.$$hashKey;
-            }
-
-            let convertedItem = jmDBUtils.convertFromJson(user);
-
-            let params = {
-                TableName: tableName,
-                Item: convertedItem
-            };
 
             dynamoDB.putItem(params, (err, data) => {
-                if (err) {
+                if (err)
                     deferred.reject(err);
-                } else {
+                else {
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
                     this.setLastUpdateDate(convertedItem.id).then(undefined, () => console.warn('error setting last update date'));
                 }
@@ -348,47 +337,43 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         };
 
         this.setLastUpdateDate = (id) => {
-            let deferred = $q.defer();
-
-            let params = {
-                TableName: tableName,
-                Key: {id: {S: 'lastUpdateDate'}},
-                UpdateExpression: 'set lastUpdated = :num, lastUpdatedID = :id',
-                ExpressionAttributeValues: {
-                    ':num': {N: Date.now().toString()},
-                    ':id': id
-                }
-            };
+            let deferred = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    Key: {id: {S: 'lastUpdateDate'}},
+                    UpdateExpression: 'set lastUpdated = :num, lastUpdatedID = :id',
+                    ExpressionAttributeValues: {
+                        ':num': {N: Date.now().toString()},
+                        ':id': id
+                    }
+                };
 
             dynamoDB.updateItem(params, (err, data) => {
-                if (err) {
+                if (err)
                     deferred.reject(err);
-                } else {
+                else
                     deferred.resolve(jmDBUtils.objectConverter(data));
-                }
             });
 
             return deferred.promise;
         };
 
         this.deleteItem = (user) => {
-            let deferred = $q.defer();
-
-            let params = {
-                TableName: tableName,
-                Key: {
-                    id: {
-                        S: user.id.toString()
+            let deferred = $q.defer(),
+                params = {
+                    TableName: tableName,
+                    Key: {
+                        id: {
+                            S: user.id.toString()
+                        }
                     }
-                }
-            };
+                };
 
             dynamoDB.deleteItem(params, (err, data) => {
-                if (err) {
+                if (err)
                     deferred.reject(err);
-                } else {
+                else
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                }
             });
 
             return deferred.promise;
@@ -405,11 +390,10 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
                     }
                 },
                 callback = (err, data) => {
-                    if (err) {
+                    if (err)
                         deferred.reject(err);
-                    } else {
+                    else
                         deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                    }
                 };
 
             dynamoDB.getItem(params, callback);
@@ -423,9 +407,8 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         this.arrayConverter = (data) => {
             let data_out = [];
 
-            if (!data) {
+            if (!data)
                 return data_out;
-            }
 
             for (let i = 0; i < data.length; i++) {
                 data_out.push(this.objectConverter(data[i]));
@@ -437,22 +420,21 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         this.objectConverter = (data) => {
             let data_out = {};
 
-            if (!data) {
+            if (!data)
                 return data_out;
-            }
 
             Object.keys(data).forEach((key) => {
                 let val = data[key];
 
-                if (!!val.S) {
+                if (!!val.S)
                     data_out[key] = val.S;
-                } else if (!!val.N) {
+                else if (!!val.N)
                     data_out[key] = parseInt(val.N);
-                } else if (!!val.BOOL) {
+                else if (!!val.BOOL)
                     data_out[key] = (val.BOOL);
-                } else if (!!val.SS) {
+                else if (!!val.SS)
                     data_out[key] = val.SS;
-                } else if (!!val.NS) {
+                else if (!!val.NS) {
                     let val_arr = [];
                     for (let j = 0; j < val.NS.length; j++) {
                         val_arr.push(parseInt(val.NS[j]));
@@ -473,41 +455,35 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
         this.convertFromJson = (data) => {
             /* jshint -W109 */
             let data_out = {};
-            if (!data) {
+
+            if (!data)
                 return data_out;
-            }
 
             Object.keys(data).forEach((key) => {
                 let subObj = {};
                 let val = data[key];
 
-                if (!(typeof val === 'undefined' || (!val && typeof val !== 'boolean'))) {
+                if (!(typeof val === 'undefined' || (!val && typeof val !== 'boolean')))
                     subObj = null;
-                }
 
-                if (typeof val === 'boolean') {
+                if (typeof val === 'boolean')
                     subObj = {'BOOL': val};
-                }
                 else if (typeof val === 'string') {
                     let value = val.toString();
                     subObj = (value === '') ? {"NULL": true} : {"S": value};
                 }
-                else if (typeof val === 'number') {
+                else if (typeof val === 'number')
                     subObj = {"N": val.toString()};
-                }
                 else if (typeof val === 'object') {
                     if (Array.isArray(val) && val.length >= 1) {
                         let subObjKey = null;
                         subObj = {};
-                        if (typeof val[0] === 'boolean') {
+                        if (typeof val[0] === 'boolean')
                             subObjKey = "BS";
-                        }
-                        else if (typeof val[0] === 'string') {
+                        else if (typeof val[0] === 'string')
                             subObjKey = "SS";
-                        }
-                        else if (typeof val[0] === 'number') {
+                        else if (typeof val[0] === 'number')
                             subObjKey = "NS";
-                        }
 
                         if (!!subObjKey) {
                             let subObjArr = [];
@@ -517,15 +493,17 @@ angular.module('app', [md, messages, input, list, user, 'ngStorage'])
                             subObj[subObjKey] = subObjArr;
                         }
                     }
-                } else {
+                } else
                     subObj = null;
-                }
 
-                if (!!subObj) {
+                if (!!subObj)
                     data_out[key] = subObj;
-                }
             });
 
             return data_out;
         };
+    })
+
+    .controller('pageController', function () {
+        this.filter = '';
     });

@@ -1,0 +1,34 @@
+<md-sidenav class="md-sidenav-left" md-component-id="mobileMenu">
+
+    <md-toolbar class="md-accent">
+        <md-list flex>
+            <md-list-item class="md-2-line">
+                <img src="assets/clover.png" class="md-avatar" alt="logo">
+                <div class="md-list-item-text">
+                    <span>McPeak Family</span>
+                    <p style="font-size: small">version 3.0</p>
+                </div>
+            </md-list-item>
+        </md-list>
+
+    </md-toolbar>
+
+    <md-list>
+        <md-list-item ng-click="$ctrl.email()">
+            <md-icon>email</md-icon>
+            <p>E-mail family</p>
+        </md-list-item>
+        <md-list-item ng-click="$ctrl.export()">
+            <md-icon>archive</md-icon>
+            <p>Export</p>
+        </md-list-item>
+        <md-list-item ng-click="$ctrl.feedback()">
+            <md-icon>feedback</md-icon>
+            <p>Feedback</p>
+        </md-list-item>
+        <md-list-item ng-click="$ctrl.about()">
+            <md-icon>info</md-icon>
+            <p>About</p>
+        </md-list-item>
+    </md-list>
+</md-sidenav>

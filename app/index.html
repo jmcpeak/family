@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="icon.png">
-    <title>McPeak Family</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <!--<base href="/">-->
+    <link rel="icon" type="image/png" href="assets/clover.png">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>McPeak Family</title>
     <style>
-        .jmLoginError [ng-message] {
-            font-size: medium;
+        .jm-bottom-button {
+            width: 100%;
+            text-align: left !important;
         }
 
-        .jmMenuIcon {
-            width: 32px;
-            height: 32px
+        .jm-side-sheet {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        .jmLoginError [ng-message] {
+            font-size: medium;
         }
 
         a {
@@ -41,28 +48,41 @@
             font-size: medium;
         }
 
-        md-sidenav,
-        md-sidenav.md-locked-open,
-        md-sidenav.md-closed.md-locked-open-add-active {
-            min-width: 200px !important;
-            width: 33% !important;
-            max-width: 400px !important;
-        }
+        /*md-sidenav,*/
+        /*md-sidenav.md-locked-open,*/
+        /*md-sidenav.md-closed.md-locked-open-add-active {*/
+        /*min-width: 200px !important;*/
+        /*width: 33% !important;*/
+        /*max-width: 400px !important;*/
+        /*}*/
 
-        md-toast.error {
-            background-color: #ff0000;
-            color: #ffffff;
-        }
+        /*md-toast.error {*/
+        /*background-color: #ff0000;*/
+        /*color: #ffffff;*/
+        /*}*/
     </style>
 </head>
 
-<body layout="row" ng-app="app" ng-cloak>
+<body ng-app="app" ng-cloak>
 
-<jm-login></jm-login>
+<md-content ng-controller="pageController as page">
+    <jm-login></jm-login>
 
-<jm-list></jm-list>
+    <div ng-show="showMainPage && !queryAllInProgress">
 
-<jm-content-area></jm-content-area>
+        <section id="sidenavs">
+            <jm-about></jm-about>
+            <jm-feedback></jm-feedback>
+            <jm-mobile-menu></jm-mobile-menu>
+        </section>
+
+        <jm-toolbar filter="page.filter" edit="false"></jm-toolbar>
+        <jm-users filter="page.filter" flex="33" flex-sm="100"></jm-users>
+
+        <!--<jm-content-area flex="66"></jm-content-area>-->
+    </div>
+</md-content>
+
 
 <script type="text/ng-template" id="error-messages">
     <div ng-message="required">Required</div>
