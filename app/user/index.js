@@ -1,9 +1,11 @@
 'use strict';
 
-import md from "angular-material";
-import partials from "../partials";
-import showAngularStats from "ng-stats";
-import "angular-clipboard";
+import md from 'angular-material';
+import partials from '../partials';
+import contentTemplate from './content.tpl.html';
+import tabsTemplate from './tabs.tpl.html';
+import loginTemplate from './login.tpl.html';
+import 'angular-clipboard';
 
 export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
@@ -312,7 +314,6 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
     .directive('jmContentArea', () => {
         return {
-            //replace: true,
             controller: function ($scope) {
                 let exportResolve = (entries) => {
                     let link = document.createElement('a');
@@ -342,21 +343,20 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
                     }
                 };
             },
-            template: require('../user/content.tpl.html')
+            template: contentTemplate
         };
     })
 
     .directive('jmTabs', () => {
         return {
-            template: require('../user/tabs.tpl.html'),
+            template: tabsTemplate,
             controller: 'jmTabsController'
         };
     })
 
     .directive('jmLogin', () => {
         return {
-            //replace: true,
-            template: require('../user/login.tpl.html'),
+            template: loginTemplate,
             controller: 'jmLoginController'
         };
     }).name;

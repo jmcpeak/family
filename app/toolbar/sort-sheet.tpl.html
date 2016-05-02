@@ -1,21 +1,8 @@
 <md-bottom-sheet class="md-list" ng-cloak>
-
     <md-list>
-        <md-list-item ng-click="$ctrl.sortBy('fName')">
-            First name
-        </md-list-item>
-
-        <md-list-item ng-click="$ctrl.sortBy('lName')">
-            Last name
-        </md-list-item>
-
-        <md-list-item ng-click="$ctrl.sortBy('age')">
-            Age
-        </md-list-item>
-
-        <md-list-item ng-click="$ctrl.sortBy('state')">
-            State
-        </md-list-item>
-
+        <md-list-item ng-click="$ctrl.sort('fname')">First name</md-list-item>
+        <md-list-item ng-click="$ctrl.sort('lname')">Last name</md-list-item>
+        <md-list-item ng-click="$ctrl.sort('age')">Age</md-list-item>
+        <md-list-item ng-click="$ctrl.sort('state')">State</md-list-item>
     </md-list>
 </md-bottom-sheet>

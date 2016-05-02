@@ -123,7 +123,32 @@ export default angular.module('jmList', [md])
                 template: sortSheet,
                 controllerAs: '$ctrl',
                 controller: 'jmToolbarController'
-            });
+            }).then((data) => this.orderBy = data);
+        };
+
+        this.sort = (sortBy) => {
+            switch (sortBy.toLowerCase()) {
+                case 'fname':
+                    this.sortBy = ['firstName', 'lastName'];
+                    break;
+
+                case 'lname':
+                    this.sortBy = ['lastName', 'firstName'];
+                    break;
+
+                case 'age':
+                    this.sortBy = ['birthday', 'lastName', 'firstName'];
+                    break;
+
+                case 'state':
+                    this.sortBy = ['theState', 'lastName', 'firstName'];
+                    break;
+
+                default:
+                    this.sortBy = ['lastName', 'firstName'];
+            }
+
+            $mdBottomSheet.hide(this.sortBy);
         };
     })
 
@@ -147,8 +172,9 @@ export default angular.module('jmList', [md])
 
     .component('jmToolbar', {
         bindings: {
+            edit: '@?',
             filter: '=?',
-            edit: '@?'
+            orderBy: '=?'
         },
         template: toolbar,
         controller: 'jmToolbarController'

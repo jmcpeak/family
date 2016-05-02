@@ -8,6 +8,7 @@ export default angular.module('jmUsers', [md])
     .controller('jmUsersController', function ($document, $q, $timeout, $localStorage, jmDB, jmConstant) {
         this.count = '';
         this.queryAllInProgress = true;
+        this.orderBy = this.orderBy ? this.orderBy : ['lastName', 'firstName'];
 
         // used in user.index.js
         this.refresh = (user) => {
@@ -35,7 +36,8 @@ export default angular.module('jmUsers', [md])
 
     .component('jmUsers', {
         bindings: {
-            filter: '=?'
+            filter: '=?',
+            orderBy: '=?'
         },
         template: index,
         controller: 'jmUsersController'

@@ -1,9 +1,9 @@
-<md-virtual-repeat-container style="height: 100vh">
+<md-virtual-repeat-container style="height: 92vh">
 
     <md-list>
         <md-list-item class="md-whiteframe-z1 md-3-line" id="$ctrl.user-{{$ctrl.user.id}}"
                       ng-click="::$ctrl.selectUser(user, $event)"
-                      md-virtual-repeat="user in ::$ctrl.users | filter:$ctrl.filter | orderBy:['lastName', 'firstName']">
+                      md-virtual-repeat="user in ::$ctrl.users | filter:$ctrl.filter | orderBy:$ctrl.orderBy">
             <!--<md-icon style="font-size: 48px" alt="{{user.displayName ? user.displayName : user.firstName + ' ' + user.lastName}}">-->
                 <!--account_circle-->
             <!--</md-icon>-->

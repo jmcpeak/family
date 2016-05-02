@@ -76,10 +76,13 @@
             <jm-mobile-menu></jm-mobile-menu>
         </section>
 
-        <jm-toolbar filter="page.filter" edit="false"></jm-toolbar>
-        <jm-users filter="page.filter" flex="33" flex-sm="100"></jm-users>
+        <jm-toolbar filter="page.filter" order-by="page.orderBy" edit="false"></jm-toolbar>
 
-        <!--<jm-content-area flex="66"></jm-content-area>-->
+        <div layout="column" layout-gt-sm="row">
+            <jm-users filter="page.filter" order-by="page.orderBy" flex="33" flex-sm="100"></jm-users>
+
+            <jm-content-area flex="66"></jm-content-area>
+        </div>
     </div>
 </md-content>
 
