@@ -9,6 +9,8 @@ import user from './user';
 import users from './users';
 import 'ngstorage';
 import 'angular-material/angular-material.min.css';
+import 'aws-sdk/dist/aws-sdk';
+const AWS = window.AWS;
 
 angular.module('app', [md, messages, input, users, user, toolbar, 'ngStorage'])
 

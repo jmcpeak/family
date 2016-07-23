@@ -2,6 +2,7 @@
 
 let webpack = require('webpack'),
     path = require('path'),
+    htmlBundle = require('html-webpack-plugin'),
     isProd = process.env.NODE_ENV === 'production',
     vendor = [
         'angular',
@@ -11,13 +12,14 @@ let webpack = require('webpack'),
         'angular-material',
         'angular-messages',
         'angular-mocks',
-        'moment',
-        'ngstorage'
+        'aws-sdk',
+        'moment'
     ],
     plugins = [
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.CommonsChunkPlugin('common', 'common.js')
+        new webpack.optimize.CommonsChunkPlugin('common', 'common.[hash].js'),
+        new htmlBundle({template: 'indexTemplate.html'}),
     ];
 
 if (isProd) {
@@ -37,15 +39,15 @@ module.exports = {
         }
     },
     context: path.resolve(__dirname, 'app'),
-    externals: ['axios'],
+    externals: ['axios', 'aws-sdk'],
     entry: {
         vendor: vendor,
-        bundle: isProd ? ['babel-polyfill', './app.js'] : ['babel-polyfill', 'webpack-dev-server/client?http://localhost.finra.org:9000', 'webpack/hot/dev-server', './app.js']
+        bundle: isProd ? ['babel-polyfill', './app.js'] : ['babel-polyfill', 'webpack-dev-server/client?http://localhost:9000', 'webpack/hot/dev-server', './app.js']
     },
     devtool: isProd ? '' : 'source-map',
     output: {
         path: isProd ? './dist' : './app',
-        filename: '[name].js'
+        filename: '[name].[hash].js'
     },
     plugins: plugins,
     module: {
@@ -61,6 +63,7 @@ module.exports = {
             {test: /\.jpg$/, loader: 'file-loader'},
             {test: /\.css$/, loader: 'style!css'},
             {test: /\.less$/, loader: 'style!css!less'}
-        ]
+        ],
+        noParse: /node_modules\/aws-sdk\/dist\/aws-sdk.js/
     }
 };

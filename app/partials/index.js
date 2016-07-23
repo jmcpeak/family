@@ -1,6 +1,11 @@
 'use strict';
 
 import md from "angular-material";
+import address from '../partials/address.tpl.html';
+import spouse from '../partials/spouse.tpl.html';
+import datesAndPlaces from '../partials/datesAndPlaces.tpl.html';
+import required from '../partials/required.tpl.html';
+import children from '../partials/children.tpl.html';
 
 export default angular.module('jmPartials', [md])
 
@@ -24,7 +29,7 @@ export default angular.module('jmPartials', [md])
                 user: '='
             },
             require: '^form',
-            template: require('../partials/address.tpl.html'),
+            template: address,
             controllerAs: 'jmPartialCtrl',
             controller: 'jmPartialController'
         };
@@ -37,7 +42,7 @@ export default angular.module('jmPartials', [md])
                 user: '='
             },
             require: '^form',
-            template: require('../partials/spouse.tpl.html'),
+            template: spouse,
             controllerAs: 'jmPartialCtrl',
             controller: 'jmPartialController'
         };
@@ -50,7 +55,7 @@ export default angular.module('jmPartials', [md])
                 user: '='
             },
             require: '^form',
-            template: require('../partials/datesAndPlaces.tpl.html'),
+            template: datesAndPlaces,
             controllerAs: 'jmPartialCtrl',
             controller: 'jmPartialController'
         };
@@ -64,7 +69,7 @@ export default angular.module('jmPartials', [md])
                 form: '='
             },
             require: '^form',
-            template: require('../partials/required.tpl.html'),
+            template: required,
             controllerAs: 'jmRequiredCtrl',
             controller: function (jmService, jmDB) {
                 let parents = (resp, gender) => {
@@ -195,7 +200,7 @@ export default angular.module('jmPartials', [md])
                 user: '='
             },
             require: '^form',
-            template: require('../partials/children.tpl.html'),
+            template: children,
             controllerAs: 'jmChildrenCtrl',
             controller: function ($scope) {
                 this.fields = ['firstNameChild', 'middleNameChild', 'lastNameChild', 'bithdayChild', 'genderChild'];

@@ -1,8 +1,13 @@
 'use strict';
 
-import moment from "moment";
-import md from "angular-material";
-import messages from "angular-messages";
+import moment from 'moment';
+import md from 'angular-material';
+import messages from 'angular-messages';
+import input from '../input/input.tpl.html';
+import textarea from '../input/textarea.tpl.html';
+import switchs from '../input/switch.tpl.html';
+import select from '../input/select.tpl.html';
+import duration from '../input/duration.tpl.html';
 
 export default angular.module('jmInput', [md, messages])
 
@@ -18,7 +23,7 @@ export default angular.module('jmInput', [md, messages])
                 placeholder: '@',
                 taborder: '@'
             },
-            template: require('../input/input.tpl.html'),
+            template: input,
             link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
@@ -33,7 +38,7 @@ export default angular.module('jmInput', [md, messages])
                 placeholder: '@',
                 taborder: '@'
             },
-            template: require('../input/textarea.tpl.html'),
+            template: textarea,
             link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
@@ -47,7 +52,7 @@ export default angular.module('jmInput', [md, messages])
                 ddisabled: '@',
                 taborder: '@'
             },
-            template: require('../input/switch.tpl.html'),
+            template: switchs,
             link: (scope, element, attrs, controls) => scope.form = controls[0]
         };
     })
@@ -67,7 +72,7 @@ export default angular.module('jmInput', [md, messages])
                 orderclause: '@',
                 taborder: '@'
             },
-            template: require('../input/select.tpl.html'),
+            template: select,
             controller: function ($scope) {
                 $scope.selection = (value) => {
                     if ($scope.keydisplay && $scope.keydisplay2) {
@@ -93,7 +98,7 @@ export default angular.module('jmInput', [md, messages])
                 prefix: '@',
                 suffix: '@'
             },
-            template: require('../input/duration.tpl.html'),
+            template: duration,
             controller: function ($scope) {
                 $scope.duration = () => {
                     if ($scope.user) {
