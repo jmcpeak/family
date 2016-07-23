@@ -4,7 +4,6 @@ import md from 'angular-material';
 import partials from '../partials';
 import contentTemplate from './content.tpl.html';
 import tabsTemplate from './tabs.tpl.html';
-import loginTemplate from './login.tpl.html';
 import 'angular-clipboard';
 
 export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
@@ -264,54 +263,6 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
         };
     })
 
-    .controller('jmLoginController', function ($scope, $element, $timeout, $sessionStorage, $localStorage, jmConstant) {
-        let init = () => {
-            $timeout(()=> {
-                $element.find('input').focus();
-            }, 50);
-        };
-
-        $scope.genders = jmConstant.genders;
-        $scope.showMainPage = $sessionStorage.sessionToken ? true : false;
-        $scope.showLoginFields = (!$sessionStorage.sessionToken);
-
-        $scope.login = () => {
-            if ($scope.city.toLowerCase().hashCode() === 463258776) {
-                $scope.displayCircularProgressIndicator = true;
-                $scope.showLoginFields = false;
-
-                angular.bind($scope, AWS.config.credentials.get((error) => {
-                    $timeout(()=> {
-                        $scope.displayCircularProgressIndicator = !$scope.displayCircularProgressIndicator;
-
-                        if (error) {
-                            $scope.showLoginFields = !$scope.showLoginFields;
-                            $scope.error = {
-                                amazonError: true,
-                                message: (error.message) ? error.message : 'Unknown Error'
-                            };
-                            init();
-                        } else {
-                            $scope.showMainPage = !$scope.showMainPage;
-                            $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
-
-                            if ($localStorage.user) {
-                                $scope.selectUser($localStorage.user);
-                                $timeout(()=> {
-                                    angular.element(jmConstant.userIdHash + $localStorage.user.id).click()[0].scrollIntoView(false);
-                                });
-                            }
-                        }
-                    });
-                }));
-            } else {
-                $scope.error = {badPassword: true};
-            }
-        };
-
-        init();
-    })
-
     .directive('jmContentArea', () => {
         return {
             controller: function ($scope) {
@@ -351,12 +302,5 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
         return {
             template: tabsTemplate,
             controller: 'jmTabsController'
-        };
-    })
-
-    .directive('jmLogin', () => {
-        return {
-            template: loginTemplate,
-            controller: 'jmLoginController'
         };
     }).name;

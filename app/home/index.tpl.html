@@ -1,0 +1,13 @@
+<section id="sidenavs">
+    <jm-about></jm-about>
+    <jm-feedback></jm-feedback>
+    <jm-mobile-menu></jm-mobile-menu>
+</section>
+
+<jm-toolbar filter="$ctrl.filter" order-by="$ctrl.orderBy" edit="false"></jm-toolbar>
+
+<div layout="column" layout-gt-sm="row">
+    <jm-users filter="$ctrl.filter" order-by="$ctrl.orderBy" flex="33" flex-sm="100"></jm-users>
+
+    <jm-content-area flex="66"></jm-content-area>
+</div>

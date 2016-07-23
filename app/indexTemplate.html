@@ -12,6 +12,7 @@
     <link rel="icon" type="image/png" href="assets/clover.png">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>McPeak Family</title>
+    <base href="/"/>
     <style>
         .jm-bottom-button {
             width: 100%;
@@ -44,9 +45,9 @@
             outline: none;
         }
 
-        .md-datepicker-input {
-            font-size: medium;
-        }
+        /*.md-datepicker-input {*/
+        /*font-size: medium;*/
+        /*}*/
 
         .md-tab {
             font-size: medium;
@@ -69,25 +70,8 @@
 
 <body ng-app="app" ng-cloak>
 
-<md-content ng-controller="pageController as page">
-    <jm-login></jm-login>
-
-    <div ng-show="showMainPage && !queryAllInProgress">
-
-        <section id="sidenavs">
-            <jm-about></jm-about>
-            <jm-feedback></jm-feedback>
-            <jm-mobile-menu></jm-mobile-menu>
-        </section>
-
-        <jm-toolbar filter="page.filter" order-by="page.orderBy" edit="false"></jm-toolbar>
-
-        <div layout="column" layout-gt-sm="row">
-            <jm-users filter="page.filter" order-by="page.orderBy" flex="33" flex-sm="100"></jm-users>
-
-            <jm-content-area flex="66"></jm-content-area>
-        </div>
-    </div>
+<md-content ng-controller="themeController as theme" md-theme="{{theme.get()}}" md-theme-watch>
+    <ui-view></ui-view>
 </md-content>
 
 <script type="text/ng-template" id="error-messages">

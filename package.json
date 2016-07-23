@@ -1,6 +1,6 @@
 {
   "name": "jmFamily",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "a family database",
   "repository": {
     "type": "git",
@@ -64,7 +64,6 @@
     "webpack-dev-server": "^1.14.1"
   },
   "files": [
-    "app/**/!(app).js",
     "app/**/*.tpl.html",
     "app/**/*.less",
     "app/favicon.ico",
@@ -72,13 +71,15 @@
     "README.md"
   ],
   "dependencies": {
-    "angular": "^1.5.6",
-    "angular-animate": "^1.5.6",
-    "angular-aria": "^1.5.6",
+    "angular": "^1.5.8",
+    "angular-animate": "^1.5.8",
+    "angular-aria": "^1.5.8",
     "angular-clipboard": "^1.4.2",
     "angular-material": "angular/bower-material",
-    "angular-messages": "^1.5.6",
-    "angular-mocks": "^1.5.6",
+    "angular-messages": "^1.5.8",
+    "angular-mocks": "^1.5.8",
+    "angular-route": "^1.5.8",
+    "angular-ui-router": "^0.3.1",
     "aws-sdk": "^2.3.17",
     "html-webpack-plugin": "^2.22.0",
     "moment": "^2.13.0",

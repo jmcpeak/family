@@ -12,8 +12,11 @@ let webpack = require('webpack'),
         'angular-material',
         'angular-messages',
         'angular-mocks',
+        'angular-route',
+        'angular-ui-router',
         'aws-sdk',
-        'moment'
+        'moment',
+        'ngstorage'
     ],
     plugins = [
         new webpack.optimize.DedupePlugin(),

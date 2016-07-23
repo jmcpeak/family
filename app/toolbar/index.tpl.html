@@ -112,6 +112,21 @@
                                 Export
                             </md-button>
                         </md-menu-item>
+
+                        <md-menu-item ng-click="$ctrl.theme()">
+                            <md-button>
+                                <md-icon>settings_brightness</md-icon>
+                                {{$ctrl.themeLabel}}
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item ng-click="$ctrl.logout()">
+                            <md-button>
+                                <md-icon>lock_open</md-icon>
+                                Logout
+                            </md-button>
+                        </md-menu-item>
+
                         <md-menu-item ng-click="$ctrl.aboutDialog()">
                             <md-button>
                                 <md-icon md-svg-src="action:description"></md-icon>

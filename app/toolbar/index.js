@@ -9,10 +9,12 @@ import mobileMenu from './mobile-menu.tpl.html';
 import search from './search.tpl.html';
 import about from './about.tpl.html';
 import aboutDialog from './about-dialog.tpl.html';
+import 'ngstorage';
 
-export default angular.module('jmList', [md])
+export default angular.module('jmList', [md, 'ngStorage'])
 
-    .controller('jmToolbarController', function ($window, $location, $mdBottomSheet, $mdDialog, $mdSidenav, jmDB) {
+    .controller('jmToolbarController', function ($window, $location, $sessionStorage, $state, $mdBottomSheet, $mdDialog,
+                                                 $mdSidenav, jmDB, jmThemeService) {
         let originatorEv,
             getTitle = (user)=> {
                 let pre = 'Remove ',
@@ -43,6 +45,9 @@ export default angular.module('jmList', [md])
                     ()=> {
                         toast('Error: User NOT Deleted', true);
                     });
+            },
+            init = () => {
+                this.themeLabel = jmThemeService.label();
             };
 
         this.bottomSheetCancel = () => $mdBottomSheet.cancel();
@@ -72,6 +77,13 @@ export default angular.module('jmList', [md])
                 controller: 'jmToolbarController'
             });
         };
+
+        this.logout = ()=> {
+            $sessionStorage.sessionToken = undefined;
+            $state.go('login');
+        };
+
+        this.theme = () => jmThemeService.toggle().then((label) => this.themeLabel = label);
 
         this.openMenu = ($mdOpenMenu, $event) => {
             originatorEv = $event;
@@ -150,6 +162,8 @@ export default angular.module('jmList', [md])
 
             $mdBottomSheet.hide(this.sortBy);
         };
+
+        init();
     })
 
     .component('jmAbout', {

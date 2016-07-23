@@ -1,0 +1,30 @@
+<div layout="column" layout-gt-sm="row" layout-align="center center" layout-padding ng-if="!$ctrl.busy"
+     style="height: 100vh;">
+
+    <img src="assets/clover.png" alt="shamrock">
+
+    <form ng-submit="$ctrl.login()">
+
+        <md-input-container class="md-headline" style="width: 350px">
+            <label>What city is the reunion held in?</label>
+
+            <input name="city" type="text" ng-model="$ctrl.city" ng-keydown="$ctrl.clear()">
+
+            <ng-messages for="$ctrl.messages" multiple md-auto-hide="false">
+                <div ng-message="password">That is not the right city</div>
+                <div ng-message="amazon">{{$ctrl.error}}</div>
+            </ng-messages>
+
+        </md-input-container>
+
+        <input type="submit" style="position: absolute; left: -9999px">
+
+    </form>
+
+</div>
+
+<div layout layout-align="center center" ng-show="$ctrl.busy" style="height: 100vh;">
+    <md-progress-circular md-diameter="80px" md-mode="indeterminate"
+                          ng-class="$ctrl.queryAllError ? 'md-warn' : ''"></md-progress-circular>
+    <span class="md-headline">{{$ctrl.queryAllError}}</span>
+</div>
