@@ -17,8 +17,18 @@ export default angular.module('jmStates', [md, route, uiRouter])
         });
 
         $stateProvider.state('home', {
-            url: '/home' + '/:user',
+            url: '/home' + '/:id',
             template: '<jm-home></jm-home>'
+        });
+
+        $stateProvider.state('users', {
+            url: '/users',
+            template: '<jm-users filter="$ctrl.filter" order-by="$ctrl.orderBy"></jm-users>'
+        });
+
+        $stateProvider.state('user', {
+            url: '/user' + '/:id',
+            template: '<jm-content-area></jm-content-area>'
         });
 
     }).name;

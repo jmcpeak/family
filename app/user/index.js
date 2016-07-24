@@ -183,7 +183,7 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
 
                 if ($scope.addUser) {
                     jmService.usePreviousForm();
-                    $scope.refresh(user, true);
+                    //$scope.scrollIntoView(user, true);
                     $scope.addUser = !$scope.addUser;
                 }
             }, ()=> toast('NOT Saved', true));
@@ -263,37 +263,54 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
         };
     })
 
+    .controller('jmContentController', function ($scope, $timeout, $stateParams, $localStorage, jmDB) {
+        let exportResolve = (entries) => {
+                let link = document.createElement('a');
+                link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
+                link.setAttribute('download', 'McPeak Family.csv');
+                link.click();
+            },
+            init = () => {
+                let id = $stateParams.id,
+                    cachedUser = jmDB.getCachedItem(id);
+
+                if (cachedUser)
+                    $timeout(() => $scope.selectedUser = cachedUser);
+                else {
+                    if ($localStorage.user && $localStorage.user.id === id)
+                        $timeout(() => $scope.selectedUser = $localStorage.user);
+                    else
+                        jmDB.getItem(id).then((r) => $scope.selectedUser = r);
+                }
+            };
+
+        $scope.export = () => jmDB.exportToCSV().then(exportResolve);
+
+        $scope.getCount = (data) => {
+            if (data) {
+                let additional = 0;
+                angular.forEach(data, (entry) => {
+                    if (entry.firstNameSpouse && entry.firstNameSpouse.length >= 1) {
+                        additional++;
+                    }
+
+                    angular.forEach(entry.children, (child) => {
+                        if (entry['firstNameChild' + child] && entry['firstNameChild' + child].length >= 1) {
+                            additional++;
+                        }
+                    });
+                });
+
+                return data.length + additional;
+            }
+        };
+
+        init();
+    })
+
     .directive('jmContentArea', () => {
         return {
-            controller: function ($scope) {
-                let exportResolve = (entries) => {
-                    let link = document.createElement('a');
-                    link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
-                    link.setAttribute('download', 'McPeak Family.csv');
-                    link.click();
-                };
-
-                $scope.export = () => jmDB.exportToCSV().then(exportResolve);
-
-                $scope.getCount = (data) => {
-                    if (data) {
-                        let additional = 0;
-                        angular.forEach(data, (entry) => {
-                            if (entry.firstNameSpouse && entry.firstNameSpouse.length >= 1) {
-                                additional++;
-                            }
-
-                            angular.forEach(entry.children, (child) => {
-                                if (entry['firstNameChild' + child] && entry['firstNameChild' + child].length >= 1) {
-                                    additional++;
-                                }
-                            });
-                        });
-
-                        return data.length + additional;
-                    }
-                };
-            },
+            controller: 'jmContentController',
             template: contentTemplate
         };
     })

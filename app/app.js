@@ -6,15 +6,16 @@ import aws from './aws';
 import states from './states';
 import login from './login';
 import home from './home';
+import users from './users';
+import user from './user';
 import 'ngstorage';
 import 'angular-material/angular-material.min.css';
 
-angular.module('app', [md, aws, states, login, home, 'ngStorage'])
+angular.module('app', [md, aws, states, login, home, users, user, 'ngStorage'])
 
     .constant('jmConstant', {
         light: 'golf',
         dark: 'golf-dark',
-        userIdHash: '#user-',
         googleMapsBase: 'https://www.google.com/maps/place/',
         streetViewBase: 'https://maps.googleapis.com/maps/api/streetview?location=',
         streetViewSuffix: '&size=450x250',

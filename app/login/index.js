@@ -25,7 +25,7 @@ export default angular.module('jmLogin', [md, messages, route, 'ngStorage'])
                 AWS.config.credentials.get((error) => {
                     if (!error) {
                         $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
-                        $state.go('home', {user: $localStorage.user});
+                        $state.go('home', {id: $localStorage.user.id});
                     } else {
                         this.messages.amazon = true;
                         this.error = (error.message) ? error.message : 'Unknown Error'
@@ -37,7 +37,7 @@ export default angular.module('jmLogin', [md, messages, route, 'ngStorage'])
 
         this.$onInit = () => {
             if ($sessionStorage.sessionToken)
-                $state.go('home', {user: $localStorage.user});
+                $state.go('home', {id: $localStorage.user.id});
 
             $timeout(() => $element.find('input').focus(), 50);
         };

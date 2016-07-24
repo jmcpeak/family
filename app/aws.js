@@ -121,7 +121,8 @@ export default angular.module('jmAWS', [])
     .service('jmDB', function ($q, $location, $log, jmDBUtils) {
         let minLengthId = 15,
             tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak',
-            dynamoDB = new AWS.DynamoDB({region: 'us-west-2'});
+            dynamoDB = new AWS.DynamoDB({region: 'us-west-2'}),
+            users = {};
 
         this.guid = () => {
             let s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -136,16 +137,14 @@ export default angular.module('jmAWS', [])
                     ExpressionAttributeValues: {
                         ':size': {N: minLengthId.toString()}
                     }
-                },
-                callback = (err, data) => {
-                    if (err) {
-                        defer.reject(err);
-                    } else {
-                        defer.resolve(jmDBUtils.arrayConverter(data.Items));
-                    }
                 };
 
-            dynamoDB.scan(params, callback);
+            dynamoDB.scan(params, (err, data) => {
+                if (err)
+                    defer.reject(err);
+                else
+                    defer.resolve(jmDBUtils.arrayConverter(data.Items));
+            });
 
             return defer.promise;
         };
@@ -182,10 +181,9 @@ export default angular.module('jmAWS', [])
                 };
 
             dynamoDB.scan(params, (err, data) => {
-                if (err) {
+                if (err)
                     deferred.reject(err);
-                    $log.error(err.message);
-                } else
+                else
                     deferred.resolve(jmDBUtils.arrayConverter(data.Items));
             });
 
@@ -298,7 +296,7 @@ export default angular.module('jmAWS', [])
                     deferred.reject(err);
                 else {
                     deferred.resolve(jmDBUtils.objectConverter(data.Item));
-                    this.setLastUpdateDate(convertedItem.id).then(undefined, () => console.warn('error setting last update date'));
+                    this.setLastUpdateDate(convertedItem.id).then(undefined, () => $log.warn('error setting last update date'));
                 }
             });
 
@@ -357,16 +355,19 @@ export default angular.module('jmAWS', [])
                             S: id.toString()
                         }
                     }
-                },
-                callback = (err, data) => {
-                    if (err)
-                        deferred.reject(err);
-                    else
-                        deferred.resolve(jmDBUtils.objectConverter(data.Item));
                 };
 
-            dynamoDB.getItem(params, callback);
+            dynamoDB.getItem(params, (err, data) => {
+                if (err)
+                    deferred.reject(err);
+                else
+                    deferred.resolve(jmDBUtils.objectConverter(data.Item));
+            });
 
             return deferred.promise;
         };
+
+        this.addCachedItem = (user) => users[user.id] = user;
+
+        this.getCachedItem = (id) => users[id];
     }).name;
