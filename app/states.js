@@ -12,7 +12,7 @@ export default angular.module('jmStates', [md, route, uiRouter])
         $urlRouterProvider.otherwise(($injector) => $injector.get('$state').go('login'));
 
         $stateProvider.state('login', {
-            url: '/login',
+            url: '/login' + '/:url',
             template: '<jm-login></jm-login>'
         });
 

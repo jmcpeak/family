@@ -122,7 +122,9 @@ export default angular.module('jmAWS', [])
         let minLengthId = 15,
             tableName = $location.$$path === '/test/' || $location.$$path === '/test' ? 'test' : 'mcpeak',
             dynamoDB = new AWS.DynamoDB({region: 'us-west-2'}),
-            users = {};
+            users = {},
+            states = {},
+            params = {};
 
         this.guid = () => {
             let s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -370,4 +372,14 @@ export default angular.module('jmAWS', [])
         this.addCachedItem = (user) => users[user.id] = user;
 
         this.getCachedItem = (id) => users[id];
+
+        this.getRedirect = (name) => {
+            return {state: states[name], params: params[name]};
+        };
+
+        this.setRedirect = (state, param) => {
+            states[state.name] = state;
+            params[state.name] = param;
+            return state.name;
+        };
     }).name;

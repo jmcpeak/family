@@ -263,7 +263,7 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
         };
     })
 
-    .controller('jmContentController', function ($scope, $timeout, $stateParams, $localStorage, jmDB) {
+    .controller('jmContentController', function ($scope, $timeout, $sessionStorage, $state, $localStorage, jmDB) {
         let exportResolve = (entries) => {
                 let link = document.createElement('a');
                 link.setAttribute('href', encodeURI('data:text/csv;charset=utf-8,' + entries));
@@ -271,16 +271,20 @@ export default angular.module('jmUser', [md, partials, 'angular-clipboard'])
                 link.click();
             },
             init = () => {
-                let id = $stateParams.id,
-                    cachedUser = jmDB.getCachedItem(id);
-
-                if (cachedUser)
-                    $timeout(() => $scope.selectedUser = cachedUser);
+                if (!$sessionStorage.sessionToken)
+                    $state.go('login', {url: jmDB.setRedirect($state.current, $state.params)});
                 else {
-                    if ($localStorage.user && $localStorage.user.id === id)
-                        $timeout(() => $scope.selectedUser = $localStorage.user);
-                    else
-                        jmDB.getItem(id).then((r) => $scope.selectedUser = r);
+                    let id = $state.params.id,
+                        cachedUser = jmDB.getCachedItem(id);
+
+                    if (cachedUser)
+                        $timeout(() => $scope.selectedUser = cachedUser);
+                    else {
+                        if ($localStorage.user && $localStorage.user.id === id)
+                            $timeout(() => $scope.selectedUser = $localStorage.user);
+                        else
+                            jmDB.getItem(id).then((r) => $scope.selectedUser = r);
+                    }
                 }
             };
 

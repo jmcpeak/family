@@ -8,7 +8,8 @@ import 'ngstorage';
 
 export default angular.module('jmLogin', [md, messages, route, 'ngStorage'])
 
-    .controller('jmLoginController', function ($element, $timeout, $state, $sessionStorage, $localStorage) {
+    .controller('jmLoginController', function ($element, $timeout, $state, $sessionStorage, $localStorage, jmDB) {
+        let goHome = () => $state.go('home', $localStorage.user ? {id: $localStorage.user.id} : undefined);
         this.messages = {};
         this.busy = false;
 
@@ -25,7 +26,12 @@ export default angular.module('jmLogin', [md, messages, route, 'ngStorage'])
                 AWS.config.credentials.get((error) => {
                     if (!error) {
                         $sessionStorage.sessionToken = AWS.config.credentials.sessionToken;
-                        $state.go('home', {id: $localStorage.user.id});
+
+                        if ($state.params.url) {
+                            let redirect = jmDB.getRedirect($state.params.url);
+                            $state.go(redirect.state, redirect.params);
+                        } else
+                            goHome();
                     } else {
                         this.messages.amazon = true;
                         this.error = (error.message) ? error.message : 'Unknown Error'
@@ -37,7 +43,7 @@ export default angular.module('jmLogin', [md, messages, route, 'ngStorage'])
 
         this.$onInit = () => {
             if ($sessionStorage.sessionToken)
-                $state.go('home', {id: $localStorage.user.id});
+                goHome();
 
             $timeout(() => $element.find('input').focus(), 50);
         };

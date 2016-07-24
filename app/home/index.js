@@ -11,12 +11,12 @@ import 'ngstorage';
 
 export default angular.module('jmHome', [md, uiRouter, input, toolbar, users, user, 'ngStorage'])
 
-    .controller('jmHomeController', function ($timeout, $state, $sessionStorage) {
+    .controller('jmHomeController', function ($timeout, $state, $sessionStorage, jmDB) {
         this.filter = '';
-        
+
         this.$onInit = () => {
             if (!$sessionStorage.sessionToken)
-                $state.go('login');
+                $state.go('login', {url: jmDB.setRedirect($state.current, $state.params)});
 
             $timeout(()=> {
                 //angular.element(jmConstant.userIdHash + $localStorage.user.id).click()[0].scrollIntoView(false);
