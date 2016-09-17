@@ -37,9 +37,7 @@ if (isProd) {
 
 module.exports = {
     resolve: {
-        alias: {
-            //'sq-angular': '@BondA/sq-angular'
-        }
+        alias: {}
     },
     context: path.resolve(__dirname, 'app'),
     externals: ['axios', 'aws-sdk'],

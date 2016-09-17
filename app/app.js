@@ -119,7 +119,7 @@ angular.module('app', [md, aws, states, login, home, users, user, 'ngStorage'])
             if (this.length === 0) {
                 return hash;
             }
-            for (i = 0, len = this.length; i < len; i++) {
+            for (let i = 0, len = this.length; i < len; i++) {
                 /* jshint -W016 */
                 chr = this.charCodeAt(i);
                 hash = ((hash << 5) - hash) + chr;
