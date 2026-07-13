@@ -1,0 +1,13 @@
+{
+  "configurations": [
+    {
+      "command": "npm run dev",
+      "env": {
+        "AWS_PROFILE": "mcpeak-family"
+      },
+      "name": "Dev (DynamoDB)",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ]
+}
