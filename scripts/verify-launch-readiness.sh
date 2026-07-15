@@ -83,8 +83,8 @@ fi
 echo "    Alarm count: $ALARM_COUNT"
 
 echo "==> Verifying production redirects and health endpoints"
-HTTP_LOCATION="$(curl -sSI "http://${PROD_DOMAIN}" | awk '/^location:/ { print $2 }' | tr -d '\r' | tail -n 1)"
-WWW_LOCATION="$(curl -sSI "https://www.${PROD_DOMAIN}" | awk '/^location:/ { print $2 }' | tr -d '\r' | tail -n 1)"
+HTTP_LOCATION="$(curl -sSI "http://${PROD_DOMAIN}" | awk 'tolower($1)=="location:" { print $2 }' | tr -d '\r' | tail -n 1)"
+WWW_LOCATION="$(curl -sSI "https://www.${PROD_DOMAIN}" | awk 'tolower($1)=="location:" { print $2 }' | tr -d '\r' | tail -n 1)"
 HTTPS_STATUS="$(curl -sS -o /dev/null -w "%{http_code}" "https://${PROD_DOMAIN}")"
 READY_STATUS="$(curl -sS -o /dev/null -w "%{http_code}" "https://${PROD_DOMAIN}/api/health/ready")"
 

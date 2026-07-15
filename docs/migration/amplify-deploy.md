@@ -4,6 +4,18 @@ Step-by-step guide to host the Next.js app on [AWS Amplify Hosting](https://docs
 
 Production URL target: [https://mcpeakfamily.org](https://mcpeakfamily.org)
 
+## Execution snapshot (2026-07-15)
+
+- Amplify app id: `d3owy2e8pgsugo`
+- Amplify branch URL: `https://main.d3owy2e8pgsugo.amplifyapp.com`
+- Compute role: `arn:aws:iam::754934490052:role/amplify-family-compute-role`
+- WAF web ACL: `arn:aws:wafv2:us-east-1:754934490052:global/webacl/family-api-rate-limits/9a7e864b-18b3-4e64-8bc7-5547cec8ea88`
+- DynamoDB backup before cutover: `arn:aws:dynamodb:us-west-2:754934490052:table/mcpeak/backup/01784156721387-f8beb2ca`
+- Active cutover target: `dua4quhyijwa6.cloudfront.net`
+- Rollback DNS targets (captured pre-cutover):
+  - `mcpeakfamily.org` A ALIAS -> `s3-website-us-west-2.amazonaws.com`
+  - `www.mcpeakfamily.org` A ALIAS -> `s3-website-us-west-2.amazonaws.com`
+
 ## Before you start
 
 - [ ] AWS account with access to Amplify, IAM, and DynamoDB
@@ -21,18 +33,18 @@ Your default profile has **expired access keys**. Use a dedicated profile:
 
 ```bash
 # In your terminal (opens browser — complete sign-in there)
-aws configure set region us-west-2 --profile mcpeak-family
-aws login --profile mcpeak-family
+aws configure set region us-west-2 --profile mcpeak-family-admin
+aws login --profile mcpeak-family-admin
 
 # Verify you're in the family account (legacy DynamoDB account)
-AWS_PROFILE=mcpeak-family aws sts get-caller-identity
+AWS_PROFILE=mcpeak-family-admin aws sts get-caller-identity
 # Expect Account: 754934490052
 ```
 
 If `aws login` is unavailable, configure credentials manually:
 
 ```bash
-aws configure --profile mcpeak-family
+aws configure --profile mcpeak-family-admin
 # Enter access key, secret key, region us-west-2
 ```
 
@@ -46,7 +58,7 @@ From the repo root (after code is pushed to GitHub):
 # Optional: GitHub PAT with repo scope for auto-deploy from GitHub
 export GITHUB_TOKEN=ghp_your_token_here
 
-export AWS_PROFILE=mcpeak-family
+export AWS_PROFILE=mcpeak-family-admin
 ./scripts/amplify-setup.sh
 ```
 
@@ -62,19 +74,19 @@ This script via AWS CLI:
 Check status anytime:
 
 ```bash
-AWS_PROFILE=mcpeak-family ./scripts/amplify-status.sh
+AWS_PROFILE=mcpeak-family-admin ./scripts/amplify-status.sh
 ```
 
 Redeploy:
 
 ```bash
-AWS_PROFILE=mcpeak-family ./scripts/amplify-deploy.sh
+AWS_PROFILE=mcpeak-family-admin ./scripts/amplify-deploy.sh
 ```
 
 Launch-readiness verification (PITR, backup/restore checks, role scope, alarms, redirects, health):
 
 ```bash
-AWS_PROFILE=mcpeak-family CREATE_BACKUP=true npm run amplify:verify
+AWS_PROFILE=mcpeak-family-admin CREATE_BACKUP=true npm run amplify:verify
 ```
 
 ---
@@ -130,20 +142,20 @@ Alternatively, use **Custom trust policy** if Amplify offers "Compute role" in t
 
 | Variable | Value |
 |---|---|
-| `AWS_REGION` | `us-west-2` |
 | `FAMILY_DDB_TABLE` | `mcpeak` |
 | `FAMILY_USE_IN_MEMORY_DB` | `false` |
 | `FAMILY_LOGIN_ANSWER` | *(required; private value, do not commit to repo)* |
 | `FAMILY_SESSION_SECRET` | *(generate a long random string)* |
 | `CANONICAL_HOST` | `mcpeakfamily.org` |
 | `NEXT_PUBLIC_SITE_URL` | `https://mcpeakfamily.org` |
-| `NODE_ENV` | `production` |
 
 9. **Save and deploy**
 
 First build takes several minutes. When it succeeds, Amplify gives you a URL like:
 
-`https://main.d1234abcdef.amplifyapp.com`
+`https://main.d3owy2e8pgsugo.amplifyapp.com`
+
+Note: Amplify-hosted Next.js server runtime does not automatically receive console env vars. Keep the `amplify.yml` step that writes required variables into `.env.production` before `npm run build`.
 
 ### 3b. Attach Compute role
 
@@ -168,7 +180,7 @@ Before touching DNS, verify on the `*.amplifyapp.com` URL:
 Automated smoke command:
 
 ```bash
-SMOKE_BASE_URL=https://main.d1234abcdef.amplifyapp.com \
+SMOKE_BASE_URL=https://main.d3owy2e8pgsugo.amplifyapp.com \
 PLAYWRIGHT_LOGIN_ANSWER='your-answer' \
 npm run test:smoke:staging
 ```
@@ -182,9 +194,9 @@ If DynamoDB calls fail with access denied, recheck the Compute role policy and `
 Before DNS cutover, configure edge rate limiting and verify the legacy Cognito pool cannot bypass app auth:
 
 ```bash
-AWS_PROFILE=mcpeak-family ./scripts/configure-waf.sh
-AWS_PROFILE=mcpeak-family ./scripts/audit-cognito-access.sh
-AWS_PROFILE=mcpeak-family ./scripts/configure-cloudwatch-alarms.sh
+AWS_PROFILE=mcpeak-family-admin ./scripts/configure-waf.sh
+AWS_PROFILE=mcpeak-family-admin ./scripts/audit-cognito-access.sh
+AWS_PROFILE=mcpeak-family-admin ./scripts/configure-cloudwatch-alarms.sh
 ```
 
 Defaults configured by `configure-waf.sh`:
@@ -194,11 +206,11 @@ Defaults configured by `configure-waf.sh`:
 If these values are too strict, rerun with overrides:
 
 ```bash
-AWS_PROFILE=mcpeak-family LOGIN_RATE_LIMIT=200 SENSITIVE_RATE_LIMIT=800 ./scripts/configure-waf.sh
+AWS_PROFILE=mcpeak-family-admin LOGIN_RATE_LIMIT=200 SENSITIVE_RATE_LIMIT=800 ./scripts/configure-waf.sh
 ```
 
 Rollback:
-- Disassociate the web ACL in AWS WAF from the CloudFront distribution.
+- Disassociate the web ACL in AWS WAF from the Amplify app resource.
 - Adjust limits and rerun `configure-waf.sh`.
 - Disable noisy alarms temporarily while tuning filter thresholds.
 

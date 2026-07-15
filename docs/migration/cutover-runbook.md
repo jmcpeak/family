@@ -2,6 +2,18 @@
 
 Use this runbook to move from the legacy AngularJS app to the Next.js app and keep rollback options available during the transition window.
 
+## Execution record (2026-07-15)
+
+- Amplify app id: `d3owy2e8pgsugo`
+- Production URL: `https://mcpeakfamily.org`
+- Branch URL: `https://main.d3owy2e8pgsugo.amplifyapp.com`
+- WAF ACL ARN: `arn:aws:wafv2:us-east-1:754934490052:global/webacl/family-api-rate-limits/9a7e864b-18b3-4e64-8bc7-5547cec8ea88`
+- Pre-cutover backup ARN: `arn:aws:dynamodb:us-west-2:754934490052:table/mcpeak/backup/01784156721387-f8beb2ca`
+- Cutover DNS target: `dua4quhyijwa6.cloudfront.net`
+- Rollback DNS targets captured before cutover:
+  - `mcpeakfamily.org` A ALIAS -> `s3-website-us-west-2.amazonaws.com`
+  - `www.mcpeakfamily.org` A ALIAS -> `s3-website-us-west-2.amazonaws.com`
+
 ## 1) Pre-cutover freeze
 
 1. Freeze feature work on legacy AngularJS (`legacy-angularjs`) and accept only critical fixes.
@@ -14,20 +26,20 @@ Use this runbook to move from the legacy AngularJS app to the Next.js app and ke
    - `CANONICAL_HOST=mcpeakfamily.org`
    - `NEXT_PUBLIC_SITE_URL=https://mcpeakfamily.org`
 3. Verify legacy Cognito identity-pool roles cannot read/write the production table:
-   - `AWS_PROFILE=mcpeak-family ./scripts/audit-cognito-access.sh`
+   - `AWS_PROFILE=mcpeak-family-admin ./scripts/audit-cognito-access.sh`
    - Remove DynamoDB access from the unauthenticated role if detected.
 4. Configure edge rate limiting with AWS WAF:
-   - `AWS_PROFILE=mcpeak-family ./scripts/configure-waf.sh`
+   - `AWS_PROFILE=mcpeak-family-admin ./scripts/configure-waf.sh`
    - Defaults: `120` requests/5m/IP for `/api/auth/login`, `500` requests/5m/IP for sensitive API routes.
    - Keep `/api/health` and static assets excluded from these rules.
 5. Configure CloudWatch dashboard + alarms:
-   - `AWS_PROFILE=mcpeak-family ./scripts/configure-cloudwatch-alarms.sh`
+   - `AWS_PROFILE=mcpeak-family-admin ./scripts/configure-cloudwatch-alarms.sh`
    - Ensure alarms exist for API 5xx, login failures, readiness failures, WAF blocks, and DynamoDB throttles.
 6. Execute full validation:
    - `npm run validate`
    - `npm run build`
 7. Run launch-readiness verification (AWS + redirect + health checks):
-   - `AWS_PROFILE=mcpeak-family CREATE_BACKUP=true npm run amplify:verify`
+   - `AWS_PROFILE=mcpeak-family-admin CREATE_BACKUP=true npm run amplify:verify`
    - Optional restore test: add `RESTORE_TABLE_NAME=mcpeak-restore-check` to verify backup recovery.
 
 ## 2) Staging verification
@@ -35,7 +47,7 @@ Use this runbook to move from the legacy AngularJS app to the Next.js app and ke
 1. Deploy current branch to staging.
 2. Run automated smoke checks:
    - Local/non-destructive CI smoke: `npm run test:smoke`
-   - Staging full smoke: `SMOKE_BASE_URL=https://staging-url PLAYWRIGHT_LOGIN_ANSWER='your-answer' npm run test:smoke:staging`
+   - Staging full smoke: `SMOKE_BASE_URL=https://main.d3owy2e8pgsugo.amplifyapp.com PLAYWRIGHT_LOGIN_ANSWER='your-answer' npm run test:smoke:staging`
 3. Run smoke checks:
    - `/api/health/live` returns `200`
    - `/api/health/ready` returns `200`

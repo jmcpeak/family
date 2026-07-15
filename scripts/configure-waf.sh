@@ -4,30 +4,18 @@ set -euo pipefail
 AWS_REGION="${AWS_REGION:-us-west-2}"
 WAF_REGION="${WAF_REGION:-us-east-1}"
 AMPLIFY_APP_NAME="${AMPLIFY_APP_NAME:-mcpeak-family}"
-GITHUB_BRANCH="${GITHUB_BRANCH:-main}"
 WEB_ACL_NAME="${WEB_ACL_NAME:-family-api-rate-limits}"
 LOGIN_RATE_LIMIT="${LOGIN_RATE_LIMIT:-120}"
 SENSITIVE_RATE_LIMIT="${SENSITIVE_RATE_LIMIT:-500}"
-CLOUDFRONT_DISTRIBUTION_ID="${CLOUDFRONT_DISTRIBUTION_ID:-}"
 
-if [[ -z "$CLOUDFRONT_DISTRIBUTION_ID" ]]; then
-  APP_ID="$(aws amplify list-apps --region "$AWS_REGION" --query "apps[?name=='${AMPLIFY_APP_NAME}'].appId | [0]" --output text)"
-  if [[ "$APP_ID" != "None" && -n "$APP_ID" ]]; then
-    BRANCH_DOMAIN="$(aws amplify get-branch --region "$AWS_REGION" --app-id "$APP_ID" --branch-name "$GITHUB_BRANCH" --query branch.displayName --output text 2>/dev/null || true)"
-    if [[ -n "$BRANCH_DOMAIN" && "$BRANCH_DOMAIN" != "None" ]]; then
-      CLOUDFRONT_DISTRIBUTION_ID="$(aws cloudfront list-distributions --query "DistributionList.Items[?contains(Aliases.Items, '${BRANCH_DOMAIN}')].Id | [0]" --output text)"
-    fi
-  fi
-fi
-
-if [[ -z "$CLOUDFRONT_DISTRIBUTION_ID" || "$CLOUDFRONT_DISTRIBUTION_ID" == "None" ]]; then
-  echo "Unable to detect CloudFront distribution ID automatically."
-  echo "Set CLOUDFRONT_DISTRIBUTION_ID and rerun."
+APP_ID="$(aws amplify list-apps --region "$AWS_REGION" --query "apps[?name=='${AMPLIFY_APP_NAME}'].appId | [0]" --output text)"
+if [[ "$APP_ID" == "None" || -z "$APP_ID" ]]; then
+  echo "Unable to detect Amplify app id for ${AMPLIFY_APP_NAME}."
   exit 1
 fi
 
 ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-RESOURCE_ARN="arn:aws:cloudfront::${ACCOUNT_ID}:distribution/${CLOUDFRONT_DISTRIBUTION_ID}"
+RESOURCE_ARN="arn:aws:amplify:${AWS_REGION}:${ACCOUNT_ID}:apps/${APP_ID}"
 
 RULES_FILE="$(mktemp)"
 cat > "$RULES_FILE" <<EOF
@@ -41,7 +29,7 @@ cat > "$RULES_FILE" <<EOF
         "AggregateKeyType": "IP",
         "ScopeDownStatement": {
           "ByteMatchStatement": {
-            "SearchString": "/api/auth/login",
+            "SearchString": "L2FwaS9hdXRoL2xvZ2lu",
             "FieldToMatch": { "UriPath": {} },
             "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
             "PositionalConstraint": "EXACTLY"
@@ -68,7 +56,7 @@ cat > "$RULES_FILE" <<EOF
             "Statements": [
               {
                 "ByteMatchStatement": {
-                  "SearchString": "/api/members",
+                  "SearchString": "L2FwaS9tZW1iZXJz",
                   "FieldToMatch": { "UriPath": {} },
                   "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
                   "PositionalConstraint": "STARTS_WITH"
@@ -76,7 +64,7 @@ cat > "$RULES_FILE" <<EOF
               },
               {
                 "ByteMatchStatement": {
-                  "SearchString": "/api/export/mailing",
+                  "SearchString": "L2FwaS9leHBvcnQvbWFpbGluZw==",
                   "FieldToMatch": { "UriPath": {} },
                   "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
                   "PositionalConstraint": "EXACTLY"
@@ -84,7 +72,7 @@ cat > "$RULES_FILE" <<EOF
               },
               {
                 "ByteMatchStatement": {
-                  "SearchString": "/api/surveys",
+                  "SearchString": "L2FwaS9zdXJ2ZXlz",
                   "FieldToMatch": { "UriPath": {} },
                   "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
                   "PositionalConstraint": "STARTS_WITH"
@@ -92,7 +80,7 @@ cat > "$RULES_FILE" <<EOF
               },
               {
                 "ByteMatchStatement": {
-                  "SearchString": "/api/emails",
+                  "SearchString": "L2FwaS9lbWFpbHM=",
                   "FieldToMatch": { "UriPath": {} },
                   "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
                   "PositionalConstraint": "EXACTLY"
@@ -142,7 +130,6 @@ else
 fi
 
 aws wafv2 associate-web-acl \
-  --scope CLOUDFRONT \
   --region "$WAF_REGION" \
   --web-acl-arn "$WEB_ACL_ARN" \
   --resource-arn "$RESOURCE_ARN"
@@ -150,6 +137,6 @@ aws wafv2 associate-web-acl \
 rm -f "$RULES_FILE"
 
 echo "Configured WAF ACL ${WEB_ACL_NAME}"
-echo "Associated with distribution ${CLOUDFRONT_DISTRIBUTION_ID}"
+echo "Associated with Amplify app ${APP_ID}"
 echo "Login rate limit: ${LOGIN_RATE_LIMIT} requests / 5 minutes per IP"
 echo "Sensitive route rate limit: ${SENSITIVE_RATE_LIMIT} requests / 5 minutes per IP"

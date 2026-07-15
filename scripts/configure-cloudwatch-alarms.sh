@@ -32,9 +32,21 @@ put_alarm() {
   local comparison="$4"
   local period="${5:-300}"
 
-  local actions=()
   if [[ -n "$SNS_TOPIC_ARN" ]]; then
-    actions=(--alarm-actions "$SNS_TOPIC_ARN" --ok-actions "$SNS_TOPIC_ARN")
+    aws cloudwatch put-metric-alarm \
+      --region "$AWS_REGION" \
+      --alarm-name "$alarm_name" \
+      --namespace "$NAMESPACE" \
+      --metric-name "$metric_name" \
+      --statistic Sum \
+      --period "$period" \
+      --evaluation-periods 1 \
+      --threshold "$threshold" \
+      --comparison-operator "$comparison" \
+      --treat-missing-data notBreaching \
+      --alarm-actions "$SNS_TOPIC_ARN" \
+      --ok-actions "$SNS_TOPIC_ARN" >/dev/null
+    return
   fi
 
   aws cloudwatch put-metric-alarm \
@@ -47,22 +59,24 @@ put_alarm() {
     --evaluation-periods 1 \
     --threshold "$threshold" \
     --comparison-operator "$comparison" \
-    --treat-missing-data notBreaching \
-    "${actions[@]}" >/dev/null
+    --treat-missing-data notBreaching >/dev/null
 }
 
 echo "Configuring log metric filters in ${LOG_GROUP_NAME}"
+aws logs create-log-group \
+  --region "$AWS_REGION" \
+  --log-group-name "$LOG_GROUP_NAME" 2>/dev/null || true
 put_metric_filter \
   "FamilyApi5xxCount" \
-  '"event":"api_error" "status":5' \
+  '{ $.event = "api_error" && $.status >= 500 }' \
   "Api5xxCount"
 put_metric_filter \
   "FamilyLoginFailureCount" \
-  '"event":"api_response" "route":"/api/auth/login" "status":401' \
+  '{ $.event = "api_response" && $.route = "/api/auth/login" && $.status = 401 }' \
   "LoginFailureCount"
 put_metric_filter \
   "FamilyReadinessFailureCount" \
-  '"event":"api_response" "route":"/api/health/ready" "status":503' \
+  '{ $.event = "api_response" && $.route = "/api/health/ready" && $.status = 503 }' \
   "ReadinessFailureCount"
 
 echo "Configuring application alarms"
