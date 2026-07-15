@@ -8,6 +8,10 @@ frontend:
         - npm run validate
     build:
       commands:
+        - rm -f .env.production
+        - env | grep -e '^FAMILY_' -e '^CANONICAL_HOST=' -e '^NEXT_PUBLIC_SITE_URL=' >> .env.production
+        - echo "AWS_REGION=${AWS_REGION:-us-west-2}" >> .env.production
+        - echo "NODE_ENV=production" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next
