@@ -58,4 +58,22 @@ describe("proxy", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
   });
+
+  it("redirects www requests with forwarded port to canonical host", async () => {
+    mutableEnv.NODE_ENV = "production";
+    mutableEnv.CANONICAL_HOST = "mcpeakfamily.org";
+    const { proxy } = await loadProxy();
+    const request = new NextRequest("https://www.mcpeakfamily.org:3000/path", {
+      headers: {
+        host: "www.mcpeakfamily.org:3000",
+        "x-forwarded-proto": "https",
+      },
+    });
+
+    const response = proxy(request);
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "https://mcpeakfamily.org/path",
+    );
+  });
 });

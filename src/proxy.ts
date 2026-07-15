@@ -8,15 +8,17 @@ export function proxy(request: NextRequest): NextResponse {
   }
 
   const host = request.headers.get("host") ?? "";
+  const hostWithoutPort = host.split(":")[0] ?? "";
   const proto = request.headers.get("x-forwarded-proto");
   const url = request.nextUrl.clone();
 
   const needsHttps = proto === "http";
-  const needsWwwRedirect = host === `www.${CANONICAL_HOST}`;
+  const needsWwwRedirect = hostWithoutPort === `www.${CANONICAL_HOST}`;
 
   if (needsHttps || needsWwwRedirect) {
     url.protocol = "https:";
-    url.host = CANONICAL_HOST;
+    url.hostname = CANONICAL_HOST;
+    url.port = "";
     return NextResponse.redirect(url, 308);
   }
 
