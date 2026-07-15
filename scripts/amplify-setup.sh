@@ -29,6 +29,13 @@ FAMILY_DDB_TABLE="${FAMILY_DDB_TABLE:-mcpeak}"
 DOMAIN_NAME="${DOMAIN_NAME:-mcpeakfamily.org}"
 COMPUTE_ROLE_NAME="${COMPUTE_ROLE_NAME:-amplify-family-compute-role}"
 SESSION_SECRET="${FAMILY_SESSION_SECRET:-$(openssl rand -base64 48)}"
+LOGIN_ANSWER="${FAMILY_LOGIN_ANSWER:-}"
+
+if [[ -z "$LOGIN_ANSWER" ]]; then
+  echo "Set FAMILY_LOGIN_ANSWER before running production setup."
+  echo "Example: export FAMILY_LOGIN_ANSWER='your-family-answer'"
+  exit 1
+fi
 
 echo "==> Verifying AWS credentials"
 ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
@@ -69,7 +76,7 @@ echo "    Attached DynamoDB policy"
 
 COMPUTE_ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${COMPUTE_ROLE_NAME}"
 
-ENV_VARS="FAMILY_DDB_TABLE=${FAMILY_DDB_TABLE},FAMILY_USE_IN_MEMORY_DB=${FAMILY_USE_IN_MEMORY_DB:-false},CANONICAL_HOST=${DOMAIN_NAME},NEXT_PUBLIC_SITE_URL=https://${DOMAIN_NAME},FAMILY_SESSION_SECRET=${SESSION_SECRET}"
+ENV_VARS="FAMILY_DDB_TABLE=${FAMILY_DDB_TABLE},FAMILY_USE_IN_MEMORY_DB=${FAMILY_USE_IN_MEMORY_DB:-false},FAMILY_LOGIN_ANSWER=${LOGIN_ANSWER},CANONICAL_HOST=${DOMAIN_NAME},NEXT_PUBLIC_SITE_URL=https://${DOMAIN_NAME},FAMILY_SESSION_SECRET=${SESSION_SECRET}"
 
 echo "==> Looking for existing Amplify app: $AMPLIFY_APP_NAME"
 APP_ID="$(aws amplify list-apps --region "$AWS_REGION" --query "apps[?name=='${AMPLIFY_APP_NAME}'].appId | [0]" --output text)"
@@ -166,7 +173,7 @@ echo "==> Setup complete"
 echo "App ID:          $APP_ID"
 echo "Default domain:  https://${GITHUB_BRANCH}.${DEFAULT_DOMAIN}"
 echo "Compute role:    $COMPUTE_ROLE_ARN"
-echo "Session secret:  $SESSION_SECRET"
+echo "Session secret:  configured"
 echo
 echo "Next:"
 echo "  ./scripts/amplify-status.sh"

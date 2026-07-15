@@ -24,14 +24,6 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "maps.googleapis.com",
-      },
-    ],
-  },
   async headers() {
     return [
       {

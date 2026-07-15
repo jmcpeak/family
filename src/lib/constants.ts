@@ -3,10 +3,9 @@ import type { Gender } from "@/lib/types";
 export const USER_ID_HASH_PREFIX = "user-";
 export const LOGIN_ANSWER_HASH = 463258776;
 export const SESSION_COOKIE_NAME = "family_session";
+export const SURVEY_COMPLETION_COOKIE_PREFIX = "family_survey_completed_";
+export const SURVEY_BASE_PATH = "/surveys";
 export const GOOGLE_MAPS_BASE = "https://www.google.com/maps/place/";
-export const STREET_VIEW_BASE =
-  "https://maps.googleapis.com/maps/api/streetview?location=";
-export const STREET_VIEW_SUFFIX = "&size=450x250";
 
 export const GENDERS: Array<{ name: string; key: Gender }> = [
   { name: "", key: "" },
@@ -77,15 +76,15 @@ export const STATES = [
   { name: "WYOMING", abbreviation: "WY" },
 ] as const;
 
-export const CSV_EXPORT_FIELDS = [
-  "firstName",
-  "lastName",
-  "email",
-  "phone",
-  "address",
-  "address2",
-  "city",
-  "theState",
-  "zipcode",
-  "country",
-] as const;
+export function formatTitleCase(value: string): string {
+  if (!value) {
+    return value;
+  }
+
+  return value.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export const STATE_OPTIONS = STATES.map((state) => ({
+  value: state.abbreviation,
+  label: formatTitleCase(state.name),
+}));

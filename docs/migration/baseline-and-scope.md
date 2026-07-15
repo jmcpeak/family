@@ -31,8 +31,8 @@ Source implementation: `jmDB` service in `src/app/app.js`.
 | `queryAll()` | Scan all family members (excluding short ids) | `GET /api/members` | Keep default sort on client (`lastName`, `firstName`) |
 | `queryParents(gender)` | Scan potential father/mother options | `GET /api/parents?gender=m|f` | Preserve spouse-gender fallback logic |
 | `getEmailAddresses()` | Return non-empty email list for bulk mail | `GET /api/emails` | UI still offers copy-to-clipboard list |
-| `exportToCSV()` | Download CSV of key contact fields | `GET /api/export.csv` | Server-generated CSV stream |
-| `getItem(id)` | Fetch member or metadata row (`lastUpdateDate`) | `GET /api/members/{id}` | Support metadata id path |
+| `exportToCSV()` | Download CSV of key contact fields | `GET /api/export/mailing` | Server-generated CSV stream |
+| `getItem(id)` | Fetch member or metadata row (`lastUpdateDate`) | internal repository lookup | Current API exposes bulk member reads via `GET /api/members` |
 | `putItem(user)` | Upsert member record | `PUT /api/members/{id}` | Server updates metadata after write |
 | `deleteItem(user)` | Delete member by id | `DELETE /api/members/{id}` | Preserve optimistic UI removal |
 | `setLastUpdateDate(id)` | Write metadata row with timestamp and id | internal helper | Keep internal to API layer |

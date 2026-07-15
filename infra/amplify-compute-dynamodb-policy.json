@@ -13,8 +13,7 @@
         "dynamodb:Query"
       ],
       "Resource": [
-        "arn:aws:dynamodb:us-west-2:ACCOUNT_ID:table/mcpeak",
-        "arn:aws:dynamodb:us-west-2:ACCOUNT_ID:table/test"
+        "arn:aws:dynamodb:us-west-2:ACCOUNT_ID:table/mcpeak"
       ]
     }
   ]

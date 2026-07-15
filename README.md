@@ -13,7 +13,7 @@ The original AngularJS/Grunt/Bower application is preserved in `legacy-angularjs
 
 - Next.js 16 + React 19
 - MUI 9 (`@mui/material`, `@mui/icons-material`) with Emotion
-- TypeScript 6, Vitest, ESLint 9
+- TypeScript 7, Vitest, Biome
 
 ## Quick start
 
@@ -66,7 +66,7 @@ If `aws login` keeps landing in the wrong account, use the Cognito option above 
 - `AWS_REGION`: AWS region for DynamoDB access.
 - `FAMILY_DDB_TABLE`: DynamoDB table name for production data.
 - `FAMILY_USE_IN_MEMORY_DB`: `true` to use local in-memory repository, `false` to use DynamoDB.
-- `FAMILY_LOGIN_ANSWER`: Optional plain-text override for the login challenge answer.
+- `FAMILY_LOGIN_ANSWER`: Plain-text login challenge answer. Required in production.
 - `FAMILY_SESSION_SECRET`: Secret used to sign session cookies.
 - `CANONICAL_HOST`: Production hostname (default `mcpeakfamily.org`).
 - `NEXT_PUBLIC_SITE_URL`: Canonical site URL (default `https://mcpeakfamily.org`).
@@ -84,14 +84,18 @@ The app is intended for [https://mcpeakfamily.org](https://mcpeakfamily.org). Pr
 - `npm run dev:http` - start Next dev server over HTTP.
 - `npm run build` - production build.
 - `npm run start` - run production server.
-- `npm run lint` - run Next lint rules.
+- `npm run lint` - run Biome checks.
 - `npm run typecheck` - TypeScript check.
 - `npm run test` - run unit tests.
 - `npm run test:coverage` - run tests with coverage.
-- `npm run validate` - lint + typecheck + test.
+- `npm run test:smoke` - run non-destructive Playwright smoke tests.
+- `npm run test:smoke:staging` - run write/revert smoke flow (`SMOKE_ALLOW_WRITES=true`).
+- `npm run validate` - lint + typecheck + unit tests + coverage + critical coverage checks.
+- `npm run amplify:verify` - run AWS launch-readiness checks (PITR, alarms, redirects, health).
 
 ## Migration docs
 
 - Baseline and scope: `docs/migration/baseline-and-scope.md`
 - Hosting and HTTPS: `docs/migration/hosting-mcpeakfamily-org.md`
 - AWS Amplify deploy: `docs/migration/amplify-deploy.md`
+- Identity roadmap: `docs/migration/identity-roadmap.md`

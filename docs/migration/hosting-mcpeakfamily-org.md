@@ -22,6 +22,7 @@ NODE_ENV=production
 AWS_REGION=us-west-2
 FAMILY_DDB_TABLE=mcpeak
 FAMILY_USE_IN_MEMORY_DB=false
+FAMILY_LOGIN_ANSWER=<private-family-answer>
 FAMILY_SESSION_SECRET=<long-random-secret>
 CANONICAL_HOST=mcpeakfamily.org
 NEXT_PUBLIC_SITE_URL=https://mcpeakfamily.org
@@ -68,7 +69,7 @@ Detailed walkthrough: [`docs/migration/amplify-deploy.md`](amplify-deploy.md)
 ## Post-deploy smoke checks
 
 - [ ] `https://mcpeakfamily.org` loads the login screen
-- [ ] Login with reunion city answer works
+- [ ] Login with configured `FAMILY_LOGIN_ANSWER` works
 - [ ] Session persists after refresh
 - [ ] Member CRUD works against production DynamoDB
 - [ ] CSV export downloads over HTTPS

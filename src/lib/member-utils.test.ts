@@ -4,7 +4,9 @@ import {
   cleanMemberRecord,
   countFamilyMembers,
   formatDurationYears,
+  getChildrenIndexes,
   hashCode,
+  sortChildrenIndexesByBirthday,
 } from "@/lib/member-utils";
 import type { FamilyMemberRecord } from "@/lib/types";
 
@@ -21,6 +23,7 @@ describe("cleanMemberRecord", () => {
       id: "123",
       firstName: "Ada",
       $$hashKey: "object:1",
+      recordType: "member",
       empty: undefined,
       children: [],
     } as unknown as FamilyMemberRecord;
@@ -104,5 +107,34 @@ describe("formatDurationYears", () => {
     expect(formatDurationYears("2024-01-01", "2024-03-01")).toContain(
       "less than a year",
     );
+  });
+});
+
+describe("sortChildrenIndexesByBirthday", () => {
+  it("sorts children oldest first by birthday", () => {
+    const member: FamilyMemberRecord = {
+      id: "1",
+      children: [0, 1, 2],
+      bithdayChild0: "2015-06-01",
+      bithdayChild1: "2010-01-01",
+      bithdayChild2: "2012-03-15",
+    };
+
+    expect(
+      sortChildrenIndexesByBirthday(member, getChildrenIndexes(member)),
+    ).toEqual([1, 2, 0]);
+  });
+
+  it("places children without birthdays after dated children", () => {
+    const member: FamilyMemberRecord = {
+      id: "1",
+      children: [0, 1, 2],
+      bithdayChild0: "2015-06-01",
+      bithdayChild2: "2010-01-01",
+    };
+
+    expect(
+      sortChildrenIndexesByBirthday(member, getChildrenIndexes(member)),
+    ).toEqual([2, 0, 1]);
   });
 });

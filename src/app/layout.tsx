@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "@/app/globals.css";
 import { MuiThemeProvider } from "@/components/mui-theme-provider";
+import { QueryProvider } from "@/components/query-provider";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <MuiThemeProvider>{children}</MuiThemeProvider>
+        <MuiThemeProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </MuiThemeProvider>
       </body>
     </html>
   );

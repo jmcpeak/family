@@ -71,6 +71,12 @@ Redeploy:
 AWS_PROFILE=mcpeak-family ./scripts/amplify-deploy.sh
 ```
 
+Launch-readiness verification (PITR, backup/restore checks, role scope, alarms, redirects, health):
+
+```bash
+AWS_PROFILE=mcpeak-family CREATE_BACKUP=true npm run amplify:verify
+```
+
 ---
 
 ## Step 2 (manual) — Create IAM SSR Compute role
@@ -127,12 +133,11 @@ Alternatively, use **Custom trust policy** if Amplify offers "Compute role" in t
 | `AWS_REGION` | `us-west-2` |
 | `FAMILY_DDB_TABLE` | `mcpeak` |
 | `FAMILY_USE_IN_MEMORY_DB` | `false` |
+| `FAMILY_LOGIN_ANSWER` | *(required; private value, do not commit to repo)* |
 | `FAMILY_SESSION_SECRET` | *(generate a long random string)* |
 | `CANONICAL_HOST` | `mcpeakfamily.org` |
 | `NEXT_PUBLIC_SITE_URL` | `https://mcpeakfamily.org` |
 | `NODE_ENV` | `production` |
-
-Do **not** set `FAMILY_LOGIN_ANSWER` unless you want to override the reunion-city check.
 
 9. **Save and deploy**
 
@@ -155,12 +160,47 @@ Redeploy if the first deploy ran before the role was attached ( **Hosting** → 
 
 Before touching DNS, verify on the `*.amplifyapp.com` URL:
 
-- [ ] Login with **New London**
+- [ ] Login with your configured reunion answer (stored in `FAMILY_LOGIN_ANSWER`)
 - [ ] Member list loads from DynamoDB
 - [ ] Save / add / delete works
 - [ ] CSV export works
 
+Automated smoke command:
+
+```bash
+SMOKE_BASE_URL=https://main.d1234abcdef.amplifyapp.com \
+PLAYWRIGHT_LOGIN_ANSWER='your-answer' \
+npm run test:smoke:staging
+```
+
 If DynamoDB calls fail with access denied, recheck the Compute role policy and `FAMILY_DDB_TABLE`.
+
+---
+
+## Step 4b — Apply security controls
+
+Before DNS cutover, configure edge rate limiting and verify the legacy Cognito pool cannot bypass app auth:
+
+```bash
+AWS_PROFILE=mcpeak-family ./scripts/configure-waf.sh
+AWS_PROFILE=mcpeak-family ./scripts/audit-cognito-access.sh
+AWS_PROFILE=mcpeak-family ./scripts/configure-cloudwatch-alarms.sh
+```
+
+Defaults configured by `configure-waf.sh`:
+- `/api/auth/login`: block after `120` requests / 5 minutes / IP
+- Sensitive routes (`/api/members*`, `/api/surveys*`, `/api/emails`, `/api/export/mailing`): block after `500` requests / 5 minutes / IP
+
+If these values are too strict, rerun with overrides:
+
+```bash
+AWS_PROFILE=mcpeak-family LOGIN_RATE_LIMIT=200 SENSITIVE_RATE_LIMIT=800 ./scripts/configure-waf.sh
+```
+
+Rollback:
+- Disassociate the web ACL in AWS WAF from the CloudFront distribution.
+- Adjust limits and rerun `configure-waf.sh`.
+- Disable noisy alarms temporarily while tuning filter thresholds.
 
 ---
 
@@ -208,7 +248,7 @@ This repo requires Node 20+. `amplify.yml` runs `nvm use 20`. In Amplify console
 
 ### Build fails (Next.js 16)
 
-Amplify officially documents support through Next.js 15 ([SSR support](https://docs.aws.amazon.com/amplify/latest/userguide/ssr-amplify-support.html)). This app uses Next.js 16; if build fails, check Amplify build logs. Most Next.js 16 SSR apps work on `WEB_COMPUTE` with `baseDirectory: .next`.
+Check Amplify build logs and confirm your app still uses `WEB_COMPUTE` with `baseDirectory: .next` in [`amplify.yml`](../../amplify.yml).
 
 ### DynamoDB access denied
 

@@ -32,6 +32,21 @@ function signPayload(encodedPayload: string): string {
     .digest("base64url");
 }
 
+function matchesLoginAnswer(
+  expectedAnswer: string,
+  providedAnswer: string,
+): boolean {
+  const expectedHash = crypto
+    .createHash("sha256")
+    .update(expectedAnswer)
+    .digest();
+  const providedHash = crypto
+    .createHash("sha256")
+    .update(providedAnswer)
+    .digest();
+  return crypto.timingSafeEqual(expectedHash, providedHash);
+}
+
 export function createSessionToken(): string {
   const payload: SessionPayload = {
     exp: Date.now() + SESSION_DURATION_MS,
@@ -75,7 +90,10 @@ export function isValidLoginAnswer(answer: string): boolean {
   }
 
   if (serverEnv.loginAnswer) {
-    return normalized === serverEnv.loginAnswer.trim().toLowerCase();
+    return matchesLoginAnswer(
+      serverEnv.loginAnswer.trim().toLowerCase(),
+      normalized,
+    );
   }
 
   return hashCode(normalized) === LOGIN_ANSWER_HASH;

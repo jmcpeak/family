@@ -1,9 +1,4 @@
-import {
-  GOOGLE_MAPS_BASE,
-  STREET_VIEW_BASE,
-  STREET_VIEW_SUFFIX,
-  USER_ID_HASH_PREFIX,
-} from "@/lib/constants";
+import { GOOGLE_MAPS_BASE, USER_ID_HASH_PREFIX } from "@/lib/constants";
 import type { FamilyMemberRecord } from "@/lib/types";
 
 export function createGuid(): string {
@@ -60,11 +55,6 @@ export function getGoogleMapsUrl(member: FamilyMemberRecord): string {
   return `${GOOGLE_MAPS_BASE}${encodeURIComponent(address)}`;
 }
 
-export function getStreetViewUrl(member: FamilyMemberRecord): string {
-  const address = `${member.address ?? ""},${member.city ?? ""},${member.theState ?? ""}`;
-  return `${STREET_VIEW_BASE}${encodeURIComponent(address)}${STREET_VIEW_SUFFIX}`;
-}
-
 export function getChildrenIndexes(member: FamilyMemberRecord): number[] {
   const children: unknown = member.children;
   if (children instanceof Set) {
@@ -78,6 +68,32 @@ export function getChildrenIndexes(member: FamilyMemberRecord): number[] {
     return [0];
   }
   return children.filter((value): value is number => Number.isFinite(value));
+}
+
+export function sortChildrenIndexesByBirthday(
+  member: FamilyMemberRecord,
+  indexes: number[],
+): number[] {
+  return [...indexes].sort((a, b) => {
+    const dateA = parseMaybeDate(String(member[`bithdayChild${a}`] ?? ""));
+    const dateB = parseMaybeDate(String(member[`bithdayChild${b}`] ?? ""));
+
+    if (!dateA && !dateB) {
+      return a - b;
+    }
+    if (!dateA) {
+      return 1;
+    }
+    if (!dateB) {
+      return -1;
+    }
+
+    const diff = dateA.getTime() - dateB.getTime();
+    if (diff !== 0) {
+      return diff;
+    }
+    return a - b;
+  });
 }
 
 export function countFamilyMembers(members: FamilyMemberRecord[]): number {
@@ -162,7 +178,7 @@ export function cleanMemberRecord(
   for (const [key, rawValue] of Object.entries(
     member as Record<string, unknown>,
   )) {
-    if (key === "$$hashKey") {
+    if (key === "$$hashKey" || key === "recordType") {
       continue;
     }
 
