@@ -10,12 +10,28 @@ const roboto = Roboto({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mcpeakfamily.org";
+const siteTitle = "McPeak Family";
+const siteDescription =
+  "McPeak family directory — roots, stories, and family connections.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://mcpeakfamily.org",
-  ),
-  title: "McPeak Family",
-  description: "Family member directory rebuilt on Next.js and React.",
+  metadataBase: new URL(siteUrl),
+  title: siteTitle,
+  description: siteDescription,
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    siteName: siteTitle,
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
 };
 
 export default function RootLayout({
