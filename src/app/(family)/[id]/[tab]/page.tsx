@@ -1,8 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { isTabKey } from "@/lib/family-editor";
 
 interface FamilyMemberTabPageProps {
   params: Promise<{
+    id: string;
     tab: string;
   }>;
 }
@@ -10,10 +11,15 @@ interface FamilyMemberTabPageProps {
 export default async function FamilyMemberTabPage({
   params,
 }: FamilyMemberTabPageProps): Promise<null> {
-  const { tab } = await params;
+  const { id, tab } = await params;
   if (!isTabKey(tab)) {
     notFound();
   }
 
-  return null;
+  const memberPath = `/${encodeURIComponent(id)}`;
+  if (tab === "family") {
+    redirect(memberPath);
+  }
+
+  redirect(`${memberPath}?tab=${encodeURIComponent(tab)}`);
 }

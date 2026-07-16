@@ -104,7 +104,7 @@ describe("useFamilyNavigation", () => {
     expect(mockPush).toHaveBeenCalledWith("/");
   });
 
-  it("opens members on canonical family tab route", () => {
+  it("opens members on canonical member route", () => {
     vi.spyOn(window, "confirm").mockReturnValue(true);
     const onLoadRouteMember = vi.fn();
     const onRouteTabChange = vi.fn();
@@ -129,7 +129,7 @@ describe("useFamilyNavigation", () => {
     });
 
     expect(onOpenMember).toHaveBeenCalledWith(MEMBERS[0]);
-    expect(mockPush).toHaveBeenCalledWith("/1/family");
+    expect(mockPush).toHaveBeenCalledWith("/1");
   });
 
   it("keeps the editor open while the member route is pending", () => {
@@ -154,7 +154,7 @@ describe("useFamilyNavigation", () => {
     expect(result.current.desktopEditing).toBe(true);
   });
 
-  it("pushes nested routes when switching tabs", () => {
+  it("pushes member routes without embedding the tab", () => {
     const onLoadRouteMember = vi.fn();
     const onRouteTabChange = vi.fn();
     const onResetDirty = vi.fn();
@@ -173,10 +173,10 @@ describe("useFamilyNavigation", () => {
     );
 
     act(() => {
-      result.current.pushMemberTabRoute("1", "children");
+      result.current.pushMemberRoute("1");
     });
 
-    expect(mockPush).toHaveBeenCalledWith("/1/children");
+    expect(mockPush).toHaveBeenCalledWith("/1");
   });
 
   it("syncs tab changes from route updates", () => {

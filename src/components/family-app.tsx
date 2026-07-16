@@ -7,7 +7,12 @@ import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AboutDialog,
@@ -52,12 +57,13 @@ const DEFAULT_PARENT_OPTIONS: ParentOption[] = [
 ];
 
 export function FamilyApp(): React.JSX.Element {
-  const params = useParams<{ id?: string; tab?: string | string[] }>();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = useParams<{ id?: string }>();
   const routeMemberId = typeof params.id === "string" ? params.id : undefined;
-  const routeTabParam = Array.isArray(params.tab) ? params.tab[0] : params.tab;
-  const routeTab = parseTabKey(
-    typeof routeTabParam === "string" ? routeTabParam : undefined,
-  );
+  const routeTab = parseTabKey(searchParams.get("tab") ?? undefined);
+  const showAbout = searchParams.get("dialog") === "about";
   const queryClient = useQueryClient();
   const theme = useTheme();
   const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"), {
@@ -90,7 +96,6 @@ export function FamilyApp(): React.JSX.Element {
     setError(null);
   }, []);
   const [search, setSearch] = useState("");
-  const [showAbout, setShowAbout] = useState(false);
   const [showEmails, setShowEmails] = useState(false);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -170,7 +175,6 @@ export function FamilyApp(): React.JSX.Element {
     onRouteTabChange: setActiveTab,
     onResetDirty: () => setDirty(false),
   });
-  const { pushMemberTabRoute } = navigation;
 
   const handleTabChange = useCallback(
     (tab: TabKey): void => {
@@ -182,9 +186,17 @@ export function FamilyApp(): React.JSX.Element {
       ) {
         return;
       }
-      pushMemberTabRoute(selectedUser.id, tab);
+
+      const nextParams = new URLSearchParams(searchParams.toString());
+      if (tab === "family") {
+        nextParams.delete("tab");
+      } else {
+        nextParams.set("tab", tab);
+      }
+      const query = nextParams.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname);
     },
-    [pushMemberTabRoute, routeMemberId, selectedUser, setActiveTab],
+    [pathname, routeMemberId, router, searchParams, selectedUser, setActiveTab],
   );
 
   useEffect(() => {
@@ -406,6 +418,24 @@ export function FamilyApp(): React.JSX.Element {
     setMoreMenuAnchor(null);
   };
 
+  const openAboutDialog = useCallback((): void => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.set("dialog", "about");
+    const query = nextParams.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
+  }, [pathname, router, searchParams]);
+
+  const closeAboutDialog = useCallback((): void => {
+    if (!searchParams.has("dialog")) {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.delete("dialog");
+    const query = nextParams.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
+  }, [pathname, router, searchParams]);
+
   const errorSnackbar = (
     <Snackbar
       open={errorSnackbarOpen}
@@ -624,12 +654,12 @@ export function FamilyApp(): React.JSX.Element {
           onOpenEmailsDialog={openEmailsDialog}
           onExportMailingLabels={exportMailingLabels}
           onOpenSurvey={openSurvey}
-          onOpenAboutDialog={() => setShowAbout(true)}
+          onOpenAboutDialog={openAboutDialog}
           onLogout={logout}
           onSetThemeMode={setThemeMode}
         />
 
-        <AboutDialog open={showAbout} onClose={() => setShowAbout(false)} />
+        <AboutDialog open={showAbout} onClose={closeAboutDialog} />
         <ConfirmDialog
           open={confirmDiscardOpen}
           title="Discard unsaved changes?"

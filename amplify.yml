@@ -10,8 +10,16 @@ frontend:
       commands:
         - rm -f .env.production
         - env | grep -e '^FAMILY_' -e '^CANONICAL_HOST=' -e '^NEXT_PUBLIC_SITE_URL=' >> .env.production
+        - export RESOLVED_COMMIT="$(git rev-parse "${AWS_COMMIT_ID:-HEAD}" 2>/dev/null || git rev-parse HEAD)"
         - echo "AWS_REGION=${AWS_REGION:-us-west-2}" >> .env.production
         - echo "NODE_ENV=production" >> .env.production
+        - export APP_VERSION="$(node -p "require('./package.json').version")"
+        - export SHORT_COMMIT="$(printf '%s' "${RESOLVED_COMMIT}" | cut -c1-7)"
+        - export BUILD_DATE="$(git show -s --format=%cI "${RESOLVED_COMMIT}" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        - echo "NEXT_PUBLIC_APP_VERSION=${APP_VERSION}" >> .env.production
+        - echo "NEXT_PUBLIC_GIT_COMMIT_FULL=${RESOLVED_COMMIT}" >> .env.production
+        - echo "NEXT_PUBLIC_GIT_COMMIT=${SHORT_COMMIT}" >> .env.production
+        - echo "NEXT_PUBLIC_BUILD_DATE=${BUILD_DATE}" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next

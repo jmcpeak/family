@@ -28,7 +28,7 @@ export interface UseFamilyNavigationResult {
   mobileEditing: boolean;
   showEditor: boolean;
   showDeleteAction: boolean;
-  pushMemberTabRoute: (memberId: string, tab: TabKey) => void;
+  pushMemberRoute: (memberId: string) => void;
   openMemberEditor: (
     member: FamilyMemberRecord,
     source: EditorSource,
@@ -92,9 +92,9 @@ export function useFamilyNavigation({
     }
   }, [desktopDrawer, routeMemberId]);
 
-  const pushMemberTabRoute = useCallback(
-    (memberId: string, tab: TabKey): void => {
-      router.push(`/${encodeURIComponent(memberId)}/${tab}`);
+  const pushMemberRoute = useCallback(
+    (memberId: string): void => {
+      router.push(`/${encodeURIComponent(memberId)}`);
     },
     [router],
   );
@@ -120,7 +120,7 @@ export function useFamilyNavigation({
       }
 
       onOpenMember(member);
-      pushMemberTabRoute(member.id, "family");
+      pushMemberRoute(member.id);
       if (source === "mobile") {
         setMobileListOpen(false);
         return;
@@ -128,7 +128,7 @@ export function useFamilyNavigation({
 
       setDesktopMode("edit");
     },
-    [confirmDiscard, pushMemberTabRoute],
+    [confirmDiscard, pushMemberRoute],
   );
 
   const returnToBrowse = useCallback((): void => {
@@ -196,7 +196,7 @@ export function useFamilyNavigation({
     mobileEditing,
     showEditor,
     showDeleteAction,
-    pushMemberTabRoute,
+    pushMemberRoute,
     openMemberEditor,
     returnToBrowse,
     showEditorLayout,
