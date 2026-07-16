@@ -2,6 +2,11 @@ export {
   applySurveyCompletionCookie,
   getSurveyCompletionCookieName,
 } from "@/lib/surveys/cookies";
+export {
+  dismissSurveyAutoOpen,
+  getSurveyDismissStorageKey,
+  isSurveyAutoOpenDismissed,
+} from "@/lib/surveys/dismiss";
 export { addCalendarMonths, isSurveyActive } from "@/lib/surveys/lifecycle";
 export {
   buildSurveySummary,

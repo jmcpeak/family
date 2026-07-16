@@ -48,6 +48,26 @@ describe("SurveyDialog", () => {
     );
   });
 
+  it("closes with dontAskAgain when the checkbox is checked", () => {
+    const onClose = vi.fn();
+    render(
+      <SurveyDialog
+        open
+        loading={false}
+        survey={createSurveySummary({})}
+        submitting={false}
+        submitError={null}
+        onSubmit={vi.fn()}
+        onClose={onClose}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("checkbox", { name: /don't ask again/i }));
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+
+    expect(onClose).toHaveBeenCalledWith({ dontAskAgain: true });
+  });
+
   it("shows closed-state messaging for past surveys", () => {
     render(
       <SurveyDialog

@@ -21,7 +21,10 @@ import {
   EditorLoadingSkeleton,
   MemberEditor,
 } from "@/components/family/member-editor";
-import { SurveyDialog } from "@/components/family/surveys/survey-dialog";
+import {
+  SurveyDialog,
+  type SurveyCloseOptions,
+} from "@/components/family/surveys/survey-dialog";
 import { SurveyResultsDialog } from "@/components/family/surveys/survey-results-dialog";
 import { MemberBrowser } from "@/components/member-browser";
 import { useThemeMode } from "@/components/mui-theme-provider";
@@ -49,7 +52,9 @@ import {
 import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
 import { familyKeys } from "@/lib/queries/query-keys";
 import {
+  dismissSurveyAutoOpen,
   getSurveyPath,
+  isSurveyAutoOpenDismissed,
   parseSurveyResultsSlugFromPathname,
   parseSurveySlugFromPathname,
   type SurveySlug,
@@ -453,16 +458,22 @@ export function FamilyApp(): React.JSX.Element {
     [router],
   );
 
-  const closeSurvey = useCallback((): void => {
-    setSurveySubmitError(null);
-    if (routeSurveySlug) {
-      autoOpenedSurveySlugRef.current = routeSurveySlug;
-    }
-    setSurveyDialogOpen(false);
-    if (routeSurveySlug) {
-      router.replace("/");
-    }
-  }, [routeSurveySlug, router]);
+  const closeSurvey = useCallback(
+    (options?: SurveyCloseOptions): void => {
+      setSurveySubmitError(null);
+      if (routeSurveySlug) {
+        autoOpenedSurveySlugRef.current = routeSurveySlug;
+        if (options?.dontAskAgain) {
+          dismissSurveyAutoOpen(routeSurveySlug);
+        }
+      }
+      setSurveyDialogOpen(false);
+      if (routeSurveySlug) {
+        router.replace("/");
+      }
+    },
+    [routeSurveySlug, router],
+  );
 
   const closeSurveyResults = useCallback((): void => {
     setSurveyResultsDialogOpen(false);
@@ -509,6 +520,11 @@ export function FamilyApp(): React.JSX.Element {
 
     const nextSurvey = activeSurveys.find((survey) => !survey.completed);
     if (!nextSurvey) {
+      return;
+    }
+
+    if (isSurveyAutoOpenDismissed(nextSurvey.slug)) {
+      autoOpenedSurveySlugRef.current = nextSurvey.slug;
       return;
     }
 

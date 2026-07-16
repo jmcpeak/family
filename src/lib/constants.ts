@@ -4,6 +4,7 @@ export const USER_ID_HASH_PREFIX = "user-";
 export const LOGIN_ANSWER_HASH = 463258776;
 export const SESSION_COOKIE_NAME = "family_session";
 export const SURVEY_COMPLETION_COOKIE_PREFIX = "family_survey_completed_";
+export const SURVEY_DISMISS_STORAGE_PREFIX = "family_survey_dismissed_";
 export const SURVEY_BASE_PATH = "/surveys";
 export const GOOGLE_MAPS_BASE = "https://www.google.com/maps/place/";
 

@@ -21,6 +21,10 @@ import {
   type SurveySummary,
 } from "@/lib/surveys";
 
+export interface SurveyCloseOptions {
+  dontAskAgain?: boolean;
+}
+
 interface SurveyDialogProps {
   open: boolean;
   loading: boolean;
@@ -31,7 +35,7 @@ interface SurveyDialogProps {
     slug: SurveySlug,
     payload: SurveySubmissionPayload,
   ) => Promise<void>;
-  onClose: () => void;
+  onClose: (options?: SurveyCloseOptions) => void;
 }
 
 interface ReunionInterestFormState {
@@ -79,6 +83,7 @@ export function SurveyDialog({
   const [formState, setFormState] =
     useState<ReunionInterestFormState>(DEFAULT_FORM_STATE);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [dontAskAgain, setDontAskAgain] = useState(false);
   const [displaySurvey, setDisplaySurvey] = useState<SurveySummary | null>(
     survey,
   );
@@ -97,9 +102,14 @@ export function SurveyDialog({
     }
     setFormState(DEFAULT_FORM_STATE);
     setLocalError(null);
+    setDontAskAgain(false);
   }, [currentSurvey, open]);
 
   const dialogError = localError ?? submitError;
+
+  const handleClose = (): void => {
+    onClose(dontAskAgain ? { dontAskAgain: true } : undefined);
+  };
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
@@ -136,7 +146,7 @@ export function SurveyDialog({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="md"
       fullWidth
       fullScreen={false}
@@ -369,7 +379,18 @@ export function SurveyDialog({
             />
 
             <DialogActions sx={{ px: 0 }}>
-              <Button onClick={onClose} disabled={submitting}>
+              <FormControlLabel
+                sx={{ mr: "auto", ml: 0 }}
+                control={
+                  <Checkbox
+                    checked={dontAskAgain}
+                    onChange={(event) => setDontAskAgain(event.target.checked)}
+                    disabled={submitting}
+                  />
+                }
+                label="Don't ask again"
+              />
+              <Button onClick={handleClose} disabled={submitting}>
                 Close
               </Button>
               <Button type="submit" variant="contained" disabled={submitting}>
@@ -381,7 +402,7 @@ export function SurveyDialog({
       </DialogContent>
       {currentSurvey?.status !== "active" || currentSurvey?.completed ? (
         <DialogActions>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={handleClose}>Close</Button>
         </DialogActions>
       ) : null}
     </Dialog>
