@@ -11,7 +11,9 @@ export function isSurveyAutoOpenDismissed(slug: SurveySlug): boolean {
   }
 
   try {
-    return window.localStorage.getItem(getSurveyDismissStorageKey(slug)) === "1";
+    return (
+      window.localStorage.getItem(getSurveyDismissStorageKey(slug)) === "1"
+    );
   } catch {
     return false;
   }
