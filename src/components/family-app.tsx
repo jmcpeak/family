@@ -7,8 +7,8 @@ import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AboutDialog,
   ConfirmDialog,
@@ -21,11 +21,6 @@ import {
   EditorLoadingSkeleton,
   MemberEditor,
 } from "@/components/family/member-editor";
-import {
-  type SurveyCloseOptions,
-  SurveyDialog,
-} from "@/components/family/surveys/survey-dialog";
-import { SurveyResultsDialog } from "@/components/family/surveys/survey-results-dialog";
 import { MemberBrowser } from "@/components/member-browser";
 import { useThemeMode } from "@/components/mui-theme-provider";
 import {
@@ -36,12 +31,10 @@ import {
   useParentsQuery,
   useSaveMemberMutation,
   useSessionQuery,
-  useSubmitSurveyMutation,
-  useSurveyResultsQuery,
-  useSurveysQuery,
 } from "@/hooks/use-family-data";
 import { useFamilyNavigation } from "@/hooks/use-family-navigation";
 import { useMemberEditor } from "@/hooks/use-member-editor";
+import { useSurveyLifecycle } from "@/hooks/use-survey-lifecycle";
 import {
   buildParentSelectOptions,
   filterVisibleMembers,
@@ -51,15 +44,6 @@ import {
 } from "@/lib/family-editor";
 import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
 import { familyKeys } from "@/lib/queries/query-keys";
-import {
-  dismissSurveyAutoOpen,
-  getSurveyPath,
-  isSurveyAutoOpenDismissed,
-  parseSurveyResultsSlugFromPathname,
-  parseSurveySlugFromPathname,
-  type SurveySlug,
-  type SurveySubmissionPayload,
-} from "@/lib/surveys";
 import type { FamilyMemberRecord, ParentOption } from "@/lib/types";
 
 const EMPTY_MEMBERS: FamilyMemberRecord[] = [];
@@ -68,21 +52,11 @@ const DEFAULT_PARENT_OPTIONS: ParentOption[] = [
 ];
 
 export function FamilyApp(): React.JSX.Element {
-  const router = useRouter();
-  const pathname = usePathname();
   const params = useParams<{ id?: string; tab?: string | string[] }>();
   const routeMemberId = typeof params.id === "string" ? params.id : undefined;
   const routeTabParam = Array.isArray(params.tab) ? params.tab[0] : params.tab;
   const routeTab = parseTabKey(
     typeof routeTabParam === "string" ? routeTabParam : undefined,
-  );
-  const routeSurveySlug = useMemo(
-    () => parseSurveySlugFromPathname(pathname),
-    [pathname],
-  );
-  const routeSurveyResultsSlug = useMemo(
-    () => parseSurveyResultsSlugFromPathname(pathname),
-    [pathname],
   );
   const queryClient = useQueryClient();
   const theme = useTheme();
@@ -133,13 +107,7 @@ export function FamilyApp(): React.JSX.Element {
     useState<HTMLElement | null>(null);
   const [pastSurveysMenuAnchor, setPastSurveysMenuAnchor] =
     useState<HTMLElement | null>(null);
-  const [surveySubmitError, setSurveySubmitError] = useState<string | null>(
-    null,
-  );
-  const [surveyDialogOpen, setSurveyDialogOpen] = useState(false);
-  const [surveyResultsDialogOpen, setSurveyResultsDialogOpen] = useState(false);
   const [saveAttentionActive, setSaveAttentionActive] = useState(false);
-  const autoOpenedSurveySlugRef = useRef<SurveySlug | null>(null);
 
   const {
     selectedUser,
@@ -164,16 +132,20 @@ export function FamilyApp(): React.JSX.Element {
     sessionQuery.isPending && sessionQuery.data === undefined;
   const membersQuery = useMembersQuery(authenticated);
   const parentsQuery = useParentsQuery(authenticated);
-  const surveysQuery = useSurveysQuery(authenticated);
-  const surveyResultsQuery = useSurveyResultsQuery(
-    authenticated,
-    routeSurveyResultsSlug,
-  );
   const loginMutation = useLoginMutation();
   const logoutMutation = useLogoutMutation();
   const saveMemberMutation = useSaveMemberMutation();
   const deleteMemberMutation = useDeleteMemberMutation();
-  const submitSurveyMutation = useSubmitSurveyMutation();
+  const {
+    openSurvey,
+    activeSurveys,
+    pastSurveys,
+    dialogs: surveyDialogs,
+  } = useSurveyLifecycle({
+    authenticated,
+    onError: reportError,
+    onClearError: clearError,
+  });
 
   const membersPayload = membersQuery.data;
   const members = membersPayload?.members ?? EMPTY_MEMBERS;
@@ -186,19 +158,7 @@ export function FamilyApp(): React.JSX.Element {
   const saving = saveMemberMutation.isPending;
   const deleting = deleteMemberMutation.isPending;
   const loginBusy = loginMutation.isPending;
-  const submittingSurvey = submitSurveyMutation.isPending;
   const saveEnabled = !!selectedUser && dirty && !saving;
-  const activeSurveys = surveysQuery.data?.active ?? [];
-  const pastSurveys = surveysQuery.data?.past ?? [];
-  const selectedSurvey = useMemo(
-    () =>
-      routeSurveySlug
-        ? ([...activeSurveys, ...pastSurveys].find(
-            (survey) => survey.slug === routeSurveySlug,
-          ) ?? null)
-        : null,
-    [activeSurveys, pastSurveys, routeSurveySlug],
-  );
 
   const navigation = useFamilyNavigation({
     routeMemberId,
@@ -229,22 +189,11 @@ export function FamilyApp(): React.JSX.Element {
 
   useEffect(() => {
     const queryError =
-      sessionQuery.error ??
-      membersQuery.error ??
-      parentsQuery.error ??
-      surveysQuery.error ??
-      surveyResultsQuery.error;
+      sessionQuery.error ?? membersQuery.error ?? parentsQuery.error;
     if (queryError) {
       reportError(queryError.message);
     }
-  }, [
-    membersQuery.error,
-    parentsQuery.error,
-    reportError,
-    sessionQuery.error,
-    surveyResultsQuery.error,
-    surveysQuery.error,
-  ]);
+  }, [membersQuery.error, parentsQuery.error, reportError, sessionQuery.error]);
 
   const visibleMembers = useMemo(
     () => filterVisibleMembers(members, search),
@@ -449,113 +398,6 @@ export function FamilyApp(): React.JSX.Element {
       );
     }
   };
-
-  const openSurvey = useCallback(
-    (slug: SurveySlug): void => {
-      setSurveySubmitError(null);
-      router.push(getSurveyPath(slug));
-    },
-    [router],
-  );
-
-  const closeSurvey = useCallback(
-    (options?: SurveyCloseOptions): void => {
-      setSurveySubmitError(null);
-      if (routeSurveySlug) {
-        autoOpenedSurveySlugRef.current = routeSurveySlug;
-        if (options?.dontAskAgain) {
-          dismissSurveyAutoOpen(routeSurveySlug);
-        }
-      }
-      setSurveyDialogOpen(false);
-      if (routeSurveySlug) {
-        router.replace("/");
-      }
-    },
-    [routeSurveySlug, router],
-  );
-
-  const closeSurveyResults = useCallback((): void => {
-    setSurveyResultsDialogOpen(false);
-    if (routeSurveyResultsSlug) {
-      router.replace("/");
-    }
-  }, [routeSurveyResultsSlug, router]);
-
-  const submitSelectedSurvey = useCallback(
-    async (
-      slug: SurveySlug,
-      payload: SurveySubmissionPayload,
-    ): Promise<void> => {
-      clearError();
-      setSurveySubmitError(null);
-      try {
-        await submitSurveyMutation.mutateAsync({ slug, payload });
-        await queryClient.invalidateQueries({ queryKey: familyKeys.surveys() });
-        router.replace("/");
-      } catch (caughtError) {
-        const message =
-          caughtError instanceof Error ? caughtError.message : "Unknown error";
-        setSurveySubmitError(message);
-        reportError(message);
-      }
-    },
-    [clearError, queryClient, reportError, router, submitSurveyMutation],
-  );
-
-  useEffect(() => {
-    if (!authenticated) {
-      autoOpenedSurveySlugRef.current = null;
-      return;
-    }
-
-    if (
-      routeSurveySlug ||
-      routeSurveyResultsSlug ||
-      surveysQuery.isPending ||
-      activeSurveys.length === 0
-    ) {
-      return;
-    }
-
-    const nextSurvey = activeSurveys.find((survey) => !survey.completed);
-    if (!nextSurvey) {
-      return;
-    }
-
-    if (isSurveyAutoOpenDismissed(nextSurvey.slug)) {
-      autoOpenedSurveySlugRef.current = nextSurvey.slug;
-      return;
-    }
-
-    if (autoOpenedSurveySlugRef.current === nextSurvey.slug) {
-      return;
-    }
-
-    autoOpenedSurveySlugRef.current = nextSurvey.slug;
-    openSurvey(nextSurvey.slug);
-  }, [
-    activeSurveys,
-    authenticated,
-    openSurvey,
-    routeSurveyResultsSlug,
-    routeSurveySlug,
-    surveysQuery.isPending,
-  ]);
-
-  useEffect(() => {
-    setSurveyDialogOpen(Boolean(routeSurveySlug));
-  }, [routeSurveySlug]);
-
-  useEffect(() => {
-    setSurveyResultsDialogOpen(Boolean(routeSurveyResultsSlug));
-  }, [routeSurveyResultsSlug]);
-
-  useEffect(() => {
-    if (routeSurveySlug) {
-      autoOpenedSurveySlugRef.current = routeSurveySlug;
-    }
-  }, [routeSurveySlug]);
 
   const closeMoreMenu = (): void => {
     setPastSurveysMenuAnchor(null);
@@ -820,24 +662,7 @@ export function FamilyApp(): React.JSX.Element {
           onCopyEmails={copyEmails}
           fullScreen={!desktopDrawer}
         />
-        <SurveyDialog
-          open={surveyDialogOpen}
-          loading={Boolean(routeSurveySlug) && surveysQuery.isPending}
-          survey={selectedSurvey}
-          submitting={submittingSurvey}
-          submitError={surveySubmitError}
-          onSubmit={submitSelectedSurvey}
-          onClose={closeSurvey}
-        />
-        <SurveyResultsDialog
-          open={surveyResultsDialogOpen}
-          loading={
-            Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending
-          }
-          surveySlug={routeSurveyResultsSlug}
-          results={surveyResultsQuery.data ?? null}
-          onClose={closeSurveyResults}
-        />
+        {surveyDialogs}
       </Box>
       {errorSnackbar}
     </>
