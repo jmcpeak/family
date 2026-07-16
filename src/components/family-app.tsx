@@ -33,8 +33,8 @@ import {
   useParentsQuery,
   useSaveMemberMutation,
   useSessionQuery,
-  useSurveyResultsQuery,
   useSubmitSurveyMutation,
+  useSurveyResultsQuery,
   useSurveysQuery,
 } from "@/hooks/use-family-data";
 import { useFamilyNavigation } from "@/hooks/use-family-navigation";
@@ -815,7 +815,9 @@ export function FamilyApp(): React.JSX.Element {
         />
         <SurveyResultsDialog
           open={surveyResultsDialogOpen}
-          loading={Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending}
+          loading={
+            Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending
+          }
           surveySlug={routeSurveyResultsSlug}
           results={surveyResultsQuery.data ?? null}
           onClose={closeSurveyResults}

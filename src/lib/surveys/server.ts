@@ -6,18 +6,18 @@ import {
   reunionInterestChoiceLabels,
   splitSurveySummaries,
 } from "@/lib/surveys/registry";
-import {
-  ATTENDANCE_LIKELIHOOD_VALUES,
-  GOLF_FORMAT_VALUES,
-  GOLF_INTEREST_VALUES,
-  PONTOON_INTEREST_VALUES,
-} from "@/lib/surveys/types";
 import type {
   SurveyChoiceCount,
   SurveyResultsResponse,
   SurveySlug,
   SurveySubmissionPayload,
   SurveysResponse,
+} from "@/lib/surveys/types";
+import {
+  ATTENDANCE_LIKELIHOOD_VALUES,
+  GOLF_FORMAT_VALUES,
+  GOLF_INTEREST_VALUES,
+  PONTOON_INTEREST_VALUES,
 } from "@/lib/surveys/types";
 
 interface BuildSurveyResponseArgs {
@@ -109,7 +109,9 @@ export async function buildSurveyResultsResponse({
   }
 
   const responses = await repository.listSurveyResponses(slug);
-  const sortedResponses = [...responses].sort((a, b) => b.createdAt - a.createdAt);
+  const sortedResponses = [...responses].sort(
+    (a, b) => b.createdAt - a.createdAt,
+  );
 
   const totals = {
     attendanceLikelihood: buildChoiceCounts(

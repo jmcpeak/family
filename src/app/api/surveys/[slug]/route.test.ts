@@ -49,7 +49,9 @@ describe("GET /api/surveys/[slug]", () => {
     });
 
     expect(response.status).toBe(404);
-    await expect(response.json()).resolves.toEqual({ error: "Survey not found." });
+    await expect(response.json()).resolves.toEqual({
+      error: "Survey not found.",
+    });
     expect(buildSurveyResultsResponseMock).not.toHaveBeenCalled();
   });
 

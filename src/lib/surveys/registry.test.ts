@@ -35,7 +35,9 @@ describe("survey registry", () => {
     expect(
       parseSurveyResultsSlugFromPathname("/surveys/2027-reunion-interest"),
     ).toBeNull();
-    expect(parseSurveyResultsSlugFromPathname("/surveys/nope/results")).toBeNull();
+    expect(
+      parseSurveyResultsSlugFromPathname("/surveys/nope/results"),
+    ).toBeNull();
   });
 
   it("validates payloads using the survey schema", () => {

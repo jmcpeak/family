@@ -7,6 +7,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,7 +15,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {
   reunionInterestChoiceLabels,
@@ -64,11 +64,19 @@ export function SurveyResultsDialog({
   });
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth fullScreen={fullScreen}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="lg"
+      fullWidth
+      fullScreen={fullScreen}
+    >
       <DialogTitle>{results?.title ?? "Survey results"}</DialogTitle>
       <DialogContent dividers>
         {loading && !results ? (
-          <Typography color="text.secondary">Loading survey results…</Typography>
+          <Typography color="text.secondary">
+            Loading survey results…
+          </Typography>
         ) : null}
 
         {!loading && !surveySlug ? (
@@ -132,7 +140,9 @@ export function SurveyResultsDialog({
               </Box>
             </Box>
 
-            <TableContainer sx={{ border: `1px solid ${theme.palette.divider}` }}>
+            <TableContainer
+              sx={{ border: `1px solid ${theme.palette.divider}` }}
+            >
               <Table size="small" stickyHeader>
                 <TableHead>
                   <TableRow>
@@ -152,7 +162,9 @@ export function SurveyResultsDialog({
                 <TableBody>
                   {results.responses.map((response) => (
                     <TableRow key={response.id} hover>
-                      <TableCell>{formatTimestamp(response.createdAt)}</TableCell>
+                      <TableCell>
+                        {formatTimestamp(response.createdAt)}
+                      </TableCell>
                       <TableCell>{response.payload.respondentName}</TableCell>
                       <TableCell>
                         {
