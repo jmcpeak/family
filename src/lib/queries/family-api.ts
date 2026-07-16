@@ -1,5 +1,6 @@
 import { cleanMemberRecord, sortMembers } from "@/lib/member-utils";
 import type {
+  SurveyResultsResponse,
   SurveySlug,
   SurveySubmissionPayload,
   SurveySubmissionResponse,
@@ -134,5 +135,13 @@ export async function submitSurvey(
       },
       body: JSON.stringify(payload),
     },
+  );
+}
+
+export async function fetchSurveyResults(
+  slug: SurveySlug,
+): Promise<SurveyResultsResponse> {
+  return requestJson<SurveyResultsResponse>(
+    `/api/surveys/${encodeURIComponent(slug)}`,
   );
 }

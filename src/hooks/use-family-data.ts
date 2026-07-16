@@ -7,11 +7,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { ApiError } from "@/lib/queries/family-api";
 import {
+  ApiError,
   deleteMember,
   fetchMembers,
   fetchParents,
+  fetchSurveyResults,
   fetchSession,
   fetchSurveys,
   isUnauthorizedError,
@@ -22,6 +23,7 @@ import {
 } from "@/lib/queries/family-api";
 import { familyKeys } from "@/lib/queries/query-keys";
 import type {
+  SurveyResultsResponse,
   SurveySlug,
   SurveySubmissionPayload,
   SurveySubmissionResponse,
@@ -229,5 +231,35 @@ export function useSubmitSurveyMutation(): UseMutationResult<
       await queryClient.invalidateQueries({ queryKey: familyKeys.surveys() });
     },
     onError: handleAuthError,
+  });
+}
+
+export function useSurveyResultsQuery(
+  authenticated: boolean,
+  slug: SurveySlug | null,
+): UseQueryResult<SurveyResultsResponse, ApiError> {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: familyKeys.surveyResults(slug),
+    queryFn: async () => {
+      if (!slug) {
+        throw new ApiError("Survey not found.", 404);
+      }
+
+      try {
+        return await fetchSurveyResults(slug);
+      } catch (error) {
+        if (isUnauthorizedError(error)) {
+          queryClient.setQueryData<SessionResponse>(familyKeys.session(), {
+            authenticated: false,
+          });
+        }
+        throw error;
+      }
+    },
+    enabled: authenticated && Boolean(slug),
+    throwOnError: false,
+    retry: false,
   });
 }

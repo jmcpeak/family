@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   buildSurveySummary,
   getSurveyPath,
+  getSurveyResultsPath,
   isSurveySlug,
   parseSurveyPayload,
+  parseSurveyResultsSlugFromPathname,
   parseSurveySlugFromPathname,
   splitSurveySummaries,
 } from "@/lib/surveys/registry";
@@ -14,8 +16,26 @@ describe("survey registry", () => {
     expect(parseSurveySlugFromPathname("/surveys/2027-reunion-interest")).toBe(
       "2027-reunion-interest",
     );
+    expect(
+      parseSurveySlugFromPathname("/surveys/2027-reunion-interest/results"),
+    ).toBeNull();
     expect(parseSurveySlugFromPathname("/surveys/nope")).toBeNull();
     expect(parseSurveySlugFromPathname("/")).toBeNull();
+  });
+
+  it("builds and parses survey results pathnames", () => {
+    expect(getSurveyResultsPath("2027-reunion-interest")).toBe(
+      "/surveys/2027-reunion-interest/results",
+    );
+    expect(
+      parseSurveyResultsSlugFromPathname(
+        "/surveys/2027-reunion-interest/results",
+      ),
+    ).toBe("2027-reunion-interest");
+    expect(
+      parseSurveyResultsSlugFromPathname("/surveys/2027-reunion-interest"),
+    ).toBeNull();
+    expect(parseSurveyResultsSlugFromPathname("/surveys/nope/results")).toBeNull();
   });
 
   it("validates payloads using the survey schema", () => {

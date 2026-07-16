@@ -92,3 +92,28 @@ export interface SurveySubmissionResponse {
   submittedAt: number;
   closesAt: number;
 }
+
+export interface SurveyChoiceCount<TValue extends string = string> {
+  value: TValue;
+  label: string;
+  count: number;
+}
+
+export interface SurveyResultsTotals {
+  attendanceLikelihood: SurveyChoiceCount<AttendanceLikelihood>[];
+  golfInterest: SurveyChoiceCount<GolfInterest>[];
+  golfFormatPreference: SurveyChoiceCount<GolfFormatPreference>[];
+  pontoonInterest: SurveyChoiceCount<PontoonInterest>[];
+  lodgingNeededCount: number;
+  lodgingNotNeededCount: number;
+  luncheonHeadcountTotal: number;
+  dinnerHeadcountTotal: number;
+}
+
+export interface SurveyResultsResponse {
+  slug: SurveySlug;
+  title: string;
+  responseCount: number;
+  totals: SurveyResultsTotals;
+  responses: SurveyResponseRecord[];
+}

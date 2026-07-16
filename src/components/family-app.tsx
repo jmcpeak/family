@@ -22,6 +22,7 @@ import {
   MemberEditor,
 } from "@/components/family/member-editor";
 import { SurveyDialog } from "@/components/family/surveys/survey-dialog";
+import { SurveyResultsDialog } from "@/components/family/surveys/survey-results-dialog";
 import { MemberBrowser } from "@/components/member-browser";
 import { useThemeMode } from "@/components/mui-theme-provider";
 import {
@@ -32,6 +33,7 @@ import {
   useParentsQuery,
   useSaveMemberMutation,
   useSessionQuery,
+  useSurveyResultsQuery,
   useSubmitSurveyMutation,
   useSurveysQuery,
 } from "@/hooks/use-family-data";
@@ -48,6 +50,7 @@ import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
 import { familyKeys } from "@/lib/queries/query-keys";
 import {
   getSurveyPath,
+  parseSurveyResultsSlugFromPathname,
   parseSurveySlugFromPathname,
   type SurveySlug,
   type SurveySubmissionPayload,
@@ -70,6 +73,10 @@ export function FamilyApp(): React.JSX.Element {
   );
   const routeSurveySlug = useMemo(
     () => parseSurveySlugFromPathname(pathname),
+    [pathname],
+  );
+  const routeSurveyResultsSlug = useMemo(
+    () => parseSurveyResultsSlugFromPathname(pathname),
     [pathname],
   );
   const queryClient = useQueryClient();
@@ -125,6 +132,7 @@ export function FamilyApp(): React.JSX.Element {
     null,
   );
   const [surveyDialogOpen, setSurveyDialogOpen] = useState(false);
+  const [surveyResultsDialogOpen, setSurveyResultsDialogOpen] = useState(false);
   const [saveAttentionActive, setSaveAttentionActive] = useState(false);
   const autoOpenedSurveySlugRef = useRef<SurveySlug | null>(null);
 
@@ -152,6 +160,10 @@ export function FamilyApp(): React.JSX.Element {
   const membersQuery = useMembersQuery(authenticated);
   const parentsQuery = useParentsQuery(authenticated);
   const surveysQuery = useSurveysQuery(authenticated);
+  const surveyResultsQuery = useSurveyResultsQuery(
+    authenticated,
+    routeSurveyResultsSlug,
+  );
   const loginMutation = useLoginMutation();
   const logoutMutation = useLogoutMutation();
   const saveMemberMutation = useSaveMemberMutation();
@@ -215,7 +227,8 @@ export function FamilyApp(): React.JSX.Element {
       sessionQuery.error ??
       membersQuery.error ??
       parentsQuery.error ??
-      surveysQuery.error;
+      surveysQuery.error ??
+      surveyResultsQuery.error;
     if (queryError) {
       reportError(queryError.message);
     }
@@ -224,6 +237,7 @@ export function FamilyApp(): React.JSX.Element {
     parentsQuery.error,
     reportError,
     sessionQuery.error,
+    surveyResultsQuery.error,
     surveysQuery.error,
   ]);
 
@@ -450,6 +464,13 @@ export function FamilyApp(): React.JSX.Element {
     }
   }, [routeSurveySlug, router]);
 
+  const closeSurveyResults = useCallback((): void => {
+    setSurveyResultsDialogOpen(false);
+    if (routeSurveyResultsSlug) {
+      router.replace("/");
+    }
+  }, [routeSurveyResultsSlug, router]);
+
   const submitSelectedSurvey = useCallback(
     async (
       slug: SurveySlug,
@@ -479,6 +500,7 @@ export function FamilyApp(): React.JSX.Element {
 
     if (
       routeSurveySlug ||
+      routeSurveyResultsSlug ||
       surveysQuery.isPending ||
       activeSurveys.length === 0
     ) {
@@ -500,6 +522,7 @@ export function FamilyApp(): React.JSX.Element {
     activeSurveys,
     authenticated,
     openSurvey,
+    routeSurveyResultsSlug,
     routeSurveySlug,
     surveysQuery.isPending,
   ]);
@@ -507,6 +530,10 @@ export function FamilyApp(): React.JSX.Element {
   useEffect(() => {
     setSurveyDialogOpen(Boolean(routeSurveySlug));
   }, [routeSurveySlug]);
+
+  useEffect(() => {
+    setSurveyResultsDialogOpen(Boolean(routeSurveyResultsSlug));
+  }, [routeSurveyResultsSlug]);
 
   useEffect(() => {
     if (routeSurveySlug) {
@@ -785,6 +812,13 @@ export function FamilyApp(): React.JSX.Element {
           submitError={surveySubmitError}
           onSubmit={submitSelectedSurvey}
           onClose={closeSurvey}
+        />
+        <SurveyResultsDialog
+          open={surveyResultsDialogOpen}
+          loading={Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending}
+          surveySlug={routeSurveyResultsSlug}
+          results={surveyResultsQuery.data ?? null}
+          onClose={closeSurveyResults}
         />
       </Box>
       {errorSnackbar}

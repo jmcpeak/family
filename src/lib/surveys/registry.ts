@@ -104,11 +104,35 @@ export function getSurveyPath(slug: SurveySlug): string {
   return `${SURVEY_BASE_PATH}/${encodeURIComponent(slug)}`;
 }
 
+export function getSurveyResultsPath(slug: SurveySlug): string {
+  return `${getSurveyPath(slug)}/results`;
+}
+
 export function parseSurveySlugFromPathname(
   pathname: string,
 ): SurveySlug | null {
   const segments = pathname.split("/").filter(Boolean);
   if (segments.length !== 2 || segments[0] !== "surveys") {
+    return null;
+  }
+
+  try {
+    const decodedSlug = decodeURIComponent(segments[1]);
+    return isSurveySlug(decodedSlug) ? decodedSlug : null;
+  } catch {
+    return null;
+  }
+}
+
+export function parseSurveyResultsSlugFromPathname(
+  pathname: string,
+): SurveySlug | null {
+  const segments = pathname.split("/").filter(Boolean);
+  if (
+    segments.length !== 3 ||
+    segments[0] !== "surveys" ||
+    segments[2] !== "results"
+  ) {
     return null;
   }
 

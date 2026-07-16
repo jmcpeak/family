@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MemoryFamilyRepository } from "@/lib/data/memory-repository";
 import {
+  buildSurveyResultsResponse,
   buildSurveysResponse,
   hasDuplicateSurveyRespondent,
 } from "@/lib/surveys/server";
@@ -59,5 +60,69 @@ describe("survey server helpers", () => {
         respondentName: "Taylor McPeak",
       }),
     ).resolves.toBe(false);
+  });
+
+  it("builds survey results with aggregates and newest-first responses", async () => {
+    const repository = new MemoryFamilyRepository();
+
+    await repository.createSurveyResponse({
+      id: "survey#2027-reunion-interest#response#old",
+      slug: "2027-reunion-interest",
+      createdAt: 100,
+      payload: {
+        respondentName: "Taylor McPeak",
+        attendanceLikelihood: "likely",
+        golfInterest: "yes",
+        golfFormatPreference: "either",
+        luncheonHeadcount: 2,
+        dinnerHeadcount: 3,
+        pontoonInterest: "maybe",
+        lodgingNeeded: true,
+        lodgingDetails: "Near the lake",
+        comments: "Will bring snacks",
+      },
+    });
+
+    await repository.createSurveyResponse({
+      id: "survey#2027-reunion-interest#response#new",
+      slug: "2027-reunion-interest",
+      createdAt: 200,
+      payload: {
+        respondentName: "Jordan McPeak",
+        attendanceLikelihood: "definitely",
+        golfInterest: "no",
+        golfFormatPreference: "no-golf",
+        luncheonHeadcount: 1,
+        dinnerHeadcount: 1,
+        pontoonInterest: "yes",
+        lodgingNeeded: false,
+        comments: "See everyone there",
+      },
+    });
+
+    const results = await buildSurveyResultsResponse({
+      repository,
+      slug: "2027-reunion-interest",
+    });
+
+    expect(results.responseCount).toBe(2);
+    expect(results.responses.map((response) => response.id)).toEqual([
+      "survey#2027-reunion-interest#response#new",
+      "survey#2027-reunion-interest#response#old",
+    ]);
+    expect(results.totals.lodgingNeededCount).toBe(1);
+    expect(results.totals.lodgingNotNeededCount).toBe(1);
+    expect(results.totals.luncheonHeadcountTotal).toBe(3);
+    expect(results.totals.dinnerHeadcountTotal).toBe(4);
+    expect(
+      results.totals.attendanceLikelihood.find(
+        (choice) => choice.value === "definitely",
+      )?.count,
+    ).toBe(1);
+    expect(
+      results.totals.attendanceLikelihood.find(
+        (choice) => choice.value === "likely",
+      )?.count,
+    ).toBe(1);
   });
 });

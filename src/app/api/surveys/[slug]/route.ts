@@ -14,10 +14,39 @@ import {
   applySurveyCompletionCookie,
   getSurveyCompletionCookieName,
 } from "@/lib/surveys/cookies";
-import { hasDuplicateSurveyRespondent } from "@/lib/surveys/server";
+import {
+  buildSurveyResultsResponse,
+  hasDuplicateSurveyRespondent,
+} from "@/lib/surveys/server";
 
 interface RouteContext {
   params: Promise<{ slug: string }>;
+}
+
+export async function GET(
+  _request: Request,
+  context: RouteContext,
+): Promise<NextResponse> {
+  try {
+    const unauthorized = await requireSession();
+    if (unauthorized) {
+      return unauthorized;
+    }
+
+    const { slug } = await context.params;
+    if (!isSurveySlug(slug)) {
+      return NextResponse.json({ error: "Survey not found." }, { status: 404 });
+    }
+
+    const repository = getFamilyRepository();
+    const results = await buildSurveyResultsResponse({ repository, slug });
+    return NextResponse.json(results);
+  } catch (error) {
+    return handleApiError(
+      { route: "/api/surveys/[slug]", method: "GET" },
+      error,
+    );
+  }
 }
 
 export async function POST(
