@@ -1,8 +1,12 @@
+import crypto from "node:crypto";
 import type { FamilyRepository } from "@/lib/data/repository";
+import { isSurveyActive } from "@/lib/surveys/lifecycle";
 import {
   buildSurveySummary,
   getSurveyDefinition,
+  isSurveySlug,
   listSurveyDefinitions,
+  parseSurveyPayload,
   reunionInterestChoiceLabels,
   splitSurveySummaries,
 } from "@/lib/surveys/registry";
@@ -11,6 +15,7 @@ import type {
   SurveyResultsResponse,
   SurveySlug,
   SurveySubmissionPayload,
+  SurveySubmissionResponse,
   SurveysResponse,
 } from "@/lib/surveys/types";
 import {
@@ -36,6 +41,26 @@ interface BuildSurveyResultsResponseArgs {
   repository: FamilyRepository;
   slug: SurveySlug;
 }
+
+export interface SubmitSurveyResponseArgs {
+  repository: FamilyRepository;
+  slug: string;
+  body: unknown;
+  nowMs: number;
+  alreadyCompleted: boolean;
+}
+
+export type SubmitSurveyResponseResult =
+  | ({ ok: true } & SurveySubmissionResponse)
+  | {
+      ok: false;
+      reason:
+        | "not_found"
+        | "closed"
+        | "already_completed"
+        | "invalid_payload"
+        | "duplicate_respondent";
+    };
 
 function normalizeRespondentName(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
@@ -82,7 +107,7 @@ export async function buildSurveysResponse({
   return splitSurveySummaries(summaries);
 }
 
-export async function hasDuplicateSurveyRespondent({
+async function hasDuplicateSurveyRespondent({
   repository,
   slug,
   respondentName,
@@ -97,6 +122,66 @@ export async function hasDuplicateSurveyRespondent({
     const existing = response.payload.respondentName;
     return normalizeRespondentName(existing) === normalized;
   });
+}
+
+export async function submitSurveyResponse({
+  repository,
+  slug,
+  body,
+  nowMs,
+  alreadyCompleted,
+}: SubmitSurveyResponseArgs): Promise<SubmitSurveyResponseResult> {
+  if (!isSurveySlug(slug)) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  const definition = getSurveyDefinition(slug);
+  if (!definition) {
+    return { ok: false, reason: "not_found" };
+  }
+
+  const activation = await repository.ensureSurveyActivation(
+    slug,
+    definition.durationMonths,
+    nowMs,
+  );
+
+  if (!isSurveyActive(activation, nowMs)) {
+    return { ok: false, reason: "closed" };
+  }
+
+  if (alreadyCompleted) {
+    return { ok: false, reason: "already_completed" };
+  }
+
+  const parsed = parseSurveyPayload(slug, body);
+  if (!parsed) {
+    return { ok: false, reason: "invalid_payload" };
+  }
+
+  const duplicateRespondent = await hasDuplicateSurveyRespondent({
+    repository,
+    slug,
+    respondentName: parsed.respondentName,
+  });
+  if (duplicateRespondent) {
+    return { ok: false, reason: "duplicate_respondent" };
+  }
+
+  await repository.createSurveyResponse({
+    id: `survey#${slug}#response#${crypto.randomUUID()}`,
+    slug,
+    createdAt: nowMs,
+    payload: parsed,
+  });
+
+  return {
+    ok: true,
+    submitted: true,
+    slug,
+    submittedAt: nowMs,
+    closesAt: activation.closesAt,
+  };
 }
 
 export async function buildSurveyResultsResponse({

@@ -1,27 +1,39 @@
-import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/api-guard";
 import { handleApiError } from "@/lib/api-observability";
 import { getFamilyRepository } from "@/lib/data";
-import {
-  getSurveyDefinition,
-  isSurveyActive,
-  isSurveySlug,
-  parseSurveyPayload,
-} from "@/lib/surveys";
+import { isSurveySlug } from "@/lib/surveys";
 import {
   applySurveyCompletionCookie,
   getSurveyCompletionCookieName,
 } from "@/lib/surveys/cookies";
 import {
   buildSurveyResultsResponse,
-  hasDuplicateSurveyRespondent,
+  type SubmitSurveyResponseResult,
+  submitSurveyResponse,
 } from "@/lib/surveys/server";
 
 interface RouteContext {
   params: Promise<{ slug: string }>;
 }
+
+const SUBMIT_ERROR_BY_REASON: Record<
+  Extract<SubmitSurveyResponseResult, { ok: false }>["reason"],
+  { status: number; error: string }
+> = {
+  not_found: { status: 404, error: "Survey not found." },
+  closed: { status: 410, error: "This survey has closed." },
+  already_completed: {
+    status: 409,
+    error: "This survey has already been submitted on this browser.",
+  },
+  invalid_payload: { status: 400, error: "Invalid survey payload." },
+  duplicate_respondent: {
+    status: 409,
+    error: "A response for this respondent has already been submitted.",
+  },
+};
 
 export async function GET(
   _request: Request,
@@ -60,73 +72,40 @@ export async function POST(
     }
 
     const { slug } = await context.params;
-    if (!isSurveySlug(slug)) {
-      return NextResponse.json({ error: "Survey not found." }, { status: 404 });
-    }
-
-    const definition = getSurveyDefinition(slug);
-    if (!definition) {
-      return NextResponse.json({ error: "Survey not found." }, { status: 404 });
-    }
-
-    const nowMs = Date.now();
-    const repository = getFamilyRepository();
-    const activation = await repository.ensureSurveyActivation(
-      slug,
-      definition.durationMonths,
-      nowMs,
-    );
-
-    if (!isSurveyActive(activation, nowMs)) {
-      return NextResponse.json(
-        { error: "This survey has closed." },
-        { status: 410 },
-      );
-    }
-
     const cookieStore = await cookies();
-    if (cookieStore.get(getSurveyCompletionCookieName(slug))?.value === "1") {
-      return NextResponse.json(
-        { error: "This survey has already been submitted on this browser." },
-        { status: 409 },
-      );
-    }
-
-    const payload = await request.json().catch(() => null);
-    const parsed = parseSurveyPayload(slug, payload);
-    if (!parsed) {
-      return NextResponse.json(
-        { error: "Invalid survey payload." },
-        { status: 400 },
-      );
-    }
-
-    const duplicateRespondent = await hasDuplicateSurveyRespondent({
+    const alreadyCompleted =
+      isSurveySlug(slug) &&
+      cookieStore.get(getSurveyCompletionCookieName(slug))?.value === "1";
+    const body = await request.json().catch(() => null);
+    const repository = getFamilyRepository();
+    const result = await submitSurveyResponse({
       repository,
       slug,
-      respondentName: parsed.respondentName,
+      body,
+      nowMs: Date.now(),
+      alreadyCompleted,
     });
-    if (duplicateRespondent) {
+
+    if (!result.ok) {
+      const mapped = SUBMIT_ERROR_BY_REASON[result.reason];
       return NextResponse.json(
-        { error: "A response for this respondent has already been submitted." },
-        { status: 409 },
+        { error: mapped.error },
+        { status: mapped.status },
       );
     }
 
-    await repository.createSurveyResponse({
-      id: `survey#${slug}#response#${crypto.randomUUID()}`,
-      slug,
-      createdAt: nowMs,
-      payload: parsed,
-    });
-
     const response = NextResponse.json({
-      submitted: true,
-      slug,
-      submittedAt: nowMs,
-      closesAt: activation.closesAt,
+      submitted: result.submitted,
+      slug: result.slug,
+      submittedAt: result.submittedAt,
+      closesAt: result.closesAt,
     });
-    applySurveyCompletionCookie(response, slug, activation.closesAt, nowMs);
+    applySurveyCompletionCookie(
+      response,
+      result.slug,
+      result.closesAt,
+      result.submittedAt,
+    );
     return response;
   } catch (error) {
     return handleApiError(

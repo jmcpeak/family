@@ -3,8 +3,19 @@ import { MemoryFamilyRepository } from "@/lib/data/memory-repository";
 import {
   buildSurveyResultsResponse,
   buildSurveysResponse,
-  hasDuplicateSurveyRespondent,
+  submitSurveyResponse,
 } from "@/lib/surveys/server";
+
+const VALID_BODY = {
+  respondentName: "Alex McPeak",
+  attendanceLikelihood: "likely",
+  golfInterest: "yes",
+  golfFormatPreference: "either",
+  luncheonHeadcount: 2,
+  dinnerHeadcount: 2,
+  pontoonInterest: "maybe",
+  lodgingNeeded: false,
+} as const;
 
 describe("survey server helpers", () => {
   it("builds active and past lists from repository activation records", async () => {
@@ -26,40 +37,6 @@ describe("survey server helpers", () => {
     });
     expect(later.active).toHaveLength(0);
     expect(later.past).toHaveLength(1);
-  });
-
-  it("detects duplicate respondents across submissions", async () => {
-    const repository = new MemoryFamilyRepository();
-    await repository.createSurveyResponse({
-      id: "survey#2027-reunion-interest#response#1",
-      slug: "2027-reunion-interest",
-      createdAt: 123,
-      payload: {
-        respondentName: "Alex McPeak",
-        attendanceLikelihood: "likely",
-        golfInterest: "yes",
-        golfFormatPreference: "either",
-        luncheonHeadcount: 2,
-        dinnerHeadcount: 2,
-        pontoonInterest: "maybe",
-        lodgingNeeded: false,
-      },
-    });
-
-    await expect(
-      hasDuplicateSurveyRespondent({
-        repository,
-        slug: "2027-reunion-interest",
-        respondentName: " alex   mcpeak ",
-      }),
-    ).resolves.toBe(true);
-    await expect(
-      hasDuplicateSurveyRespondent({
-        repository,
-        slug: "2027-reunion-interest",
-        respondentName: "Taylor McPeak",
-      }),
-    ).resolves.toBe(false);
   });
 
   it("builds survey results with aggregates and newest-first responses", async () => {
@@ -124,5 +101,130 @@ describe("survey server helpers", () => {
         (choice) => choice.value === "likely",
       )?.count,
     ).toBe(1);
+  });
+});
+
+describe("submitSurveyResponse", () => {
+  it("accepts a Survey Submission and persists it", async () => {
+    const repository = new MemoryFamilyRepository();
+    const nowMs = 1_000;
+
+    const result = await submitSurveyResponse({
+      repository,
+      slug: "2027-reunion-interest",
+      body: VALID_BODY,
+      nowMs,
+      alreadyCompleted: false,
+    });
+
+    expect(result).toEqual({
+      ok: true,
+      submitted: true,
+      slug: "2027-reunion-interest",
+      submittedAt: nowMs,
+      closesAt: expect.any(Number),
+    });
+    if (!result.ok) {
+      throw new Error("expected success");
+    }
+    expect(result.closesAt).toBeGreaterThan(nowMs);
+
+    const responses = await repository.listSurveyResponses(
+      "2027-reunion-interest",
+    );
+    expect(responses).toHaveLength(1);
+    expect(responses[0]?.payload.respondentName).toBe("Alex McPeak");
+    expect(responses[0]?.slug).toBe("2027-reunion-interest");
+    expect(responses[0]?.createdAt).toBe(nowMs);
+  });
+
+  it("returns not_found for an unknown Survey slug", async () => {
+    const repository = new MemoryFamilyRepository();
+
+    await expect(
+      submitSurveyResponse({
+        repository,
+        slug: "not-a-survey",
+        body: VALID_BODY,
+        nowMs: 1_000,
+        alreadyCompleted: false,
+      }),
+    ).resolves.toEqual({ ok: false, reason: "not_found" });
+  });
+
+  it("returns closed when the Survey is no longer active", async () => {
+    const repository = new MemoryFamilyRepository();
+    const openedAt = 1_000;
+    await repository.ensureSurveyActivation(
+      "2027-reunion-interest",
+      3,
+      openedAt,
+    );
+    const farFuture = Date.UTC(2050, 0, 1);
+
+    await expect(
+      submitSurveyResponse({
+        repository,
+        slug: "2027-reunion-interest",
+        body: VALID_BODY,
+        nowMs: farFuture,
+        alreadyCompleted: false,
+      }),
+    ).resolves.toEqual({ ok: false, reason: "closed" });
+  });
+
+  it("returns already_completed when the browser already submitted", async () => {
+    const repository = new MemoryFamilyRepository();
+
+    await expect(
+      submitSurveyResponse({
+        repository,
+        slug: "2027-reunion-interest",
+        body: VALID_BODY,
+        nowMs: 1_000,
+        alreadyCompleted: true,
+      }),
+    ).resolves.toEqual({ ok: false, reason: "already_completed" });
+  });
+
+  it("returns invalid_payload for a bad body", async () => {
+    const repository = new MemoryFamilyRepository();
+
+    await expect(
+      submitSurveyResponse({
+        repository,
+        slug: "2027-reunion-interest",
+        body: { bad: true },
+        nowMs: 1_000,
+        alreadyCompleted: false,
+      }),
+    ).resolves.toEqual({ ok: false, reason: "invalid_payload" });
+  });
+
+  it("returns duplicate_respondent when the name was already used", async () => {
+    const repository = new MemoryFamilyRepository();
+    const nowMs = 1_000;
+
+    const first = await submitSurveyResponse({
+      repository,
+      slug: "2027-reunion-interest",
+      body: VALID_BODY,
+      nowMs,
+      alreadyCompleted: false,
+    });
+    expect(first.ok).toBe(true);
+
+    await expect(
+      submitSurveyResponse({
+        repository,
+        slug: "2027-reunion-interest",
+        body: {
+          ...VALID_BODY,
+          respondentName: " alex   mcpeak ",
+        },
+        nowMs: nowMs + 1,
+        alreadyCompleted: false,
+      }),
+    ).resolves.toEqual({ ok: false, reason: "duplicate_respondent" });
   });
 });
