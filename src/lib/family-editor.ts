@@ -2,7 +2,6 @@ import {
   createGuid,
   formatMemberName,
   getChildrenIndexes,
-  sortMembers,
 } from "@/lib/member-utils";
 import type { FamilyMemberRecord, ParentOption } from "@/lib/types";
 
@@ -100,17 +99,20 @@ export function earliestDateValue(a?: string, b?: string): string | undefined {
   return dateA <= dateB ? a : b;
 }
 
+/**
+ * Filters members by search text while preserving input order.
+ * Callers should pass an already-sorted list (see fetchMembers).
+ */
 export function filterVisibleMembers(
   members: FamilyMemberRecord[],
   search: string,
 ): FamilyMemberRecord[] {
   const query = search.trim().toLowerCase();
-  const sorted = sortMembers(members);
   if (!query) {
-    return sorted;
+    return members;
   }
 
-  return sorted.filter((member) => {
+  return members.filter((member) => {
     const haystack = [
       member.displayName,
       member.firstName,

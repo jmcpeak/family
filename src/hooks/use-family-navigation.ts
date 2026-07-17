@@ -187,20 +187,38 @@ export function useFamilyNavigation({
     };
   }, [desktopDrawer, desktopMode, mobileListOpen]);
 
-  return {
-    desktopMode,
-    mobileListOpen,
-    desktopBrowsing,
-    desktopEditing,
-    mobileBrowsing,
-    mobileEditing,
-    showEditor,
-    showDeleteAction,
-    pushMemberRoute,
-    openMemberEditor,
-    returnToBrowse,
-    showEditorLayout,
-    resetToBrowse,
-    replaceHomeRoute,
-  };
+  return useMemo(
+    () => ({
+      desktopMode,
+      mobileListOpen,
+      desktopBrowsing,
+      desktopEditing,
+      mobileBrowsing,
+      mobileEditing,
+      showEditor,
+      showDeleteAction,
+      pushMemberRoute,
+      openMemberEditor,
+      returnToBrowse,
+      showEditorLayout,
+      resetToBrowse,
+      replaceHomeRoute,
+    }),
+    [
+      desktopBrowsing,
+      desktopEditing,
+      desktopMode,
+      mobileBrowsing,
+      mobileEditing,
+      mobileListOpen,
+      openMemberEditor,
+      pushMemberRoute,
+      replaceHomeRoute,
+      resetToBrowse,
+      returnToBrowse,
+      showDeleteAction,
+      showEditor,
+      showEditorLayout,
+    ],
+  );
 }

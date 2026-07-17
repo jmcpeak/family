@@ -180,9 +180,9 @@ describe("useSurveyLifecycle", () => {
       { wrapper: createWrapper(queryClient) },
     );
 
-    const { getByRole, unmount } = render(result.current.dialogs);
+    const { findByRole, getByRole, unmount } = render(result.current.dialogs);
 
-    fireEvent.click(getByRole("checkbox", { name: /don't ask again/i }));
+    fireEvent.click(await findByRole("checkbox", { name: /don't ask again/i }));
     fireEvent.click(getByRole("button", { name: /^close$/i }));
 
     expect(mockReplace).toHaveBeenCalledWith("/");
@@ -300,11 +300,11 @@ describe("useSurveyLifecycle", () => {
       { wrapper: createWrapper(queryClient) },
     );
 
-    const { getByLabelText, getByRole, unmount } = render(
+    const { findByLabelText, getByRole, unmount } = render(
       result.current.dialogs,
     );
 
-    fireEvent.change(getByLabelText(/your name/i), {
+    fireEvent.change(await findByLabelText(/your name/i), {
       target: { value: "Ada Lovelace" },
     });
     fireEvent.click(getByRole("button", { name: /submit survey/i }));
@@ -352,11 +352,11 @@ describe("useSurveyLifecycle", () => {
       { wrapper: createWrapper(queryClient) },
     );
 
-    const { getByLabelText, getByRole, unmount } = render(
+    const { findByLabelText, getByRole, unmount } = render(
       result.current.dialogs,
     );
 
-    fireEvent.change(getByLabelText(/your name/i), {
+    fireEvent.change(await findByLabelText(/your name/i), {
       target: { value: "Ada Lovelace" },
     });
     fireEvent.click(getByRole("button", { name: /submit survey/i }));

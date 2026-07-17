@@ -7,27 +7,21 @@ import Snackbar from "@mui/material/Snackbar";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useQueryClient } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import {
   useParams,
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  AboutDialog,
-  ConfirmDialog,
-  EmailsDialog,
-} from "@/components/family/app-dialogs";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ConfirmDialog } from "@/components/family/app-dialogs";
 import { AppMenus } from "@/components/family/app-menus";
+import { BrowseSearchProvider } from "@/components/family/browse-search-context";
+import { BrowseShell } from "@/components/family/browse-shell";
+import { EditorShell } from "@/components/family/editor-shell";
 import { FamilyAppBar } from "@/components/family/family-app-bar";
 import { LoginScreen } from "@/components/family/login-screen";
-import {
-  EditorLoadingSkeleton,
-  MemberEditor,
-} from "@/components/family/member-editor";
-import { MemberBrowser } from "@/components/member-browser";
-import { useThemeMode } from "@/components/mui-theme-provider";
 import {
   useDeleteMemberMutation,
   useLoginMutation,
@@ -42,19 +36,61 @@ import { useMemberEditor } from "@/hooks/use-member-editor";
 import { useSurveyLifecycle } from "@/hooks/use-survey-lifecycle";
 import {
   buildParentSelectOptions,
-  filterVisibleMembers,
   hasRequiredMemberFields,
   parseTabKey,
   type TabKey,
 } from "@/lib/family-editor";
 import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
+import { fetchEmails, isUnauthorizedError } from "@/lib/queries/family-api";
 import { familyKeys } from "@/lib/queries/query-keys";
 import type { FamilyMemberRecord, ParentOption } from "@/lib/types";
+
+const AboutDialog = dynamic(
+  () =>
+    import("@/components/family/app-dialogs").then((module) => ({
+      default: module.AboutDialog,
+    })),
+  { ssr: false },
+);
+
+const EmailsDialog = dynamic(
+  () =>
+    import("@/components/family/app-dialogs").then((module) => ({
+      default: module.EmailsDialog,
+    })),
+  { ssr: false },
+);
 
 const EMPTY_MEMBERS: FamilyMemberRecord[] = [];
 const DEFAULT_PARENT_OPTIONS: ParentOption[] = [
   { id: "", firstName: "", lastName: "" },
 ];
+const EMPTY_DISPLAY_NAME_OPTIONS: string[] = [];
+
+function displayNameSignature(member: FamilyMemberRecord | null): string {
+  if (!member) {
+    return "";
+  }
+
+  return [
+    member.firstName,
+    member.middleName,
+    member.lastName,
+    member.maidenName,
+    member.titleName,
+    member.suffixName,
+    member.nickName,
+    member.firstNameSpouse,
+    member.middleNameSpouse,
+    member.lastNameSpouse,
+    member.maidenNameSpouse,
+    member.titleNameSpouse,
+    member.suffixNameSpouse,
+    member.nickNameSpouse,
+  ]
+    .map((value) => String(value ?? ""))
+    .join("\0");
+}
 
 export function FamilyApp(): React.JSX.Element {
   const router = useRouter();
@@ -69,33 +105,48 @@ export function FamilyApp(): React.JSX.Element {
   const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"), {
     noSsr: true,
   });
-  const {
-    mode: themeMode,
-    resolvedMode,
-    setMode: setThemeMode,
-  } = useThemeMode();
 
-  const [error, setError] = useState<string | null>(null);
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
+    "error",
+  );
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const reportError = useCallback((message: string): void => {
-    setError(message);
-    setErrorSnackbarOpen(true);
-  }, []);
+  const reportSnackbar = useCallback(
+    (message: string, severity: "error" | "success"): void => {
+      setSnackbarMessage(message);
+      setSnackbarSeverity(severity);
+      setSnackbarOpen(true);
+    },
+    [],
+  );
+
+  const reportError = useCallback(
+    (message: string): void => {
+      reportSnackbar(message, "error");
+    },
+    [reportSnackbar],
+  );
+
+  const reportSuccess = useCallback(
+    (message: string): void => {
+      reportSnackbar(message, "success");
+    },
+    [reportSnackbar],
+  );
 
   const clearError = useCallback((): void => {
-    setErrorSnackbarOpen(false);
-    setError(null);
+    setSnackbarOpen(false);
+    setSnackbarMessage(null);
   }, []);
 
-  const closeErrorSnackbar = useCallback((): void => {
-    setErrorSnackbarOpen(false);
+  const closeSnackbar = useCallback((): void => {
+    setSnackbarOpen(false);
   }, []);
 
-  const handleErrorSnackbarExited = useCallback((): void => {
-    setError(null);
+  const handleSnackbarExited = useCallback((): void => {
+    setSnackbarMessage(null);
   }, []);
-  const [search, setSearch] = useState("");
   const [showEmails, setShowEmails] = useState(false);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -131,6 +182,9 @@ export function FamilyApp(): React.JSX.Element {
     removeChild,
   } = useMemberEditor();
 
+  const selectedUserRef = useRef(selectedUser);
+  selectedUserRef.current = selectedUser;
+
   const sessionQuery = useSessionQuery();
   const authenticated = sessionQuery.data?.authenticated ?? false;
   const sessionLoading =
@@ -165,6 +219,10 @@ export function FamilyApp(): React.JSX.Element {
   const loginBusy = loginMutation.isPending;
   const saveEnabled = !!selectedUser && dirty && !saving;
 
+  const resetDirty = useCallback((): void => {
+    setDirty(false);
+  }, [setDirty]);
+
   const navigation = useFamilyNavigation({
     routeMemberId,
     routeTab,
@@ -173,7 +231,7 @@ export function FamilyApp(): React.JSX.Element {
     desktopDrawer,
     onLoadRouteMember: loadMemberFromRoute,
     onRouteTabChange: setActiveTab,
-    onResetDirty: () => setDirty(false),
+    onResetDirty: resetDirty,
   });
 
   const handleTabChange = useCallback(
@@ -207,19 +265,17 @@ export function FamilyApp(): React.JSX.Element {
     }
   }, [membersQuery.error, parentsQuery.error, reportError, sessionQuery.error]);
 
-  const visibleMembers = useMemo(
-    () => filterVisibleMembers(members, search),
-    [members, search],
-  );
-
+  const nameSignature = displayNameSignature(selectedUser);
   const displayNameOptions = useMemo(() => {
-    if (!selectedUser) {
-      return [];
+    if (!nameSignature) {
+      return EMPTY_DISPLAY_NAME_OPTIONS;
     }
-    return buildDisplayNameOptions(selectedUser).map(
-      (option) => option.display,
-    );
-  }, [selectedUser]);
+    const member = selectedUserRef.current;
+    if (!member) {
+      return EMPTY_DISPLAY_NAME_OPTIONS;
+    }
+    return buildDisplayNameOptions(member).map((option) => option.display);
+  }, [nameSignature]);
 
   const fatherOptions = useMemo(
     () => buildParentSelectOptions(fathers, selectedUser?.father, members),
@@ -231,9 +287,13 @@ export function FamilyApp(): React.JSX.Element {
     [mothers, members, selectedUser?.mother],
   );
 
-  const routeMemberExists = routeMemberId
-    ? members.some((member) => member.id === routeMemberId)
-    : false;
+  const routeMemberExists = useMemo(
+    () =>
+      routeMemberId
+        ? members.some((member) => member.id === routeMemberId)
+        : false,
+    [members, routeMemberId],
+  );
   const selectedMemberTitle = selectedUser
     ? formatMemberName(selectedUser)
     : "";
@@ -320,6 +380,7 @@ export function FamilyApp(): React.JSX.Element {
     try {
       const saved = await saveMemberMutation.mutateAsync(selectedUser);
       replaceSelectedUser(saved);
+      reportSuccess("Member saved.");
     } catch (caughtError) {
       reportError(
         caughtError instanceof Error ? caughtError.message : "Unknown error",
@@ -327,10 +388,12 @@ export function FamilyApp(): React.JSX.Element {
     }
   };
 
+  const { showEditorLayout, openMemberEditor } = navigation;
+
   const beginAddMember = useCallback((): void => {
     startNewMember();
-    navigation.showEditorLayout();
-  }, [navigation, startNewMember]);
+    showEditorLayout();
+  }, [showEditorLayout, startNewMember]);
 
   const addMember = (): void => {
     if (dirty) {
@@ -359,6 +422,7 @@ export function FamilyApp(): React.JSX.Element {
       clearSelection();
       navigation.resetToBrowse();
       navigation.replaceHomeRoute();
+      reportSuccess("Member deleted.");
     } catch (caughtError) {
       reportError(
         caughtError instanceof Error ? caughtError.message : "Unknown error",
@@ -374,22 +438,20 @@ export function FamilyApp(): React.JSX.Element {
 
   const openEmailsDialog = async (): Promise<void> => {
     try {
-      const response = await fetch("/api/emails");
-      if (response.status === 401) {
+      const payload = await queryClient.fetchQuery({
+        queryKey: familyKeys.emails(),
+        queryFn: fetchEmails,
+      });
+      setEmailsText(payload.emails.join("; "));
+      setCopiedEmailText(false);
+      setShowEmails(true);
+    } catch (caughtError) {
+      if (isUnauthorizedError(caughtError)) {
         queryClient.setQueryData(familyKeys.session(), {
           authenticated: false,
         });
         return;
       }
-      if (!response.ok) {
-        throw new Error("Unable to fetch emails.");
-      }
-
-      const payload = (await response.json()) as { emails: string[] };
-      setEmailsText(payload.emails.join("; "));
-      setCopiedEmailText(false);
-      setShowEmails(true);
-    } catch (caughtError) {
       reportError(
         caughtError instanceof Error ? caughtError.message : "Unknown error",
       );
@@ -436,29 +498,62 @@ export function FamilyApp(): React.JSX.Element {
     router.push(query ? `${pathname}?${query}` : pathname);
   }, [pathname, router, searchParams]);
 
-  const errorSnackbar = (
+  const handleEditMemberMobile = useCallback(
+    (member: FamilyMemberRecord): void => {
+      openMemberEditor(member, "mobile", openMember);
+    },
+    [openMemberEditor, openMember],
+  );
+
+  const handleEditMemberDesktop = useCallback(
+    (member: FamilyMemberRecord): void => {
+      openMemberEditor(member, "desktop", openMember);
+    },
+    [openMemberEditor, openMember],
+  );
+
+  const closeEmailsDialog = useCallback((): void => {
+    setShowEmails(false);
+  }, []);
+
+  const confirmDiscard = useCallback((): void => {
+    setConfirmDiscardOpen(false);
+    beginAddMember();
+  }, [beginAddMember]);
+
+  const cancelDiscard = useCallback((): void => {
+    setConfirmDiscardOpen(false);
+  }, []);
+
+  const cancelDelete = useCallback((): void => {
+    setConfirmDeleteOpen(false);
+  }, []);
+
+  const appSnackbar = (
     <Snackbar
-      open={errorSnackbarOpen}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      open={snackbarOpen}
+      autoHideDuration={snackbarSeverity === "success" ? 4000 : null}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       onClose={(_, reason) => {
         if (reason === "clickaway") {
           return;
         }
-        closeErrorSnackbar();
+        closeSnackbar();
       }}
       slotProps={{
         transition: {
-          onExited: handleErrorSnackbarExited,
+          onExited: handleSnackbarExited,
         },
       }}
     >
       <Alert
-        severity="error"
+        severity={snackbarSeverity}
+        color={snackbarSeverity === "success" ? "primary" : "secondary"}
         variant="filled"
-        onClose={closeErrorSnackbar}
+        onClose={closeSnackbar}
         sx={{ width: "100%" }}
       >
-        {error}
+        {snackbarMessage}
       </Alert>
     </Snackbar>
   );
@@ -471,7 +566,7 @@ export function FamilyApp(): React.JSX.Element {
         >
           <CircularProgress />
         </Box>
-        {errorSnackbar}
+        {appSnackbar}
       </>
     );
   }
@@ -485,13 +580,13 @@ export function FamilyApp(): React.JSX.Element {
           loginBusy={loginBusy}
           onSubmit={handleLogin}
         />
-        {errorSnackbar}
+        {appSnackbar}
       </>
     );
   }
 
   return (
-    <>
+    <BrowseSearchProvider>
       <Box
         sx={{
           display: "flex",
@@ -509,8 +604,6 @@ export function FamilyApp(): React.JSX.Element {
           mobileEditing={navigation.mobileEditing}
           showMemberTitleSkeleton={showMemberTitleSkeleton}
           selectedMemberTitle={selectedMemberTitle}
-          search={search}
-          setSearch={setSearch}
           metadata={metadata}
           members={members}
           coldMembersLoading={coldMembersLoading}
@@ -531,107 +624,31 @@ export function FamilyApp(): React.JSX.Element {
         <Box
           sx={{ display: "flex", flex: 1, minHeight: 0, overflow: "hidden" }}
         >
-          <Box
-            component="aside"
-            aria-label="Family member list"
-            sx={{
-              display: {
-                xs: navigation.mobileBrowsing ? "flex" : "none",
-                md: "none",
-              },
-              flex: 1,
-              minWidth: 0,
-              flexDirection: "column",
-              overflow: "hidden",
-              bgcolor: "background.paper",
-            }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                minHeight: 0,
-                overflowY: "auto",
-                overflowX: "hidden",
-                px: 1.5,
-                pt: 1.5,
-                pb: 1.5,
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-              }}
-            >
-              <MemberBrowser
-                members={visibleMembers}
-                lastUpdatedMemberId={metadata?.lastUpdatedID}
-                loading={coldMembersLoading}
-                onEditMember={(member) =>
-                  navigation.openMemberEditor(member, "mobile", openMember)
-                }
-              />
-            </Box>
-          </Box>
-
-          <Box
-            component="main"
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              height: "100%",
-              overflowY: "auto",
-              display: {
-                xs: navigation.mobileBrowsing ? "none" : "flex",
-                md: "flex",
-              },
-              flexDirection: "column",
-              backgroundImage:
-                "linear-gradient(135deg, rgba(20, 107, 58, 0.025), transparent 42%, rgba(201, 106, 27, 0.025))",
-            }}
-          >
-            <Box
-              sx={{
-                p: { xs: 1, sm: 2 },
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              }}
-            >
-              {navigation.desktopBrowsing ? (
-                <MemberBrowser
-                  members={visibleMembers}
-                  lastUpdatedMemberId={metadata?.lastUpdatedID}
-                  loading={coldMembersLoading}
-                  onEditMember={(member) =>
-                    navigation.openMemberEditor(member, "desktop", openMember)
-                  }
-                />
-              ) : (
-                <Box>
-                  {showEditorLoadingSkeleton ? (
-                    <EditorLoadingSkeleton activeTab={activeTab} />
-                  ) : null}
-                  {!selectedUser && !showEditorLoadingSkeleton ? (
-                    <Box color="text.secondary">
-                      Select a family member to begin.
-                    </Box>
-                  ) : null}
-                  {selectedUser ? (
-                    <MemberEditor
-                      selectedUser={selectedUser}
-                      activeTab={activeTab}
-                      onTabChange={handleTabChange}
-                      parentsLoaded={parentsLoaded}
-                      fatherOptions={fatherOptions}
-                      motherOptions={motherOptions}
-                      displayNameOptions={displayNameOptions}
-                      updateField={updateField}
-                      childIndexes={childIndexes}
-                      removeChild={removeChild}
-                    />
-                  ) : null}
-                </Box>
-              )}
-            </Box>
-          </Box>
+          <BrowseShell
+            members={members}
+            lastUpdatedMemberId={metadata?.lastUpdatedID}
+            loading={coldMembersLoading}
+            mobileBrowsing={navigation.mobileBrowsing}
+            desktopBrowsing={navigation.desktopBrowsing}
+            onEditMemberMobile={handleEditMemberMobile}
+            onEditMemberDesktop={handleEditMemberDesktop}
+          />
+          {navigation.showEditor ? (
+            <EditorShell
+              selectedUser={selectedUser}
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+              parentsLoaded={parentsLoaded}
+              fatherOptions={fatherOptions}
+              motherOptions={motherOptions}
+              displayNameOptions={displayNameOptions}
+              updateField={updateField}
+              childIndexes={childIndexes}
+              removeChild={removeChild}
+              showEditorLoadingSkeleton={showEditorLoadingSkeleton}
+              mobileBrowsing={navigation.mobileBrowsing}
+            />
+          ) : null}
         </Box>
 
         <AppMenus
@@ -644,8 +661,6 @@ export function FamilyApp(): React.JSX.Element {
           pastSurveysMenuAnchor={pastSurveysMenuAnchor}
           activeSurveys={activeSurveys}
           pastSurveys={pastSurveys}
-          themeMode={themeMode}
-          resolvedMode={resolvedMode}
           closeMoreMenu={closeMoreMenu}
           setThemeMenuAnchor={setThemeMenuAnchor}
           setSurveysMenuAnchor={setSurveysMenuAnchor}
@@ -656,20 +671,18 @@ export function FamilyApp(): React.JSX.Element {
           onOpenSurvey={openSurvey}
           onOpenAboutDialog={openAboutDialog}
           onLogout={logout}
-          onSetThemeMode={setThemeMode}
         />
 
-        <AboutDialog open={showAbout} onClose={closeAboutDialog} />
+        {showAbout ? (
+          <AboutDialog open={showAbout} onClose={closeAboutDialog} />
+        ) : null}
         <ConfirmDialog
           open={confirmDiscardOpen}
           title="Discard unsaved changes?"
           description="You have unsaved changes. Add a new member anyway?"
           confirmLabel="Discard and continue"
-          onConfirm={() => {
-            setConfirmDiscardOpen(false);
-            beginAddMember();
-          }}
-          onCancel={() => setConfirmDiscardOpen(false)}
+          onConfirm={confirmDiscard}
+          onCancel={cancelDiscard}
         />
         <ConfirmDialog
           open={confirmDeleteOpen}
@@ -682,19 +695,21 @@ export function FamilyApp(): React.JSX.Element {
           confirmLabel="Remove member"
           confirmColor="error"
           onConfirm={confirmDeleteSelected}
-          onCancel={() => setConfirmDeleteOpen(false)}
+          onCancel={cancelDelete}
         />
-        <EmailsDialog
-          open={showEmails}
-          onClose={() => setShowEmails(false)}
-          emailsText={emailsText}
-          copiedEmailText={copiedEmailText}
-          onCopyEmails={copyEmails}
-          fullScreen={!desktopDrawer}
-        />
+        {showEmails ? (
+          <EmailsDialog
+            open={showEmails}
+            onClose={closeEmailsDialog}
+            emailsText={emailsText}
+            copiedEmailText={copiedEmailText}
+            onCopyEmails={copyEmails}
+            fullScreen={!desktopDrawer}
+          />
+        ) : null}
         {surveyDialogs}
       </Box>
-      {errorSnackbar}
-    </>
+      {appSnackbar}
+    </BrowseSearchProvider>
   );
 }

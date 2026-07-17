@@ -9,6 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import type { FamilyMemberRecord, LastUpdateMetadata } from "@/lib/types";
 import { AppActions } from "./app-actions";
+import { useBrowseSearch } from "./browse-search-context";
 import { DirectoryStatus } from "./directory-status";
 import { FamilyCrest } from "./family-crest";
 import { MemberSearch } from "./member-search";
@@ -21,8 +22,6 @@ interface FamilyAppBarProps {
   mobileEditing: boolean;
   showMemberTitleSkeleton: boolean;
   selectedMemberTitle: string;
-  search: string;
-  setSearch: (value: string) => void;
   metadata: LastUpdateMetadata | null;
   members: FamilyMemberRecord[];
   coldMembersLoading: boolean;
@@ -48,8 +47,6 @@ export function FamilyAppBar({
   mobileEditing,
   showMemberTitleSkeleton,
   selectedMemberTitle,
-  search,
-  setSearch,
   metadata,
   members,
   coldMembersLoading,
@@ -66,6 +63,8 @@ export function FamilyAppBar({
   onOpenMoreMenu,
   moreMenuOpen,
 }: FamilyAppBarProps): React.JSX.Element {
+  const { search, setSearch } = useBrowseSearch();
+
   return (
     <AppBar position="static" elevation={1} sx={{ flexShrink: 0 }}>
       <Toolbar sx={{ gap: 0.5 }}>

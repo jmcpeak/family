@@ -7,6 +7,8 @@
     "dev": "next dev --experimental-https",
     "dev:http": "next dev",
     "build": "next build",
+    "analyze": "ANALYZE=true next build",
+    "perf:baseline": "node scripts/perf-baseline.mjs",
     "start": "next start",
     "lint": "biome check .",
     "format": "biome format --write .",
@@ -40,23 +42,24 @@
   },
   "homepage": "https://github.com/jmcpeak/family#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "3.1087.0",
-    "@aws-sdk/credential-provider-cognito-identity": "^3.972.57",
-    "@aws-sdk/lib-dynamodb": "3.1087.0",
+    "@aws-sdk/client-dynamodb": "3.1090.0",
+    "@aws-sdk/credential-provider-cognito-identity": "3.972.58",
+    "@aws-sdk/lib-dynamodb": "3.1090.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "9.2.0",
     "@mui/material": "9.2.0",
     "@mui/material-nextjs": "9.1.1",
-    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query": "5.101.2",
     "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.3",
-    "@playwright/test": "^1.61.1",
+    "@biomejs/biome": "2.5.4",
+    "@next/bundle-analyzer": "^16.2.10",
+    "@playwright/test": "1.61.1",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@types/node": "26.1.1",
@@ -64,13 +67,18 @@
     "@types/react-dom": "19.2.3",
     "@vitest/coverage-v8": "4.1.10",
     "jsdom": "29.1.1",
-    "typescript": "^6.0.3",
+    "typescript": "7.0.2",
     "vitest": "4.1.10",
-    "yaml": "^2.9.0"
+    "yaml": "2.9.0"
   },
   "overrides": {
     "@mui/material-nextjs": {
       "next": "$next"
-    }
+    },
+    "postcss": "^8.5.10"
+  },
+  "allowScripts": {
+    "fsevents": true,
+    "sharp": true
   }
 }

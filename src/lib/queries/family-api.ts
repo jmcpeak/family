@@ -118,6 +118,10 @@ export async function deleteMember(id: string): Promise<{ deleted: boolean }> {
   });
 }
 
+export async function fetchEmails(): Promise<{ emails: string[] }> {
+  return requestJson<{ emails: string[] }>("/api/emails");
+}
+
 export async function fetchSurveys(): Promise<SurveysResponse> {
   return requestJson<SurveysResponse>("/api/surveys");
 }

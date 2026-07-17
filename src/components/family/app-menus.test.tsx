@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { AppMenus } from "@/components/family/app-menus";
+import { MuiThemeProvider } from "@/components/mui-theme-provider";
 import type { SurveySummary } from "@/lib/surveys";
 
 function createSurveySummary(overrides: Partial<SurveySummary>): SurveySummary {
@@ -36,30 +37,29 @@ function renderMenus({
 }): void {
   const moreAnchor = createAnchor();
   render(
-    <AppMenus
-      showDeleteAction={false}
-      selectedUser={false}
-      deleting={false}
-      moreMenuAnchor={moreAnchor}
-      themeMenuAnchor={null}
-      surveysMenuAnchor={surveysMenuAnchor}
-      pastSurveysMenuAnchor={pastSurveysMenuAnchor}
-      activeSurveys={activeSurveys}
-      pastSurveys={pastSurveys}
-      themeMode="system"
-      resolvedMode="light"
-      closeMoreMenu={vi.fn()}
-      setThemeMenuAnchor={vi.fn()}
-      setSurveysMenuAnchor={vi.fn()}
-      setPastSurveysMenuAnchor={vi.fn()}
-      onDeleteSelected={vi.fn()}
-      onOpenEmailsDialog={vi.fn()}
-      onExportMailingLabels={vi.fn()}
-      onOpenSurvey={vi.fn()}
-      onOpenAboutDialog={vi.fn()}
-      onLogout={vi.fn()}
-      onSetThemeMode={vi.fn()}
-    />,
+    <MuiThemeProvider>
+      <AppMenus
+        showDeleteAction={false}
+        selectedUser={false}
+        deleting={false}
+        moreMenuAnchor={moreAnchor}
+        themeMenuAnchor={null}
+        surveysMenuAnchor={surveysMenuAnchor}
+        pastSurveysMenuAnchor={pastSurveysMenuAnchor}
+        activeSurveys={activeSurveys}
+        pastSurveys={pastSurveys}
+        closeMoreMenu={vi.fn()}
+        setThemeMenuAnchor={vi.fn()}
+        setSurveysMenuAnchor={vi.fn()}
+        setPastSurveysMenuAnchor={vi.fn()}
+        onDeleteSelected={vi.fn()}
+        onOpenEmailsDialog={vi.fn()}
+        onExportMailingLabels={vi.fn()}
+        onOpenSurvey={vi.fn()}
+        onOpenAboutDialog={vi.fn()}
+        onLogout={vi.fn()}
+      />
+    </MuiThemeProvider>,
   );
 }
 

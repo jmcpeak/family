@@ -14,7 +14,7 @@ import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import type { ThemeMode } from "@/components/mui-theme-provider";
+import { type ThemeMode, useThemeMode } from "@/components/mui-theme-provider";
 import type { SurveySlug, SurveySummary } from "@/lib/surveys";
 
 interface AppMenusProps {
@@ -27,8 +27,6 @@ interface AppMenusProps {
   pastSurveysMenuAnchor: HTMLElement | null;
   activeSurveys: SurveySummary[];
   pastSurveys: SurveySummary[];
-  themeMode: ThemeMode;
-  resolvedMode: "light" | "dark";
   closeMoreMenu: () => void;
   setThemeMenuAnchor: (anchor: HTMLElement | null) => void;
   setSurveysMenuAnchor: (anchor: HTMLElement | null) => void;
@@ -39,7 +37,6 @@ interface AppMenusProps {
   onOpenSurvey: (slug: SurveySlug) => void | Promise<void>;
   onOpenAboutDialog: () => void;
   onLogout: () => void | Promise<void>;
-  onSetThemeMode: (mode: ThemeMode) => void;
 }
 
 export function AppMenus({
@@ -52,8 +49,6 @@ export function AppMenus({
   pastSurveysMenuAnchor,
   activeSurveys,
   pastSurveys,
-  themeMode,
-  resolvedMode,
   closeMoreMenu,
   setThemeMenuAnchor,
   setSurveysMenuAnchor,
@@ -64,8 +59,12 @@ export function AppMenus({
   onOpenSurvey,
   onOpenAboutDialog,
   onLogout,
-  onSetThemeMode,
 }: AppMenusProps): React.JSX.Element {
+  const {
+    mode: themeMode,
+    resolvedMode,
+    setMode: setThemeMode,
+  } = useThemeMode();
   const hasPastSurveys = pastSurveys.length > 0;
 
   const closeNestedMenus = (): void => {
@@ -81,7 +80,7 @@ export function AppMenus({
 
   const setThemeModeAndClose = (nextMode: ThemeMode): void => {
     closeMoreMenu();
-    onSetThemeMode(nextMode);
+    setThemeMode(nextMode);
   };
 
   const openThemeMenu = (anchor: HTMLElement): void => {

@@ -76,15 +76,16 @@ describe("family-editor", () => {
     expect(removed.bithdayChild1).toBeUndefined();
   });
 
-  it("filters members by search while preserving sort", () => {
+  it("filters members by search while preserving input order", () => {
     const visible = filterVisibleMembers(
       [
-        { id: "2", firstName: "B", lastName: "Two", city: "Knoxville" },
         { id: "1", firstName: "A", lastName: "One", city: "Nashville" },
+        { id: "2", firstName: "B", lastName: "Two", city: "Knoxville" },
+        { id: "3", firstName: "C", lastName: "Three", city: "Nashville" },
       ],
       "nash",
     );
-    expect(visible.map((member) => member.id)).toEqual(["1"]);
+    expect(visible.map((member) => member.id)).toEqual(["1", "3"]);
   });
 
   it("checks required fields for save validation", () => {

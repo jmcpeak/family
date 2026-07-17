@@ -3,6 +3,7 @@
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
+import { useMemo } from "react";
 import { countFamilyMembers } from "@/lib/member-utils";
 import type { FamilyMemberRecord, LastUpdateMetadata } from "@/lib/types";
 import { InlineStatusSwap } from "./inline-status-swap";
@@ -20,6 +21,11 @@ export function DirectoryStatus({
   members,
   coldMembersLoading,
 }: DirectoryStatusProps): React.JSX.Element {
+  const familyMemberCount = useMemo(
+    () => countFamilyMembers(members),
+    [members],
+  );
+
   return (
     <Box
       sx={{
@@ -69,7 +75,7 @@ export function DirectoryStatus({
               sx={{ display: "inline-block", verticalAlign: "middle" }}
             />
           }
-          value={countFamilyMembers(members)}
+          value={familyMemberCount}
         />{" "}
         Family Members
       </Typography>

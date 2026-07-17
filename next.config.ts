@@ -2,10 +2,14 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const projectRoot = path.resolve(__dirname);
 
 const isProduction = process.env.NODE_ENV === "production";
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 function runGitCommand(args: string[]): string | null {
   try {
@@ -77,6 +81,9 @@ const nextConfig: NextConfig = {
     root: projectRoot,
   },
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ["@mui/material", "@mui/icons-material"],
+  },
   env: {
     NEXT_PUBLIC_APP_VERSION: appVersion,
     NEXT_PUBLIC_GIT_COMMIT_FULL: gitCommitFull,
@@ -93,4 +100,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

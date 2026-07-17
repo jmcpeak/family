@@ -1,12 +1,9 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  type SurveyCloseOptions,
-  SurveyDialog,
-} from "@/components/family/surveys/survey-dialog";
-import { SurveyResultsDialog } from "@/components/family/surveys/survey-results-dialog";
+import type { SurveyCloseOptions } from "@/components/family/surveys/survey-dialog";
 import {
   useSubmitSurveyMutation,
   useSurveyResultsQuery,
@@ -22,6 +19,18 @@ import {
   type SurveySubmissionPayload,
   type SurveySummary,
 } from "@/lib/surveys";
+
+const EMPTY_SURVEYS: SurveySummary[] = [];
+
+const SurveyLifecycleDialogs = dynamic(
+  () =>
+    import("@/components/family/surveys/survey-lifecycle-dialogs").then(
+      (module) => ({
+        default: module.SurveyLifecycleDialogs,
+      }),
+    ),
+  { ssr: false },
+);
 
 export interface UseSurveyLifecycleOptions {
   authenticated: boolean;
@@ -66,8 +75,8 @@ export function useSurveyLifecycle({
   );
   const submitSurveyMutation = useSubmitSurveyMutation();
 
-  const activeSurveys = surveysQuery.data?.active ?? [];
-  const pastSurveys = surveysQuery.data?.past ?? [];
+  const activeSurveys = surveysQuery.data?.active ?? EMPTY_SURVEYS;
+  const pastSurveys = surveysQuery.data?.past ?? EMPTY_SURVEYS;
   const selectedSurvey = useMemo(
     () =>
       routeSurveySlug
@@ -192,26 +201,22 @@ export function useSurveyLifecycle({
   }, [onError, surveyResultsQuery.error, surveysQuery.error]);
 
   const dialogs = (
-    <>
-      <SurveyDialog
-        open={surveyDialogOpen}
-        loading={Boolean(routeSurveySlug) && surveysQuery.isPending}
-        survey={selectedSurvey}
-        submitting={submitSurveyMutation.isPending}
-        submitError={surveySubmitError}
-        onSubmit={submitSelectedSurvey}
-        onClose={closeSurvey}
-      />
-      <SurveyResultsDialog
-        open={surveyResultsDialogOpen}
-        loading={
-          Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending
-        }
-        surveySlug={routeSurveyResultsSlug}
-        results={surveyResultsQuery.data ?? null}
-        onClose={closeSurveyResults}
-      />
-    </>
+    <SurveyLifecycleDialogs
+      surveyDialogOpen={surveyDialogOpen}
+      surveyResultsDialogOpen={surveyResultsDialogOpen}
+      surveyLoading={Boolean(routeSurveySlug) && surveysQuery.isPending}
+      surveyResultsLoading={
+        Boolean(routeSurveyResultsSlug) && surveyResultsQuery.isPending
+      }
+      selectedSurvey={selectedSurvey}
+      surveyResultsSlug={routeSurveyResultsSlug}
+      surveyResults={surveyResultsQuery.data ?? null}
+      submitting={submitSurveyMutation.isPending}
+      submitError={surveySubmitError}
+      onSubmit={submitSelectedSurvey}
+      onCloseSurvey={closeSurvey}
+      onCloseSurveyResults={closeSurveyResults}
+    />
   );
 
   return {

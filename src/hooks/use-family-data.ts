@@ -148,6 +148,21 @@ export function useLogoutMutation(): UseMutationResult<
   });
 }
 
+function parentsListNeedsRefresh(
+  previous: FamilyMemberRecord | undefined,
+  saved: FamilyMemberRecord,
+): boolean {
+  if (!previous) {
+    return saved.gender === "m" || saved.gender === "f";
+  }
+
+  return (
+    previous.gender !== saved.gender ||
+    previous.firstName !== saved.firstName ||
+    previous.lastName !== saved.lastName
+  );
+}
+
 export function useSaveMemberMutation(): UseMutationResult<
   FamilyMemberRecord,
   ApiError,
@@ -158,11 +173,19 @@ export function useSaveMemberMutation(): UseMutationResult<
 
   return useMutation<FamilyMemberRecord, ApiError, FamilyMemberRecord>({
     mutationFn: saveMember,
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: familyKeys.members() }),
-        queryClient.invalidateQueries({ queryKey: familyKeys.parents() }),
-      ]);
+    onSuccess: async (saved) => {
+      const membersCache = queryClient.getQueryData<FamilyListResponse>(
+        familyKeys.members(),
+      );
+      const previous = membersCache?.members.find(
+        (member) => member.id === saved.id,
+      );
+      const refreshParents = parentsListNeedsRefresh(previous, saved);
+
+      await queryClient.invalidateQueries({ queryKey: familyKeys.members() });
+      if (refreshParents) {
+        await queryClient.invalidateQueries({ queryKey: familyKeys.parents() });
+      }
     },
     onError: handleAuthError,
   });

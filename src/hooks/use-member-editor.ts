@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   addChildRow,
   copyMember,
@@ -31,12 +31,24 @@ export interface UseMemberEditorResult {
   removeChild: (index: number) => void;
 }
 
+function childSortSignature(member: FamilyMemberRecord | null): string {
+  if (!member) {
+    return "";
+  }
+  const indexes = getChildrenIndexes(member);
+  return indexes
+    .map((index) => `${index}:${String(member[`bithdayChild${index}`] ?? "")}`)
+    .join("|");
+}
+
 export function useMemberEditor(): UseMemberEditorResult {
   const [selectedUser, setSelectedUser] = useState<FamilyMemberRecord | null>(
     null,
   );
   const [activeTab, setActiveTab] = useState<TabKey>("family");
   const [dirty, setDirty] = useState(false);
+  const selectedUserRef = useRef(selectedUser);
+  selectedUserRef.current = selectedUser;
 
   const loadMemberFromRoute = useCallback(
     (member: FamilyMemberRecord): void => {
@@ -104,15 +116,17 @@ export function useMemberEditor(): UseMemberEditorResult {
     setDirty(true);
   }, []);
 
+  const childrenSignature = childSortSignature(selectedUser);
   const childIndexes = useMemo(() => {
-    if (!selectedUser) {
+    if (!childrenSignature) {
       return [];
     }
-    return sortChildrenIndexesByBirthday(
-      selectedUser,
-      getChildrenIndexes(selectedUser),
-    );
-  }, [selectedUser]);
+    const member = selectedUserRef.current;
+    if (!member) {
+      return [];
+    }
+    return sortChildrenIndexesByBirthday(member, getChildrenIndexes(member));
+  }, [childrenSignature]);
 
   return {
     selectedUser,

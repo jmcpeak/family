@@ -32,7 +32,7 @@ describe("MemberBrowser", () => {
     );
 
     expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
-    fireEvent.pointerMove(screen.getByTestId("member-row-1"));
+    fireEvent.pointerEnter(screen.getByTestId("member-row-1"));
     expect(
       screen.getByRole("button", { name: "Edit Ada Lovelace" }),
     ).toBeVisible();
@@ -63,7 +63,7 @@ describe("MemberBrowser", () => {
     expect(onEditMember).toHaveBeenCalledWith(MEMBERS[0]);
 
     onEditMember.mockClear();
-    fireEvent.pointerMove(screen.getByTestId("member-row-1"));
+    fireEvent.pointerEnter(screen.getByTestId("member-row-1"));
     fireEvent.click(screen.getByRole("button", { name: "Edit Ada Lovelace" }));
     expect(onEditMember).toHaveBeenCalledTimes(1);
     expect(onEditMember).toHaveBeenCalledWith(MEMBERS[0]);
