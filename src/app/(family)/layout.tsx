@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { FamilyApp } from "@/components/family-app";
 
 export default function FamilyLayout({
@@ -7,7 +8,9 @@ export default function FamilyLayout({
 }>): React.JSX.Element {
   return (
     <>
-      <FamilyApp />
+      <Suspense fallback={null}>
+        <FamilyApp />
+      </Suspense>
       {children}
     </>
   );
