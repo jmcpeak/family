@@ -548,10 +548,18 @@ export function FamilyApp(): React.JSX.Element {
     >
       <Alert
         severity={snackbarSeverity}
-        color={snackbarSeverity === "success" ? "primary" : "secondary"}
         variant="filled"
         onClose={closeSnackbar}
-        sx={{ width: "100%" }}
+        sx={{
+          width: "100%",
+          bgcolor:
+            snackbarSeverity === "success" ? "primary.main" : "secondary.main",
+          color:
+            snackbarSeverity === "success"
+              ? "primary.contrastText"
+              : "secondary.contrastText",
+          "& .MuiAlert-icon": { color: "inherit" },
+        }}
       >
         {snackbarMessage}
       </Alert>
