@@ -14,6 +14,8 @@ const MEMBERS_PAYLOAD: FamilyListResponse = {
     },
   ],
   metadata: null,
+  fathers: [{ id: "", firstName: "", lastName: "" }],
+  mothers: [{ id: "", firstName: "", lastName: "" }],
 };
 
 function createTestClient(): QueryClient {

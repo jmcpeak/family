@@ -15,10 +15,10 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ConfirmDialog } from "@/components/family/app-dialogs";
 import { AppMenus } from "@/components/family/app-menus";
 import { BrowseSearchProvider } from "@/components/family/browse-search-context";
 import { BrowseShell } from "@/components/family/browse-shell";
+import { ConfirmDialog } from "@/components/family/confirm-dialog";
 import { EditorShell } from "@/components/family/editor-shell";
 import { FamilyAppBar } from "@/components/family/family-app-bar";
 import { LoginScreen } from "@/components/family/login-screen";
@@ -92,7 +92,13 @@ function displayNameSignature(member: FamilyMemberRecord | null): string {
     .join("\0");
 }
 
-export function FamilyApp(): React.JSX.Element {
+interface FamilyAppProps {
+  initialAuthenticated?: boolean;
+}
+
+export function FamilyApp({
+  initialAuthenticated,
+}: FamilyAppProps): React.JSX.Element {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -185,7 +191,7 @@ export function FamilyApp(): React.JSX.Element {
   const selectedUserRef = useRef(selectedUser);
   selectedUserRef.current = selectedUser;
 
-  const sessionQuery = useSessionQuery();
+  const sessionQuery = useSessionQuery(initialAuthenticated);
   const authenticated = sessionQuery.data?.authenticated ?? false;
   const sessionLoading =
     sessionQuery.isPending && sessionQuery.data === undefined;

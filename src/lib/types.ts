@@ -35,13 +35,15 @@ export interface LastUpdateMetadata {
   lastUpdatedID?: string;
 }
 
-export interface FamilyListResponse {
-  members: FamilyMemberRecord[];
-  metadata?: LastUpdateMetadata | null;
-}
-
 export interface ParentOption {
   id: string;
   firstName?: string;
   lastName?: string;
+}
+
+export interface FamilyListResponse {
+  members: FamilyMemberRecord[];
+  metadata?: LastUpdateMetadata | null;
+  fathers: ParentOption[];
+  mothers: ParentOption[];
 }

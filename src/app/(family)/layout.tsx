@@ -1,15 +1,18 @@
 import { Suspense } from "react";
 import { FamilyApp } from "@/components/family-app";
+import { getIsAuthenticated } from "@/lib/auth";
 
-export default function FamilyLayout({
+export default async function FamilyLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>): React.JSX.Element {
+}>): Promise<React.JSX.Element> {
+  const initialAuthenticated = await getIsAuthenticated();
+
   return (
     <>
       <Suspense fallback={null}>
-        <FamilyApp />
+        <FamilyApp initialAuthenticated={initialAuthenticated} />
       </Suspense>
       {children}
     </>

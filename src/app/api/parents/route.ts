@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/api-guard";
 import { handleApiError } from "@/lib/api-observability";
 import { getFamilyRepository } from "@/lib/data";
+import { normalizeParentOptions } from "@/lib/parents";
 import type { Gender } from "@/lib/types";
 
 export async function GET(request: Request): Promise<NextResponse> {
@@ -23,23 +24,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const repository = getFamilyRepository();
     const parents = await repository.listParents(gender);
 
-    const normalizedParents = parents.map((entry) => {
-      if (entry.genderSpouse === gender && entry.firstNameSpouse) {
-        return {
-          id: entry.id,
-          firstName: entry.firstNameSpouse,
-          lastName: entry.lastNameSpouse,
-        };
-      }
-
-      return {
-        id: entry.id,
-        firstName: entry.firstName,
-        lastName: entry.lastName,
-      };
-    });
-
-    return NextResponse.json(normalizedParents);
+    return NextResponse.json(normalizeParentOptions(parents, gender));
   } catch (error) {
     return handleApiError({ route: "/api/parents", method: "GET" }, error);
   }

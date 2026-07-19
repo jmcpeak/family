@@ -65,10 +65,63 @@ function getClient(): DynamoDBDocumentClient {
   return DynamoDBDocumentClient.from(client);
 }
 
+type ScanPageParams = {
+  FilterExpression?: string;
+  ExpressionAttributeValues?: Record<string, unknown>;
+  ProjectionExpression?: string;
+};
+
 export class DynamoDbFamilyRepository implements FamilyRepository {
   private readonly client = getClient();
+  private memberTypeScanInflight: Promise<FamilyMemberRecord[]> | null = null;
 
   constructor(private readonly tableName: string) {}
+
+  private async scanAllPages(
+    params: ScanPageParams,
+  ): Promise<Record<string, unknown>[]> {
+    const items: Record<string, unknown>[] = [];
+    let exclusiveStartKey: Record<string, unknown> | undefined;
+
+    do {
+      const response = await this.client.send(
+        new ScanCommand({
+          TableName: this.tableName,
+          ...params,
+          ExclusiveStartKey: exclusiveStartKey,
+        }),
+      );
+      if (response.Items) {
+        items.push(...(response.Items as Record<string, unknown>[]));
+      }
+      exclusiveStartKey = response.LastEvaluatedKey as
+        | Record<string, unknown>
+        | undefined;
+    } while (exclusiveStartKey);
+
+    return items;
+  }
+
+  private async scanMemberTypeRecords(): Promise<FamilyMemberRecord[]> {
+    const items = await this.scanAllPages({
+      FilterExpression:
+        "attribute_not_exists(recordType) OR recordType = :memberRecordType",
+      ExpressionAttributeValues: {
+        ":memberRecordType": MEMBER_RECORD_TYPE,
+      },
+    });
+
+    return items.map((item) => cleanMemberRecord(item as FamilyMemberRecord));
+  }
+
+  private loadMemberTypeRecords(): Promise<FamilyMemberRecord[]> {
+    if (!this.memberTypeScanInflight) {
+      this.memberTypeScanInflight = this.scanMemberTypeRecords().finally(() => {
+        this.memberTypeScanInflight = null;
+      });
+    }
+    return this.memberTypeScanInflight;
+  }
 
   async checkReadiness(): Promise<void> {
     await this.client.send(
@@ -81,21 +134,11 @@ export class DynamoDbFamilyRepository implements FamilyRepository {
   }
 
   async listMembers(): Promise<FamilyMemberRecord[]> {
-    const response = await this.client.send(
-      new ScanCommand({
-        TableName: this.tableName,
-        FilterExpression:
-          "id <> :lastUpdateId AND size(id) > :minLength AND (attribute_not_exists(recordType) OR recordType = :memberRecordType)",
-        ExpressionAttributeValues: {
-          ":lastUpdateId": LAST_UPDATE_RECORD_ID,
-          ":minLength": MIN_MEMBER_ID_LENGTH,
-          ":memberRecordType": MEMBER_RECORD_TYPE,
-        },
-      }),
-    );
-
-    return ((response.Items ?? []) as FamilyMemberRecord[]).map((member) =>
-      cleanMemberRecord(member),
+    const records = await this.loadMemberTypeRecords();
+    return records.filter(
+      (member) =>
+        member.id !== LAST_UPDATE_RECORD_ID &&
+        member.id.length > MIN_MEMBER_ID_LENGTH,
     );
   }
 
@@ -193,38 +236,24 @@ export class DynamoDbFamilyRepository implements FamilyRepository {
   }
 
   async listParents(gender: Gender): Promise<FamilyMemberRecord[]> {
-    const response = await this.client.send(
-      new ScanCommand({
-        TableName: this.tableName,
-        FilterExpression:
-          "(gender = :gender OR genderSpouse = :gender) AND (attribute_not_exists(recordType) OR recordType = :memberRecordType)",
-        ExpressionAttributeValues: {
-          ":gender": gender,
-          ":memberRecordType": MEMBER_RECORD_TYPE,
-        },
-      }),
-    );
-
-    return ((response.Items ?? []) as FamilyMemberRecord[]).map((member) =>
-      cleanMemberRecord(member),
+    const records = await this.loadMemberTypeRecords();
+    return records.filter(
+      (entry) => entry.gender === gender || entry.genderSpouse === gender,
     );
   }
 
   async listEmails(): Promise<string[]> {
-    const response = await this.client.send(
-      new ScanCommand({
-        TableName: this.tableName,
-        ProjectionExpression: "email",
-        FilterExpression:
-          "attribute_exists(email) AND size(email) > :size AND (attribute_not_exists(recordType) OR recordType = :memberRecordType)",
-        ExpressionAttributeValues: {
-          ":size": 4,
-          ":memberRecordType": MEMBER_RECORD_TYPE,
-        },
-      }),
-    );
+    const items = await this.scanAllPages({
+      ProjectionExpression: "email",
+      FilterExpression:
+        "attribute_exists(email) AND size(email) > :size AND (attribute_not_exists(recordType) OR recordType = :memberRecordType)",
+      ExpressionAttributeValues: {
+        ":size": 4,
+        ":memberRecordType": MEMBER_RECORD_TYPE,
+      },
+    });
 
-    return (response.Items ?? [])
+    return items
       .map((item) => item.email)
       .filter(
         (value): value is string =>
@@ -335,17 +364,14 @@ export class DynamoDbFamilyRepository implements FamilyRepository {
   }
 
   async listSurveyActivations(): Promise<SurveyActivationRecord[]> {
-    const response = await this.client.send(
-      new ScanCommand({
-        TableName: this.tableName,
-        FilterExpression: "recordType = :recordType",
-        ExpressionAttributeValues: {
-          ":recordType": SURVEY_ACTIVATION_RECORD_TYPE,
-        },
-      }),
-    );
+    const items = await this.scanAllPages({
+      FilterExpression: "recordType = :recordType",
+      ExpressionAttributeValues: {
+        ":recordType": SURVEY_ACTIVATION_RECORD_TYPE,
+      },
+    });
 
-    return (response.Items ?? [])
+    return items
       .map((item) => item as Partial<SurveyActivationItem>)
       .filter(
         (item): item is SurveyActivationItem =>
@@ -377,18 +403,15 @@ export class DynamoDbFamilyRepository implements FamilyRepository {
   }
 
   async listSurveyResponses(slug: SurveySlug): Promise<SurveyResponseRecord[]> {
-    const response = await this.client.send(
-      new ScanCommand({
-        TableName: this.tableName,
-        FilterExpression: "recordType = :recordType AND slug = :slug",
-        ExpressionAttributeValues: {
-          ":recordType": SURVEY_RESPONSE_RECORD_TYPE,
-          ":slug": slug,
-        },
-      }),
-    );
+    const items = await this.scanAllPages({
+      FilterExpression: "recordType = :recordType AND slug = :slug",
+      ExpressionAttributeValues: {
+        ":recordType": SURVEY_RESPONSE_RECORD_TYPE,
+        ":slug": slug,
+      },
+    });
 
-    return (response.Items ?? [])
+    return items
       .map((item) => item as Partial<SurveyResponseItem>)
       .filter(
         (item): item is SurveyResponseItem =>

@@ -3,9 +3,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 const requireSessionMock = vi.fn();
 const listMembersMock = vi.fn();
+const listParentsMock = vi.fn();
 const getLastUpdateMetadataMock = vi.fn();
 const getFamilyRepositoryMock = vi.fn(() => ({
   listMembers: listMembersMock,
+  listParents: listParentsMock,
   getLastUpdateMetadata: getLastUpdateMetadataMock,
 }));
 
@@ -34,11 +36,17 @@ describe("GET /api/members", () => {
     expect(getFamilyRepositoryMock).not.toHaveBeenCalled();
   });
 
-  it("returns members and metadata when authorized", async () => {
+  it("returns members, parents, and metadata when authorized", async () => {
     requireSessionMock.mockResolvedValueOnce(null);
     listMembersMock.mockResolvedValueOnce([
-      { id: "member-1", firstName: "Ada" },
+      { id: "member-1", firstName: "Ada", gender: "f" },
     ]);
+    listParentsMock.mockImplementation(async (gender: "m" | "f") => {
+      if (gender === "f") {
+        return [{ id: "member-1", firstName: "Ada", gender: "f" }];
+      }
+      return [];
+    });
     getLastUpdateMetadataMock.mockResolvedValueOnce({
       id: "lastUpdateDate",
       lastUpdated: 123,
@@ -50,13 +58,17 @@ describe("GET /api/members", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({
-      members: [{ id: "member-1", firstName: "Ada" }],
+      members: [{ id: "member-1", firstName: "Ada", gender: "f" }],
       metadata: {
         id: "lastUpdateDate",
         lastUpdated: 123,
         lastUpdatedID: "member-1",
       },
+      fathers: [],
+      mothers: [{ id: "member-1", firstName: "Ada" }],
     });
+    expect(listParentsMock).toHaveBeenCalledWith("m");
+    expect(listParentsMock).toHaveBeenCalledWith("f");
   });
 
   it("maps repository failures to safe server errors", async () => {

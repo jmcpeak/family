@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type QueryClient,
   type UseMutationResult,
   type UseQueryResult,
   useMutation,
@@ -11,13 +12,13 @@ import {
   ApiError,
   deleteMember,
   fetchMembers,
-  fetchParents,
   fetchSession,
   fetchSurveyResults,
   fetchSurveys,
   isUnauthorizedError,
   login,
   logout,
+  type ParentsResponse,
   saveMember,
   submitSurvey,
 } from "@/lib/queries/family-api";
@@ -29,19 +30,10 @@ import type {
   SurveySubmissionResponse,
   SurveysResponse,
 } from "@/lib/surveys";
-import type {
-  FamilyListResponse,
-  FamilyMemberRecord,
-  ParentOption,
-} from "@/lib/types";
+import type { FamilyListResponse, FamilyMemberRecord } from "@/lib/types";
 
 interface SessionResponse {
   authenticated: boolean;
-}
-
-interface ParentsResponse {
-  fathers: ParentOption[];
-  mothers: ParentOption[];
 }
 
 function useAuthErrorHandler(): (error: unknown) => void {
@@ -56,33 +48,49 @@ function useAuthErrorHandler(): (error: unknown) => void {
   };
 }
 
-export function useSessionQuery(): UseQueryResult<SessionResponse, ApiError> {
+export function useSessionQuery(
+  initialAuthenticated?: boolean,
+): UseQueryResult<SessionResponse, ApiError> {
   return useQuery({
     queryKey: familyKeys.session(),
     queryFn: fetchSession,
+    ...(initialAuthenticated === undefined
+      ? {}
+      : {
+          initialData: { authenticated: initialAuthenticated },
+          staleTime: 0,
+        }),
   });
+}
+
+async function fetchDirectory(
+  queryClient: QueryClient,
+): Promise<FamilyListResponse> {
+  try {
+    return await fetchMembers();
+  } catch (error) {
+    if (isUnauthorizedError(error)) {
+      queryClient.setQueryData<SessionResponse>(familyKeys.session(), {
+        authenticated: false,
+      });
+    }
+    throw error;
+  }
 }
 
 export function useMembersQuery(
   authenticated: boolean,
-): UseQueryResult<FamilyListResponse, ApiError> {
+): UseQueryResult<Pick<FamilyListResponse, "members" | "metadata">, ApiError> {
   const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: familyKeys.members(),
-    queryFn: async () => {
-      try {
-        return await fetchMembers();
-      } catch (error) {
-        if (isUnauthorizedError(error)) {
-          queryClient.setQueryData<SessionResponse>(familyKeys.session(), {
-            authenticated: false,
-          });
-        }
-        throw error;
-      }
-    },
+    queryFn: () => fetchDirectory(queryClient),
     enabled: authenticated,
+    select: (data) => ({
+      members: data.members,
+      metadata: data.metadata,
+    }),
     throwOnError: false,
     retry: false,
   });
@@ -94,20 +102,14 @@ export function useParentsQuery(
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: familyKeys.parents(),
-    queryFn: async () => {
-      try {
-        return await fetchParents();
-      } catch (error) {
-        if (isUnauthorizedError(error)) {
-          queryClient.setQueryData<SessionResponse>(familyKeys.session(), {
-            authenticated: false,
-          });
-        }
-        throw error;
-      }
-    },
+    // Share the members cache so parents do not trigger a second directory fetch.
+    queryKey: familyKeys.members(),
+    queryFn: () => fetchDirectory(queryClient),
     enabled: authenticated,
+    select: (data): ParentsResponse => ({
+      fathers: data.fathers,
+      mothers: data.mothers,
+    }),
     throwOnError: false,
     retry: false,
   });
@@ -124,10 +126,7 @@ export function useLoginMutation(): UseMutationResult<
     mutationFn: login,
     onSuccess: async (session) => {
       queryClient.setQueryData<SessionResponse>(familyKeys.session(), session);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: familyKeys.members() }),
-        queryClient.invalidateQueries({ queryKey: familyKeys.parents() }),
-      ]);
+      await queryClient.invalidateQueries({ queryKey: familyKeys.members() });
     },
   });
 }
@@ -148,21 +147,6 @@ export function useLogoutMutation(): UseMutationResult<
   });
 }
 
-function parentsListNeedsRefresh(
-  previous: FamilyMemberRecord | undefined,
-  saved: FamilyMemberRecord,
-): boolean {
-  if (!previous) {
-    return saved.gender === "m" || saved.gender === "f";
-  }
-
-  return (
-    previous.gender !== saved.gender ||
-    previous.firstName !== saved.firstName ||
-    previous.lastName !== saved.lastName
-  );
-}
-
 export function useSaveMemberMutation(): UseMutationResult<
   FamilyMemberRecord,
   ApiError,
@@ -173,19 +157,9 @@ export function useSaveMemberMutation(): UseMutationResult<
 
   return useMutation<FamilyMemberRecord, ApiError, FamilyMemberRecord>({
     mutationFn: saveMember,
-    onSuccess: async (saved) => {
-      const membersCache = queryClient.getQueryData<FamilyListResponse>(
-        familyKeys.members(),
-      );
-      const previous = membersCache?.members.find(
-        (member) => member.id === saved.id,
-      );
-      const refreshParents = parentsListNeedsRefresh(previous, saved);
-
+    onSuccess: async () => {
+      // Members response includes parents; one invalidation refreshes both views.
       await queryClient.invalidateQueries({ queryKey: familyKeys.members() });
-      if (refreshParents) {
-        await queryClient.invalidateQueries({ queryKey: familyKeys.parents() });
-      }
     },
     onError: handleAuthError,
   });
@@ -202,10 +176,7 @@ export function useDeleteMemberMutation(): UseMutationResult<
   return useMutation<{ deleted: boolean }, ApiError, string>({
     mutationFn: deleteMember,
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: familyKeys.members() }),
-        queryClient.invalidateQueries({ queryKey: familyKeys.parents() }),
-      ]);
+      await queryClient.invalidateQueries({ queryKey: familyKeys.members() });
     },
     onError: handleAuthError,
   });

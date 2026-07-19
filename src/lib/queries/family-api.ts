@@ -64,23 +64,23 @@ export async function fetchSession(): Promise<SessionResponse> {
   return requestJson<SessionResponse>("/api/auth/session");
 }
 
+const EMPTY_PARENT_OPTION: ParentOption = {
+  id: "",
+  firstName: "",
+  lastName: "",
+};
+
+function withEmptyParentOption(parents: ParentOption[]): ParentOption[] {
+  return [EMPTY_PARENT_OPTION, ...parents];
+}
+
 export async function fetchMembers(): Promise<FamilyListResponse> {
   const response = await requestJson<FamilyListResponse>("/api/members");
   return {
     ...response,
     members: sortMembers(response.members),
-  };
-}
-
-export async function fetchParents(): Promise<ParentsResponse> {
-  const [fathers, mothers] = await Promise.all([
-    requestJson<ParentOption[]>("/api/parents?gender=m"),
-    requestJson<ParentOption[]>("/api/parents?gender=f"),
-  ]);
-
-  return {
-    fathers: [{ id: "", firstName: "", lastName: "" }, ...fathers],
-    mothers: [{ id: "", firstName: "", lastName: "" }, ...mothers],
+    fathers: withEmptyParentOption(response.fathers ?? []),
+    mothers: withEmptyParentOption(response.mothers ?? []),
   };
 }
 
