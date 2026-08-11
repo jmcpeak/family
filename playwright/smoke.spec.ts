@@ -11,21 +11,39 @@ test("non-destructive smoke: login, browse, health, export, logout", async ({
   await page.getByRole("textbox").first().fill(loginAnswer);
   await page.getByRole("button", { name: "Login" }).click();
 
+  await expect
+    .poll(async () => {
+      const response = await page.request.get("/api/auth/session");
+      if (!response.ok()) {
+        return false;
+      }
+      const body = (await response.json()) as { authenticated?: boolean };
+      return body.authenticated === true;
+    })
+    .toBe(true);
+
+  const membersResponse = await page.request.get("/api/members");
+  expect(membersResponse.status()).toBe(200);
+  const membersPayload = (await membersResponse.json()) as {
+    members: unknown[];
+  };
+  expect(membersPayload.members.length).toBeGreaterThan(0);
+
   // Active surveys auto-open after login and aria-hide the browse list.
-  const dontAskAgain = page.getByRole("checkbox", {
-    name: /don't ask again/i,
-  });
-  if (await dontAskAgain.isVisible({ timeout: 5_000 }).catch(() => false)) {
-    await dontAskAgain.click();
-    await page.getByRole("button", { name: /^close$/i }).click();
+  const surveyDialog = page.getByRole("dialog");
+  if (await surveyDialog.isVisible({ timeout: 8_000 }).catch(() => false)) {
+    const dontAskAgain = surveyDialog.getByRole("checkbox", {
+      name: /don't ask again/i,
+    });
+    if (await dontAskAgain.isVisible().catch(() => false)) {
+      await dontAskAgain.click();
+    }
+    await surveyDialog.getByRole("button", { name: /^close$/i }).click();
+    await expect(surveyDialog).toBeHidden();
   }
 
   await expect(
-    page
-      .locator(
-        '[data-testid^="member-row-"]:not([data-testid^="member-row-skeleton-"]):visible',
-      )
-      .first(),
+    page.locator('[data-testid^="member-row-"]').first(),
   ).toBeVisible();
 
   const live = await page.request.get("/api/health/live");

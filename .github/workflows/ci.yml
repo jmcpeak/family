@@ -45,4 +45,5 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Smoke tests (non-destructive)
-        run: npm run test:smoke
+        # Drop the production .next from the Build step so `next dev` starts clean.
+        run: rm -rf .next && npm run test:smoke
