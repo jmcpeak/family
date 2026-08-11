@@ -41,7 +41,14 @@ import {
   type TabKey,
 } from "@/lib/family-editor";
 import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
-import { fetchEmails, isUnauthorizedError } from "@/lib/queries/family-api";
+import { siteLinkEmailContent } from "@/lib/messaging/templates";
+import {
+  fetchEmails,
+  fetchPhones,
+  isUnauthorizedError,
+  notifyEmailBlast,
+  notifySmsBlast,
+} from "@/lib/queries/family-api";
 import { familyKeys } from "@/lib/queries/query-keys";
 import type { FamilyMemberRecord, ParentOption } from "@/lib/types";
 
@@ -108,9 +115,10 @@ export function FamilyApp({
   const showAbout = searchParams.get("dialog") === "about";
   const queryClient = useQueryClient();
   const theme = useTheme();
-  const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"), {
-    noSsr: true,
-  });
+  // Default (noSsr: false) keeps SSR and the client's hydration snapshot on
+  // defaultMatches; live matchMedia applies after mount. noSsr: true reads
+  // matchMedia during hydration and mismatches the server (FamilyAppBar search).
+  const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"));
 
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(
@@ -157,7 +165,16 @@ export function FamilyApp({
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [emailsText, setEmailsText] = useState("");
+  const [emailCount, setEmailCount] = useState(0);
+  const [phoneCount, setPhoneCount] = useState(0);
   const [copiedEmailText, setCopiedEmailText] = useState(false);
+  const [sendingChannel, setSendingChannel] = useState<"email" | "sms" | null>(
+    null,
+  );
+  const [blastResult, setBlastResult] = useState<string | null>(null);
+  const [confirmNotifyChannel, setConfirmNotifyChannel] = useState<
+    "email" | "sms" | null
+  >(null);
   const [loginAnswer, setLoginAnswer] = useState("");
   const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(
     null,
@@ -444,12 +461,21 @@ export function FamilyApp({
 
   const openEmailsDialog = async (): Promise<void> => {
     try {
-      const payload = await queryClient.fetchQuery({
-        queryKey: familyKeys.emails(),
-        queryFn: fetchEmails,
-      });
-      setEmailsText(payload.emails.join("; "));
+      const [emailsPayload, phonesPayload] = await Promise.all([
+        queryClient.fetchQuery({
+          queryKey: familyKeys.emails(),
+          queryFn: fetchEmails,
+        }),
+        queryClient.fetchQuery({
+          queryKey: familyKeys.phones(),
+          queryFn: fetchPhones,
+        }),
+      ]);
+      setEmailsText(emailsPayload.emails.join("; "));
+      setEmailCount(emailsPayload.emails.length);
+      setPhoneCount(phonesPayload.phones.length);
       setCopiedEmailText(false);
+      setBlastResult(null);
       setShowEmails(true);
     } catch (caughtError) {
       if (isUnauthorizedError(caughtError)) {
@@ -476,6 +502,32 @@ export function FamilyApp({
       reportError(
         caughtError instanceof Error ? caughtError.message : "Unknown error",
       );
+    }
+  };
+
+  const runNotifyBlast = async (channel: "email" | "sms"): Promise<void> => {
+    setConfirmNotifyChannel(null);
+    setSendingChannel(channel);
+    setBlastResult(null);
+    clearError();
+    try {
+      const result =
+        channel === "email" ? await notifyEmailBlast() : await notifySmsBlast();
+      setBlastResult(
+        `${channel === "email" ? "Email" : "SMS"} blast finished: ${result.sent} sent, ${result.failed} failed, ${result.skipped} skipped${result.dryRun ? " (dry run)" : ""}.`,
+      );
+    } catch (caughtError) {
+      if (isUnauthorizedError(caughtError)) {
+        queryClient.setQueryData(familyKeys.session(), {
+          authenticated: false,
+        });
+        return;
+      }
+      reportError(
+        caughtError instanceof Error ? caughtError.message : "Unknown error",
+      );
+    } finally {
+      setSendingChannel(null);
     }
   };
 
@@ -520,7 +572,11 @@ export function FamilyApp({
 
   const closeEmailsDialog = useCallback((): void => {
     setShowEmails(false);
+    setSendingChannel(null);
+    setConfirmNotifyChannel(null);
   }, []);
+
+  const notifyMessagePreview = useMemo(() => siteLinkEmailContent().text, []);
 
   const confirmDiscard = useCallback((): void => {
     setConfirmDiscardOpen(false);
@@ -711,13 +767,42 @@ export function FamilyApp({
           onConfirm={confirmDeleteSelected}
           onCancel={cancelDelete}
         />
+        <ConfirmDialog
+          open={confirmNotifyChannel !== null}
+          title={
+            confirmNotifyChannel === "sms"
+              ? "Send SMS blast?"
+              : "Send email blast?"
+          }
+          description={
+            confirmNotifyChannel === "sms"
+              ? `Text the site link to ${phoneCount} phone number${phoneCount === 1 ? "" : "s"} on file?`
+              : `Email the site link to ${emailCount} address${emailCount === 1 ? "" : "es"} on file?`
+          }
+          confirmLabel={
+            confirmNotifyChannel === "sms" ? "Send SMS" : "Send email"
+          }
+          onConfirm={() => {
+            if (confirmNotifyChannel) {
+              void runNotifyBlast(confirmNotifyChannel);
+            }
+          }}
+          onCancel={() => setConfirmNotifyChannel(null)}
+        />
         {showEmails ? (
           <EmailsDialog
             open={showEmails}
             onClose={closeEmailsDialog}
             emailsText={emailsText}
+            emailCount={emailCount}
+            phoneCount={phoneCount}
+            messagePreview={notifyMessagePreview}
             copiedEmailText={copiedEmailText}
+            sendingChannel={sendingChannel}
+            blastResult={blastResult}
             onCopyEmails={copyEmails}
+            onSendEmailBlast={() => setConfirmNotifyChannel("email")}
+            onSendSmsBlast={() => setConfirmNotifyChannel("sms")}
             fullScreen={!desktopDrawer}
           />
         ) : null}

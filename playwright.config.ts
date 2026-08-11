@@ -9,6 +9,8 @@ export default defineConfig({
   expect: {
     timeout: 15_000,
   },
+  // One browser at a time against the shared next dev server in CI.
+  workers: process.env.CI ? 1 : undefined,
   reporter: [["list"]],
   use: {
     baseURL: smokeBaseUrl ?? localBaseUrl,

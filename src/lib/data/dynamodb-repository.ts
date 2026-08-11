@@ -261,6 +261,25 @@ export class DynamoDbFamilyRepository implements FamilyRepository {
       );
   }
 
+  async listPhones(): Promise<string[]> {
+    const items = await this.scanAllPages({
+      ProjectionExpression: "phone",
+      FilterExpression:
+        "attribute_exists(phone) AND size(phone) > :size AND (attribute_not_exists(recordType) OR recordType = :memberRecordType)",
+      ExpressionAttributeValues: {
+        ":size": 0,
+        ":memberRecordType": MEMBER_RECORD_TYPE,
+      },
+    });
+
+    return items
+      .map((item) => item.phone)
+      .filter(
+        (value): value is string =>
+          typeof value === "string" && value.trim().length > 0,
+      );
+  }
+
   async getLastUpdateMetadata(): Promise<LastUpdateMetadata | null> {
     const record = await this.getMember(LAST_UPDATE_RECORD_ID);
     if (!record || !("lastUpdated" in record)) {

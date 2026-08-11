@@ -6,6 +6,7 @@ export const familyKeys = {
   members: () => [...familyKeys.all, "members"] as const,
   parents: () => [...familyKeys.all, "parents"] as const,
   emails: () => [...familyKeys.all, "emails"] as const,
+  phones: () => [...familyKeys.all, "phones"] as const,
   surveys: () => [...familyKeys.all, "surveys"] as const,
   surveyResults: (slug: SurveySlug | null) =>
     [...familyKeys.surveys(), "results", slug] as const,

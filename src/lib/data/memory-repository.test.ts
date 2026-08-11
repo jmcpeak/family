@@ -105,4 +105,25 @@ describe("MemoryFamilyRepository", () => {
     expect(responses).toHaveLength(1);
     expect(responses[0]?.payload.respondentName).toBe("Alex McPeak");
   });
+
+  it("lists unique phones from members", async () => {
+    const repository = new MemoryFamilyRepository();
+    await repository.upsertMember({
+      id: "member-phone-1",
+      firstName: "Pat",
+      lastName: "Lee",
+      gender: "f",
+      phone: "555-0123",
+    });
+    await repository.upsertMember({
+      id: "member-phone-2",
+      firstName: "Sam",
+      lastName: "Lee",
+      gender: "m",
+      phone: "555-0123",
+    });
+
+    const phones = await repository.listPhones();
+    expect(phones).toEqual(["555-0123"]);
+  });
 });

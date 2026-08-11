@@ -20,6 +20,15 @@ const serverEnvSchema = z.object({
     .transform((value) => value === "true"),
   FAMILY_LOGIN_ANSWER: z.string().optional(),
   FAMILY_SESSION_SECRET: z.string().optional(),
+  FAMILY_MESSAGING_DRY_RUN: z
+    .string()
+    .optional()
+    .transform((value) => value === "true"),
+  FAMILY_SES_FROM_ADDRESS: z.string().optional(),
+  FAMILY_SMS_ENABLED: z
+    .string()
+    .optional()
+    .transform((value) => value === "true"),
 });
 
 const parsed = serverEnvSchema.parse(process.env);
@@ -76,4 +85,7 @@ export const serverEnv = {
   useInMemoryDb,
   loginAnswer: parsed.FAMILY_LOGIN_ANSWER,
   sessionSecret,
+  messagingDryRun: parsed.FAMILY_MESSAGING_DRY_RUN ?? false,
+  sesFromAddress: parsed.FAMILY_SES_FROM_ADDRESS?.trim() || undefined,
+  smsEnabled: parsed.FAMILY_SMS_ENABLED ?? false,
 };

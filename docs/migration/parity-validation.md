@@ -20,7 +20,7 @@ This document tracks legacy-to-Next behavior parity for the big-bang migration.
 | Parent selectors | Father/mother lists filtered by gender | Implemented via `/api/parents` |
 | Display-name generation | Suggested display names based on name fields | Implemented in `buildDisplayNameOptions` |
 | Address links | Maps/street-view preview for valid addresses | Implemented in address tab |
-| Email utility | Gather and copy bulk addresses | Implemented via `/api/emails` dialog |
+| Email utility | Gather and copy bulk addresses | Implemented via `/api/emails` dialog + Notify family blasts |
 | CSV export | Download contact CSV | Implemented via `/api/export/mailing` |
 | Children rows | Add/remove dynamic child rows | Implemented with legacy dynamic field keys |
 

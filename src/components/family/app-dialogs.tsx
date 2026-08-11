@@ -105,8 +105,15 @@ interface EmailsDialogProps {
   open: boolean;
   onClose: () => void;
   emailsText: string;
+  emailCount: number;
+  phoneCount: number;
+  messagePreview: string;
   copiedEmailText: boolean;
+  sendingChannel: "email" | "sms" | null;
+  blastResult: string | null;
   onCopyEmails: () => void | Promise<void>;
+  onSendEmailBlast: () => void | Promise<void>;
+  onSendSmsBlast: () => void | Promise<void>;
   fullScreen: boolean;
 }
 
@@ -114,10 +121,19 @@ export function EmailsDialog({
   open,
   onClose,
   emailsText,
+  emailCount,
+  phoneCount,
+  messagePreview,
   copiedEmailText,
+  sendingChannel,
+  blastResult,
   onCopyEmails,
+  onSendEmailBlast,
+  onSendSmsBlast,
   fullScreen,
 }: EmailsDialogProps): React.JSX.Element {
+  const busy = sendingChannel !== null;
+
   return (
     <Dialog
       open={open}
@@ -126,17 +142,41 @@ export function EmailsDialog({
       fullWidth
       fullScreen={fullScreen}
     >
-      <DialogTitle>Bulk Email Addresses</DialogTitle>
+      <DialogTitle>Notify family</DialogTitle>
       <DialogContent>
+        <Typography color="text.secondary" sx={{ mb: 2 }}>
+          Send the site link to members on file, or copy email addresses for a
+          manual message. The login answer is not included — recipients already
+          know it.
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          On file: {emailCount} email{emailCount === 1 ? "" : "s"}, {phoneCount}{" "}
+          phone{phoneCount === 1 ? "" : "s"}
+        </Typography>
+        <Typography
+          variant="body2"
+          component="pre"
+          sx={{
+            mb: 2,
+            p: 1.5,
+            bgcolor: "action.hover",
+            borderRadius: 1,
+            whiteSpace: "pre-wrap",
+            fontFamily: "inherit",
+          }}
+        >
+          {messagePreview}
+        </Typography>
         <TextField
           label="Email addresses"
           value={emailsText}
           multiline
-          rows={8}
+          rows={6}
           fullWidth
           slotProps={{
             htmlInput: {
               "aria-label": "Bulk email addresses",
+              readOnly: true,
             },
           }}
         />
@@ -145,12 +185,37 @@ export function EmailsDialog({
             Copied to clipboard.
           </Alert>
         ) : null}
+        {blastResult ? (
+          <Alert severity="info" sx={{ mt: 1 }}>
+            {blastResult}
+          </Alert>
+        ) : null}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => void onCopyEmails()} variant="contained">
-          Copy and close
+      <DialogActions sx={{ flexWrap: "wrap", gap: 1 }}>
+        <Button
+          onClick={() => void onSendEmailBlast()}
+          variant="contained"
+          disabled={busy || emailCount === 0}
+        >
+          {sendingChannel === "email" ? "Sending email…" : "Send email blast"}
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button
+          onClick={() => void onSendSmsBlast()}
+          variant="contained"
+          color="secondary"
+          disabled={busy || phoneCount === 0}
+        >
+          {sendingChannel === "sms" ? "Sending SMS…" : "Send SMS blast"}
+        </Button>
+        <Button
+          onClick={() => void onCopyEmails()}
+          disabled={busy || !emailsText}
+        >
+          Copy emails
+        </Button>
+        <Button onClick={onClose} disabled={busy}>
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );
