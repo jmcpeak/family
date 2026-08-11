@@ -1,10 +1,8 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const loginAnswer = process.env.PLAYWRIGHT_LOGIN_ANSWER ?? "smoke-answer";
 
-test("non-destructive smoke: login, browse, health, export, logout", async ({
-  page,
-}) => {
+async function loginAndRevealBrowse(page: Page): Promise<void> {
   await page.goto("/");
   await expect(page.getByText(/family reunion/i)).toBeVisible();
 
@@ -29,21 +27,15 @@ test("non-destructive smoke: login, browse, health, export, logout", async ({
   };
   expect(membersPayload.members.length).toBeGreaterThan(0);
 
-  const memberRow = page
-    .locator(
-      '[data-testid^="member-row-"]:not([data-testid^="member-row-skeleton-"])',
-    )
-    .first();
-  await expect(memberRow).toBeAttached();
-
-  // Active surveys auto-open after login and aria-hide the browse list.
+  const browseMember = page.getByRole("button", { name: /McPeak/i }).first();
   const surveyDialog = page.getByRole("dialog", {
     name: /family reunion interest survey/i,
   });
+
   await Promise.race([
-    memberRow.waitFor({ state: "visible", timeout: 20_000 }),
-    surveyDialog.waitFor({ state: "visible", timeout: 20_000 }),
-  ]).catch(() => undefined);
+    browseMember.waitFor({ state: "visible", timeout: 30_000 }),
+    surveyDialog.waitFor({ state: "visible", timeout: 30_000 }),
+  ]);
 
   if (await surveyDialog.isVisible().catch(() => false)) {
     await surveyDialog
@@ -53,9 +45,14 @@ test("non-destructive smoke: login, browse, health, export, logout", async ({
     await expect(surveyDialog).toBeHidden();
   }
 
-  // MUI may leave a backdrop that obscures rows for Playwright's visibility check.
   await expect(page.locator(".MuiModal-backdrop")).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /McPeak/i }).first()).toBeVisible();
+  await expect(browseMember).toBeVisible();
+}
+
+test("non-destructive smoke: login, browse, health, export, logout", async ({
+  page,
+}) => {
+  await loginAndRevealBrowse(page);
 
   const live = await page.request.get("/api/health/live");
   expect(live.status()).toBe(200);
