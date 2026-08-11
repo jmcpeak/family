@@ -201,7 +201,7 @@ AWS_PROFILE=mcpeak-family-admin ./scripts/configure-cloudwatch-alarms.sh
 
 Defaults configured by `configure-waf.sh`:
 - `/api/auth/login`: block after `120` requests / 5 minutes / IP
-- Sensitive routes (`/api/members*`, `/api/surveys*`, `/api/emails`, `/api/export/mailing`): block after `500` requests / 5 minutes / IP
+- Sensitive routes (`/api/members*`, `/api/surveys*`, `/api/emails`, `/api/phones`, `/api/notify*`, `/api/export/mailing`): block after `500` requests / 5 minutes / IP
 
 If these values are too strict, rerun with overrides:
 

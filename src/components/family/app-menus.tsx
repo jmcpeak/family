@@ -129,7 +129,7 @@ export function AppMenus({
               <ListItemIcon>
                 <EmailIcon fontSize="small" />
               </ListItemIcon>
-              E-mail list
+              Notify family
             </MenuItem>
             <MenuItem onClick={() => runMoreAction(onExportMailingLabels)}>
               <ListItemIcon>

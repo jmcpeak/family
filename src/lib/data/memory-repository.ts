@@ -142,6 +142,17 @@ export class MemoryFamilyRepository implements FamilyRepository {
     return Array.from(set);
   }
 
+  async listPhones(): Promise<string[]> {
+    const set = new Set<string>();
+    for (const member of this.memberMap.values()) {
+      const phone = typeof member.phone === "string" ? member.phone.trim() : "";
+      if (phone.length > 0) {
+        set.add(phone);
+      }
+    }
+    return Array.from(set);
+  }
+
   async getLastUpdateMetadata(): Promise<LastUpdateMetadata | null> {
     return { ...this.lastUpdate };
   }

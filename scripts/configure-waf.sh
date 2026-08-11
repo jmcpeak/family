@@ -85,6 +85,22 @@ cat > "$RULES_FILE" <<EOF
                   "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
                   "PositionalConstraint": "EXACTLY"
                 }
+              },
+              {
+                "ByteMatchStatement": {
+                  "SearchString": "L2FwaS9waG9uZXM=",
+                  "FieldToMatch": { "UriPath": {} },
+                  "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
+                  "PositionalConstraint": "EXACTLY"
+                }
+              },
+              {
+                "ByteMatchStatement": {
+                  "SearchString": "L2FwaS9ub3RpZnk=",
+                  "FieldToMatch": { "UriPath": {} },
+                  "TextTransformations": [{ "Priority": 0, "Type": "NONE" }],
+                  "PositionalConstraint": "STARTS_WITH"
+                }
               }
             ]
           }

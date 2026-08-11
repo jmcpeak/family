@@ -43,6 +43,8 @@
   "homepage": "https://github.com/jmcpeak/family#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.1090.0",
+    "@aws-sdk/client-ses": "^3.1090.0",
+    "@aws-sdk/client-sns": "^3.1090.0",
     "@aws-sdk/credential-provider-cognito-identity": "3.972.58",
     "@aws-sdk/lib-dynamodb": "3.1090.0",
     "@emotion/react": "11.14.0",

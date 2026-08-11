@@ -33,6 +33,7 @@ export interface FamilyRepository {
   deleteMember(id: string): Promise<void>;
   listParents(gender: Gender): Promise<FamilyMemberRecord[]>;
   listEmails(): Promise<string[]>;
+  listPhones(): Promise<string[]>;
   getLastUpdateMetadata(): Promise<LastUpdateMetadata | null>;
   ensureSurveyActivation(
     slug: SurveySlug,

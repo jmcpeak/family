@@ -122,6 +122,43 @@ export async function fetchEmails(): Promise<{ emails: string[] }> {
   return requestJson<{ emails: string[] }>("/api/emails");
 }
 
+export async function fetchPhones(): Promise<{ phones: string[] }> {
+  return requestJson<{ phones: string[] }>("/api/phones");
+}
+
+export interface NotifyBlastResult {
+  channel: "email" | "sms";
+  dryRun: boolean;
+  recipientCount: number;
+  sent: number;
+  failed: number;
+  skipped: number;
+}
+
+export async function notifyEmailBlast(
+  options: { dryRun?: boolean } = {},
+): Promise<NotifyBlastResult> {
+  return requestJson<NotifyBlastResult>("/api/notify/email", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(options),
+  });
+}
+
+export async function notifySmsBlast(
+  options: { dryRun?: boolean } = {},
+): Promise<NotifyBlastResult> {
+  return requestJson<NotifyBlastResult>("/api/notify/sms", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(options),
+  });
+}
+
 export async function fetchSurveys(): Promise<SurveysResponse> {
   return requestJson<SurveysResponse>("/api/surveys");
 }
