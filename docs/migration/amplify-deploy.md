@@ -256,7 +256,7 @@ The old site at [http://mcpeakfamily.org](http://mcpeakfamily.org) likely pointe
 
 ### Build fails (Node version)
 
-This repo requires Node 20+. `amplify.yml` runs `nvm use 20`. In Amplify console → **Build settings**, confirm build image supports Node 20.
+This repo requires Node 22.22+ (24 recommended). `amplify.yml` runs `nvm use 24`. In Amplify console → **Build settings**, confirm build image supports Node 24.
 
 ### Build fails (Next.js 16)
 
