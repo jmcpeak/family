@@ -15,6 +15,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { NotifyRecipientOption } from "@/components/family/app-dialogs";
 import { AppMenus } from "@/components/family/app-menus";
 import { BrowseSearchProvider } from "@/components/family/browse-search-context";
 import { BrowseShell } from "@/components/family/browse-shell";
@@ -43,8 +44,6 @@ import {
 import { buildDisplayNameOptions, formatMemberName } from "@/lib/member-utils";
 import { siteLinkEmailContent } from "@/lib/messaging/templates";
 import {
-  fetchEmails,
-  fetchPhones,
   isUnauthorizedError,
   notifyEmailBlast,
   notifySmsBlast,
@@ -73,6 +72,44 @@ const DEFAULT_PARENT_OPTIONS: ParentOption[] = [
   { id: "", firstName: "", lastName: "" },
 ];
 const EMPTY_DISPLAY_NAME_OPTIONS: string[] = [];
+const EMPTY_NOTIFY_RECIPIENTS: NotifyRecipientOption[] = [];
+
+function buildEmailNotifyRecipients(
+  members: FamilyMemberRecord[],
+): NotifyRecipientOption[] {
+  const options: NotifyRecipientOption[] = [];
+  for (const member of members) {
+    const email = typeof member.email === "string" ? member.email.trim() : "";
+    if (email.length <= 4) {
+      continue;
+    }
+    options.push({
+      id: member.id,
+      label: formatMemberName(member),
+      contact: email,
+    });
+  }
+  return options;
+}
+
+function buildSmsNotifyRecipients(
+  members: FamilyMemberRecord[],
+): NotifyRecipientOption[] {
+  const options: NotifyRecipientOption[] = [];
+  for (const member of members) {
+    const phone = member.phone;
+    const trimmed = typeof phone === "string" ? phone.trim() : "";
+    if (!trimmed) {
+      continue;
+    }
+    options.push({
+      id: member.id,
+      label: formatMemberName(member),
+      contact: trimmed,
+    });
+  }
+  return options;
+}
 
 function displayNameSignature(member: FamilyMemberRecord | null): string {
   if (!member) {
@@ -164,10 +201,14 @@ export function FamilyApp({
   const [showEmails, setShowEmails] = useState(false);
   const [confirmDiscardOpen, setConfirmDiscardOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [emailsText, setEmailsText] = useState("");
-  const [emailCount, setEmailCount] = useState(0);
-  const [phoneCount, setPhoneCount] = useState(0);
-  const [copiedEmailText, setCopiedEmailText] = useState(false);
+  const [selectedEmailMemberIds, setSelectedEmailMemberIds] = useState<
+    string[]
+  >([]);
+  const [selectedSmsMemberIds, setSelectedSmsMemberIds] = useState<string[]>(
+    [],
+  );
+  const [notifySubject, setNotifySubject] = useState("");
+  const [notifyBody, setNotifyBody] = useState("");
   const [sendingChannel, setSendingChannel] = useState<"email" | "sms" | null>(
     null,
   );
@@ -242,10 +283,33 @@ export function FamilyApp({
   const loginBusy = loginMutation.isPending;
   const saveEnabled = !!selectedUser && dirty && !saving;
 
+  const emailRecipients = useMemo(
+    () =>
+      members.length === 0
+        ? EMPTY_NOTIFY_RECIPIENTS
+        : buildEmailNotifyRecipients(members),
+    [members],
+  );
+  const smsRecipients = useMemo(
+    () =>
+      members.length === 0
+        ? EMPTY_NOTIFY_RECIPIENTS
+        : buildSmsNotifyRecipients(members),
+    [members],
+  );
+  const emailsText = useMemo(() => {
+    const contactById = new Map(
+      emailRecipients.map((option) => [option.id, option.contact]),
+    );
+    return selectedEmailMemberIds
+      .map((id) => contactById.get(id))
+      .filter((value): value is string => typeof value === "string")
+      .join("; ");
+  }, [emailRecipients, selectedEmailMemberIds]);
+
   const resetDirty = useCallback((): void => {
     setDirty(false);
   }, [setDirty]);
-
   const navigation = useFamilyNavigation({
     routeMemberId,
     routeTab,
@@ -459,35 +523,14 @@ export function FamilyApp({
     window.location.href = "/api/export/mailing";
   };
 
-  const openEmailsDialog = async (): Promise<void> => {
-    try {
-      const [emailsPayload, phonesPayload] = await Promise.all([
-        queryClient.fetchQuery({
-          queryKey: familyKeys.emails(),
-          queryFn: fetchEmails,
-        }),
-        queryClient.fetchQuery({
-          queryKey: familyKeys.phones(),
-          queryFn: fetchPhones,
-        }),
-      ]);
-      setEmailsText(emailsPayload.emails.join("; "));
-      setEmailCount(emailsPayload.emails.length);
-      setPhoneCount(phonesPayload.phones.length);
-      setCopiedEmailText(false);
-      setBlastResult(null);
-      setShowEmails(true);
-    } catch (caughtError) {
-      if (isUnauthorizedError(caughtError)) {
-        queryClient.setQueryData(familyKeys.session(), {
-          authenticated: false,
-        });
-        return;
-      }
-      reportError(
-        caughtError instanceof Error ? caughtError.message : "Unknown error",
-      );
-    }
+  const openEmailsDialog = (): void => {
+    const defaults = siteLinkEmailContent();
+    setNotifySubject(defaults.subject);
+    setNotifyBody(defaults.text);
+    setSelectedEmailMemberIds(emailRecipients.map((option) => option.id));
+    setSelectedSmsMemberIds(smsRecipients.map((option) => option.id));
+    setBlastResult(null);
+    setShowEmails(true);
   };
 
   const copyEmails = async (): Promise<void> => {
@@ -497,7 +540,7 @@ export function FamilyApp({
     clearError();
     try {
       await navigator.clipboard.writeText(emailsText);
-      setCopiedEmailText(true);
+      reportSuccess("Emails copied to clipboard.");
     } catch (caughtError) {
       reportError(
         caughtError instanceof Error ? caughtError.message : "Unknown error",
@@ -511,8 +554,19 @@ export function FamilyApp({
     setBlastResult(null);
     clearError();
     try {
+      const memberIds =
+        channel === "email" ? selectedEmailMemberIds : selectedSmsMemberIds;
       const result =
-        channel === "email" ? await notifyEmailBlast() : await notifySmsBlast();
+        channel === "email"
+          ? await notifyEmailBlast({
+              memberIds,
+              subject: notifySubject.trim(),
+              text: notifyBody.trim(),
+            })
+          : await notifySmsBlast({
+              memberIds,
+              text: notifyBody.trim(),
+            });
       setBlastResult(
         `${channel === "email" ? "Email" : "SMS"} blast finished: ${result.sent} sent, ${result.failed} failed, ${result.skipped} skipped${result.dryRun ? " (dry run)" : ""}.`,
       );
@@ -576,8 +630,6 @@ export function FamilyApp({
     setConfirmNotifyChannel(null);
   }, []);
 
-  const notifyMessagePreview = useMemo(() => siteLinkEmailContent().text, []);
-
   const confirmDiscard = useCallback((): void => {
     setConfirmDiscardOpen(false);
     beginAddMember();
@@ -595,7 +647,7 @@ export function FamilyApp({
     <Snackbar
       open={snackbarOpen}
       autoHideDuration={snackbarSeverity === "success" ? 4000 : null}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       onClose={(_, reason) => {
         if (reason === "clickaway") {
           return;
@@ -776,8 +828,8 @@ export function FamilyApp({
           }
           description={
             confirmNotifyChannel === "sms"
-              ? `Text the site link to ${phoneCount} phone number${phoneCount === 1 ? "" : "s"} on file?`
-              : `Email the site link to ${emailCount} address${emailCount === 1 ? "" : "es"} on file?`
+              ? `Text the site link to ${selectedSmsMemberIds.length} selected phone number${selectedSmsMemberIds.length === 1 ? "" : "s"}?`
+              : `Email the site link to ${selectedEmailMemberIds.length} selected address${selectedEmailMemberIds.length === 1 ? "" : "es"}?`
           }
           confirmLabel={
             confirmNotifyChannel === "sms" ? "Send SMS" : "Send email"
@@ -794,10 +846,16 @@ export function FamilyApp({
             open={showEmails}
             onClose={closeEmailsDialog}
             emailsText={emailsText}
-            emailCount={emailCount}
-            phoneCount={phoneCount}
-            messagePreview={notifyMessagePreview}
-            copiedEmailText={copiedEmailText}
+            emailRecipients={emailRecipients}
+            smsRecipients={smsRecipients}
+            selectedEmailMemberIds={selectedEmailMemberIds}
+            selectedSmsMemberIds={selectedSmsMemberIds}
+            onSelectedEmailMemberIdsChange={setSelectedEmailMemberIds}
+            onSelectedSmsMemberIdsChange={setSelectedSmsMemberIds}
+            messageSubject={notifySubject}
+            onMessageSubjectChange={setNotifySubject}
+            messageBody={notifyBody}
+            onMessageBodyChange={setNotifyBody}
             sendingChannel={sendingChannel}
             blastResult={blastResult}
             onCopyEmails={copyEmails}

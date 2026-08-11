@@ -3,8 +3,8 @@
 Signed-in users can open **More → Notify family** to:
 
 1. Copy member emails (manual send fallback)
-2. Email a fixed site-link blast via Amazon SES
-3. Text a fixed site-link blast via Amazon SNS (when enabled)
+2. Email a site-link blast via Amazon SES (editable subject + body)
+3. Text a site-link blast via Amazon SNS when enabled (editable body)
 
 The login city answer is **not** included in outbound messages.
 
@@ -17,7 +17,23 @@ The login city answer is **not** included in outbound messages.
 | `POST /api/notify/email` | Blast site link by email |
 | `POST /api/notify/sms` | Blast site link by SMS |
 
-Body (optional): `{ "dryRun": true }` — logs payloads without calling AWS (also forced when `FAMILY_MESSAGING_DRY_RUN=true`).
+Body (optional):
+
+```json
+{
+  "dryRun": true,
+  "memberIds": ["member-guid-1", "member-guid-2"],
+  "subject": "McPeak family directory",
+  "text": "You're invited to the McPeak family directory: https://mcpeakfamily.org"
+}
+```
+
+- `dryRun: true` — logs payloads without calling AWS (also forced when `FAMILY_MESSAGING_DRY_RUN=true`).
+- `memberIds` — send only to those members’ on-file email/phone. Omit to blast everyone. Empty array is rejected (`400`). Contacts are always resolved server-side from member records (client-supplied addresses are not accepted).
+- `subject` — email only; omit to use the default template subject.
+- `text` — plain-text body for email and SMS; omit to use the default channel template. Email HTML is derived from this text.
+
+In the UI, **Notify family** includes editable subject/body fields and per-channel multi-select pickers (Select all / Clear). Defaults to everyone eligible; narrow the list for a one-person smoke test or partial blast.
 
 ## Environment
 
@@ -55,7 +71,7 @@ Local default: dry-run on (see `.env.example`).
 
 1. Sign in to https://mcpeakfamily.org
 2. Open **More → Notify family**
-3. Confirm recipient counts and message preview
+3. Edit subject/body if needed; confirm (or narrow) email and SMS recipients
 4. Choose **Send email blast** and/or **Send SMS blast**
 5. Use **Copy emails** if AWS email is not configured yet
 

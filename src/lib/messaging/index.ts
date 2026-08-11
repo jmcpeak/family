@@ -6,7 +6,9 @@ import type { EmailSender, SmsSender } from "./types";
 export type { BlastSiteLinkOptions } from "./blast";
 export { blastSiteLink } from "./blast";
 export { normalizePhoneToE164 } from "./phone";
+export { resolveNotifyRecipients } from "./resolve-recipients";
 export {
+  plainTextToSimpleHtml,
   resolveSiteUrl,
   siteLinkEmailContent,
   siteLinkSmsContent,
