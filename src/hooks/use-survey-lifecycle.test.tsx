@@ -170,17 +170,18 @@ describe("useSurveyLifecycle", () => {
     const queryClient = createTestClient();
     queryClient.setQueryData(familyKeys.surveys(), createSurveysResponse());
 
-    const { result } = renderHook(
-      () =>
-        useSurveyLifecycle({
-          authenticated: true,
-          onError: vi.fn(),
-          onClearError: vi.fn(),
-        }),
-      { wrapper: createWrapper(queryClient) },
-    );
+    function Harness(): React.JSX.Element {
+      const { dialogs } = useSurveyLifecycle({
+        authenticated: true,
+        onError: vi.fn(),
+        onClearError: vi.fn(),
+      });
+      return <>{dialogs}</>;
+    }
 
-    const { findByRole, getByRole, unmount } = render(result.current.dialogs);
+    const { findByRole, getByRole, unmount } = render(<Harness />, {
+      wrapper: createWrapper(queryClient),
+    });
 
     fireEvent.click(await findByRole("checkbox", { name: /don't ask again/i }));
     fireEvent.click(getByRole("button", { name: /^close$/i }));
