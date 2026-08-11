@@ -136,7 +136,12 @@ export interface NotifyBlastResult {
 }
 
 export async function notifyEmailBlast(
-  options: { dryRun?: boolean } = {},
+  options: {
+    dryRun?: boolean;
+    memberIds?: string[];
+    subject?: string;
+    text?: string;
+  } = {},
 ): Promise<NotifyBlastResult> {
   return requestJson<NotifyBlastResult>("/api/notify/email", {
     method: "POST",
@@ -148,7 +153,7 @@ export async function notifyEmailBlast(
 }
 
 export async function notifySmsBlast(
-  options: { dryRun?: boolean } = {},
+  options: { dryRun?: boolean; memberIds?: string[]; text?: string } = {},
 ): Promise<NotifyBlastResult> {
   return requestJson<NotifyBlastResult>("/api/notify/sms", {
     method: "POST",

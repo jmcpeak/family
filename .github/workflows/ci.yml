@@ -46,4 +46,6 @@ jobs:
 
       - name: Smoke tests (non-destructive)
         # Drop the production .next from the Build step so `next dev` starts clean.
+        # Playwright runs smoke.spec before hydration.spec and retries on CI so a
+        # cold compile of the authenticated client bundle does not flake the job.
         run: rm -rf .next && npm run test:smoke

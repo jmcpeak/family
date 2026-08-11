@@ -78,4 +78,41 @@ describe("blastSiteLink", () => {
       text: expect.stringContaining("mcpeakfamily.org"),
     });
   });
+
+  it("uses custom subject and body for email", async () => {
+    const send = vi.fn(async () => undefined);
+    const emailSender: EmailSender = { send };
+
+    await blastSiteLink({
+      channel: "email",
+      recipients: ["ada@example.com"],
+      emailSender,
+      subject: "Custom subject",
+      text: "Line one\nhttps://mcpeakfamily.org\nLine three",
+    });
+
+    expect(send).toHaveBeenCalledWith({
+      to: "ada@example.com",
+      subject: "Custom subject",
+      text: "Line one\nhttps://mcpeakfamily.org\nLine three",
+      html: expect.stringContaining("https://mcpeakfamily.org"),
+    });
+  });
+
+  it("uses custom body for SMS", async () => {
+    const send = vi.fn(async () => undefined);
+    const smsSender: SmsSender = { send };
+
+    await blastSiteLink({
+      channel: "sms",
+      recipients: ["555-012-3456"],
+      smsSender,
+      text: "Custom SMS body",
+    });
+
+    expect(send).toHaveBeenCalledWith({
+      toE164: "+15550123456",
+      text: "Custom SMS body",
+    });
+  });
 });

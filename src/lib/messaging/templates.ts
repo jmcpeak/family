@@ -11,6 +11,34 @@ export function resolveSiteUrl(siteUrl?: string): string {
   return value.length > 0 ? value : DEFAULT_SITE_URL;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+/** Turn plain-text blast body into simple HTML paragraphs; auto-link http(s) URLs. */
+export function plainTextToSimpleHtml(text: string): string {
+  const paragraphs = text
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
+
+  return paragraphs
+    .map((paragraph) => {
+      const escaped = escapeHtml(paragraph);
+      const withLinks = escaped.replace(
+        /(https?:\/\/[^\s<]+)/g,
+        (url) => `<a href="${url}">${url}</a>`,
+      );
+      return `<p>${withLinks}</p>`;
+    })
+    .join("");
+}
+
 export function siteLinkEmailContent(siteUrl?: string): {
   subject: string;
   text: string;
@@ -22,10 +50,7 @@ export function siteLinkEmailContent(siteUrl?: string): {
     `You're invited to the McPeak family directory: ${url}`,
     "Sign in, then complete the reunion survey if prompted.",
   ].join("\n");
-  const html = [
-    `<p>You're invited to the McPeak family directory: <a href="${url}">${url}</a></p>`,
-    "<p>Sign in, then complete the reunion survey if prompted.</p>",
-  ].join("");
+  const html = plainTextToSimpleHtml(text);
 
   return { subject, text, html };
 }

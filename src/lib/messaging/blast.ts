@@ -1,5 +1,9 @@
 import { normalizePhoneToE164 } from "./phone";
-import { siteLinkEmailContent, siteLinkSmsContent } from "./templates";
+import {
+  plainTextToSimpleHtml,
+  siteLinkEmailContent,
+  siteLinkSmsContent,
+} from "./templates";
 import type {
   BlastResult,
   EmailSender,
@@ -16,6 +20,10 @@ export interface BlastSiteLinkOptions {
   smsSender?: SmsSender;
   siteUrl?: string;
   concurrency?: number;
+  /** Email subject override; defaults to template subject. */
+  subject?: string;
+  /** Plain-text body override; defaults to channel template. */
+  text?: string;
 }
 
 function uniqueEmails(recipients: string[]): {
@@ -123,14 +131,18 @@ export async function blastSiteLink(
       throw new Error("emailSender is required for email blasts.");
     }
     const { emails, skipped } = uniqueEmails(options.recipients);
-    const content = siteLinkEmailContent(options.siteUrl);
+    const defaults = siteLinkEmailContent(options.siteUrl);
+    const subject = options.subject?.trim() || defaults.subject;
+    const text = options.text?.trim() || defaults.text;
+    const html =
+      options.text !== undefined ? plainTextToSimpleHtml(text) : defaults.html;
     const emailSender = options.emailSender;
     const { sent, failed } = await mapPool(emails, concurrency, async (to) => {
       await emailSender.send({
         to,
-        subject: content.subject,
-        text: content.text,
-        html: content.html,
+        subject,
+        text,
+        html,
       });
     });
     return { sent, failed, skipped };
@@ -141,7 +153,7 @@ export async function blastSiteLink(
   }
 
   const { phones, skipped } = uniquePhones(options.recipients);
-  const text = siteLinkSmsContent(options.siteUrl);
+  const text = options.text?.trim() || siteLinkSmsContent(options.siteUrl);
   const smsSender = options.smsSender;
   const { sent, failed } = await mapPool(
     phones,
