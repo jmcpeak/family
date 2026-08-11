@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
-
-const loginAnswer = process.env.PLAYWRIGHT_LOGIN_ANSWER ?? "smoke-answer";
+import { loginAndRevealBrowse } from "./helpers";
 
 test("authenticated desktop home does not hydration-mismatch", async ({
   page,
@@ -18,27 +17,9 @@ test("authenticated desktop home does not hydration-mismatch", async ({
     }
   });
 
-  await page.goto("/");
-  await page.getByRole("textbox").first().fill(loginAnswer);
-  await page.getByRole("button", { name: "Login" }).click();
+  await loginAndRevealBrowse(page);
 
   const browseMember = page.getByRole("button", { name: /McPeak/i }).first();
-  const surveyDialog = page.getByRole("dialog", {
-    name: /family reunion interest survey/i,
-  });
-  await Promise.race([
-    browseMember.waitFor({ state: "visible", timeout: 30_000 }),
-    surveyDialog.waitFor({ state: "visible", timeout: 30_000 }),
-  ]);
-  if (await surveyDialog.isVisible().catch(() => false)) {
-    await surveyDialog
-      .getByRole("checkbox", { name: /don't ask again/i })
-      .click();
-    await surveyDialog.getByRole("button", { name: /^close$/i }).click();
-    await expect(surveyDialog).toBeHidden();
-  }
-  await expect(page.locator(".MuiModal-backdrop")).toHaveCount(0);
-  await expect(browseMember).toBeVisible();
 
   // Reloading while authenticated forces SSR of FamilyAppBar, which is where
   // desktop media-query mismatch shows up.
