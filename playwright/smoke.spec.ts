@@ -10,6 +10,16 @@ test("non-destructive smoke: login, browse, health, export, logout", async ({
 
   await page.getByRole("textbox").first().fill(loginAnswer);
   await page.getByRole("button", { name: "Login" }).click();
+
+  // Active surveys auto-open after login and aria-hide the browse list.
+  const dontAskAgain = page.getByRole("checkbox", {
+    name: /don't ask again/i,
+  });
+  if (await dontAskAgain.isVisible({ timeout: 5_000 }).catch(() => false)) {
+    await dontAskAgain.click();
+    await page.getByRole("button", { name: /^close$/i }).click();
+  }
+
   await expect(
     page
       .locator(
