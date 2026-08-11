@@ -33,7 +33,7 @@ Body (optional):
 - `subject` — email only; omit to use the default template subject.
 - `text` — plain-text body for email and SMS; omit to use the default channel template. Email HTML is derived from this text.
 
-In the UI, **Notify family** includes editable subject/body fields and per-channel multi-select pickers (Select all / Clear). Defaults to everyone eligible; narrow the list for a one-person smoke test or partial blast.
+In the UI, **Email or text family** includes editable subject/body fields and per-channel multi-select pickers (Select all / Clear). Defaults to everyone eligible; narrow the list for a one-person smoke test or partial send.
 
 ## Environment
 
@@ -70,9 +70,9 @@ Local default: dry-run on (see `.env.example`).
 ## How to send (Karen / any signed-in user)
 
 1. Sign in to https://mcpeakfamily.org
-2. Open **More → Notify family**
-3. Edit subject/body if needed; confirm (or narrow) email and SMS recipients
-4. Choose **Send email blast** and/or **Send SMS blast**
+2. Open **More → Email or text family**
+3. Edit subject/body if needed; confirm (or narrow) email and text recipients
+4. Choose **Send email** and/or **Send text**
 5. Use **Copy emails** if AWS email is not configured yet
 
 ## Reputation

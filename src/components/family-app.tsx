@@ -568,7 +568,7 @@ export function FamilyApp({
               text: notifyBody.trim(),
             });
       setBlastResult(
-        `${channel === "email" ? "Email" : "SMS"} blast finished: ${result.sent} sent, ${result.failed} failed, ${result.skipped} skipped${result.dryRun ? " (dry run)" : ""}.`,
+        `${channel === "email" ? "Email" : "Text"} sent: ${result.sent} delivered, ${result.failed} failed, ${result.skipped} skipped${result.dryRun ? " (dry run)" : ""}.`,
       );
     } catch (caughtError) {
       if (isUnauthorizedError(caughtError)) {
@@ -822,17 +822,15 @@ export function FamilyApp({
         <ConfirmDialog
           open={confirmNotifyChannel !== null}
           title={
-            confirmNotifyChannel === "sms"
-              ? "Send SMS blast?"
-              : "Send email blast?"
+            confirmNotifyChannel === "sms" ? "Send text?" : "Send email?"
           }
           description={
             confirmNotifyChannel === "sms"
-              ? `Text the site link to ${selectedSmsMemberIds.length} selected phone number${selectedSmsMemberIds.length === 1 ? "" : "s"}?`
-              : `Email the site link to ${selectedEmailMemberIds.length} selected address${selectedEmailMemberIds.length === 1 ? "" : "es"}?`
+              ? `Send this message to ${selectedSmsMemberIds.length} selected recipient${selectedSmsMemberIds.length === 1 ? "" : "s"} by text?`
+              : `Send this message to ${selectedEmailMemberIds.length} selected recipient${selectedEmailMemberIds.length === 1 ? "" : "s"} by email?`
           }
           confirmLabel={
-            confirmNotifyChannel === "sms" ? "Send SMS" : "Send email"
+            confirmNotifyChannel === "sms" ? "Send text" : "Send email"
           }
           onConfirm={() => {
             if (confirmNotifyChannel) {

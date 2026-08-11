@@ -255,8 +255,8 @@ export function EmailsDialog({
       <DialogContent>
         <Typography color="text.secondary" sx={{ mb: 2 }}>
           Edit the message, choose recipients (defaults to everyone eligible),
-          then send. Subject applies to email only; the body is used for email
-          and SMS.
+          then send. Subject applies to email only; the message body is used for
+          both email and text.
         </Typography>
         <TextField
           label="Subject (email)"
@@ -275,7 +275,7 @@ export function EmailsDialog({
           fullWidth
           disabled={busy}
           sx={{ mb: 2 }}
-          helperText={`${messageBody.length} characters — keep SMS under ~160 if possible`}
+          helperText={`${messageBody.length} characters — keep texts under ~160 if possible`}
         />
         <NotifyRecipientPicker
           label="Email recipients"
@@ -285,7 +285,7 @@ export function EmailsDialog({
           disabled={busy}
         />
         <NotifyRecipientPicker
-          label="SMS recipients"
+          label="Text recipients"
           options={smsRecipients}
           selectedIds={selectedSmsMemberIds}
           onChange={onSelectedSmsMemberIdsChange}
@@ -308,7 +308,7 @@ export function EmailsDialog({
             !hasBody
           }
         >
-          {sendingChannel === "email" ? "Sending email…" : "Send email blast"}
+          {sendingChannel === "email" ? "Sending email…" : "Send email"}
         </Button>
         <Button
           onClick={() => void onSendSmsBlast()}
@@ -316,7 +316,7 @@ export function EmailsDialog({
           color="secondary"
           disabled={busy || selectedSmsMemberIds.length === 0 || !hasBody}
         >
-          {sendingChannel === "sms" ? "Sending SMS…" : "Send SMS blast"}
+          {sendingChannel === "sms" ? "Sending text…" : "Send text"}
         </Button>
         <Button
           onClick={() => void onCopyEmails()}
