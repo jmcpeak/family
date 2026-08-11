@@ -26,6 +26,16 @@ jobs:
         run: npm run validate
 
       - name: Build
+        # next build sets NODE_ENV=production, which triggers serverEnv guards.
+        # Provide non-secret placeholders so page-data collection can import env.
+        env:
+          FAMILY_DDB_TABLE: mcpeak
+          FAMILY_USE_IN_MEMORY_DB: "false"
+          FAMILY_SESSION_SECRET: ci-build-session-secret-at-least-32-chars
+          FAMILY_LOGIN_ANSWER: ci-build-answer
+          FAMILY_MESSAGING_DRY_RUN: "true"
+          FAMILY_SMS_ENABLED: "false"
+          NEXT_PUBLIC_SITE_URL: https://mcpeakfamily.org
         run: npm run build
 
       - name: Dependency audit (high+)
