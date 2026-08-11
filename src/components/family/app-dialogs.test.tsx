@@ -70,18 +70,14 @@ describe("EmailsDialog", () => {
       />,
     );
 
-    expect(
-      screen.getByRole("button", { name: "Send email" }),
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Send email" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Send text" })).toBeDisabled();
   });
 
   it("disables email send when subject is empty", () => {
     render(<EmailsDialog {...baseProps} messageSubject="   " />);
 
-    expect(
-      screen.getByRole("button", { name: "Send email" }),
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Send email" })).toBeDisabled();
     expect(
       screen.getByRole("button", { name: "Send text" }),
     ).not.toBeDisabled();

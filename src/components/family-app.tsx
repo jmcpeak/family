@@ -821,9 +821,7 @@ export function FamilyApp({
         />
         <ConfirmDialog
           open={confirmNotifyChannel !== null}
-          title={
-            confirmNotifyChannel === "sms" ? "Send text?" : "Send email?"
-          }
+          title={confirmNotifyChannel === "sms" ? "Send text?" : "Send email?"}
           description={
             confirmNotifyChannel === "sms"
               ? `Send this message to ${selectedSmsMemberIds.length} selected recipient${selectedSmsMemberIds.length === 1 ? "" : "s"} by text?`
