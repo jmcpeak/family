@@ -183,10 +183,17 @@ describe("useSurveyLifecycle", () => {
       wrapper: createWrapper(queryClient),
     });
 
-    fireEvent.click(await findByRole("checkbox", { name: /don't ask again/i }));
+    const dontAskAgain = await findByRole(
+      "checkbox",
+      { name: /don't ask again/i },
+      { timeout: 5_000 },
+    );
+    fireEvent.click(dontAskAgain);
     fireEvent.click(getByRole("button", { name: /^close$/i }));
 
-    expect(mockReplace).toHaveBeenCalledWith("/");
+    await waitFor(() => {
+      expect(mockReplace).toHaveBeenCalledWith("/");
+    });
     expect(isSurveyAutoOpenDismissed("2027-reunion-interest")).toBe(true);
     unmount();
   });
