@@ -29,22 +29,33 @@ test("non-destructive smoke: login, browse, health, export, logout", async ({
   };
   expect(membersPayload.members.length).toBeGreaterThan(0);
 
+  const memberRow = page
+    .locator(
+      '[data-testid^="member-row-"]:not([data-testid^="member-row-skeleton-"])',
+    )
+    .first();
+  await expect(memberRow).toBeAttached();
+
   // Active surveys auto-open after login and aria-hide the browse list.
-  const surveyDialog = page.getByRole("dialog");
-  if (await surveyDialog.isVisible({ timeout: 8_000 }).catch(() => false)) {
-    const dontAskAgain = surveyDialog.getByRole("checkbox", {
-      name: /don't ask again/i,
-    });
-    if (await dontAskAgain.isVisible().catch(() => false)) {
-      await dontAskAgain.click();
-    }
+  const surveyDialog = page.getByRole("dialog", {
+    name: /family reunion interest survey/i,
+  });
+  await Promise.race([
+    memberRow.waitFor({ state: "visible", timeout: 20_000 }),
+    surveyDialog.waitFor({ state: "visible", timeout: 20_000 }),
+  ]).catch(() => undefined);
+
+  if (await surveyDialog.isVisible().catch(() => false)) {
+    await surveyDialog
+      .getByRole("checkbox", { name: /don't ask again/i })
+      .click();
     await surveyDialog.getByRole("button", { name: /^close$/i }).click();
     await expect(surveyDialog).toBeHidden();
   }
 
-  await expect(
-    page.locator('[data-testid^="member-row-"]').first(),
-  ).toBeVisible();
+  // MUI may leave a backdrop that obscures rows for Playwright's visibility check.
+  await expect(page.locator(".MuiModal-backdrop")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /McPeak/i }).first()).toBeVisible();
 
   const live = await page.request.get("/api/health/live");
   expect(live.status()).toBe(200);

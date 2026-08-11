@@ -115,9 +115,10 @@ export function FamilyApp({
   const showAbout = searchParams.get("dialog") === "about";
   const queryClient = useQueryClient();
   const theme = useTheme();
-  const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"), {
-    noSsr: true,
-  });
+  // Default (noSsr: false) keeps SSR and the client's hydration snapshot on
+  // defaultMatches; live matchMedia applies after mount. noSsr: true reads
+  // matchMedia during hydration and mismatches the server (FamilyAppBar search).
+  const desktopDrawer = useMediaQuery(theme.breakpoints.up("md"));
 
   const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
   const [snackbarSeverity, setSnackbarSeverity] = useState<"error" | "success">(

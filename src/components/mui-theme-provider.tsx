@@ -4,7 +4,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const THEME_MODE_STORAGE_KEY = "family-theme-mode";
 
@@ -27,11 +34,7 @@ export function useThemeMode(): ThemeModeContextValue {
   return context;
 }
 
-function getInitialThemeMode(): ThemeMode {
-  if (typeof window === "undefined") {
-    return "system";
-  }
-
+function readStoredThemeMode(): ThemeMode | null {
   const storedMode = window.localStorage.getItem(THEME_MODE_STORAGE_KEY);
   if (
     storedMode === "light" ||
@@ -41,7 +44,7 @@ function getInitialThemeMode(): ThemeMode {
     return storedMode;
   }
 
-  return "system";
+  return null;
 }
 
 function createAppTheme(mode: "light" | "dark") {
@@ -184,17 +187,27 @@ export function MuiThemeProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.JSX.Element {
-  const [mode, setMode] = useState<ThemeMode>(getInitialThemeMode);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)", {
-    noSsr: true,
-  });
+  // Always start as "system" so SSR HTML matches the client's first paint.
+  // Do not read localStorage or matchMedia during the initial render — both
+  // diverge from the server (see MUI useMediaQuery `noSsr`, which uses the live
+  // query as getServerSnapshot on the client and breaks hydration).
+  const [mode, setModeState] = useState<ThemeMode>("system");
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const resolvedMode =
     mode === "system" ? (prefersDarkMode ? "dark" : "light") : mode;
   const theme = useMemo(() => createAppTheme(resolvedMode), [resolvedMode]);
 
   useEffect(() => {
-    window.localStorage.setItem(THEME_MODE_STORAGE_KEY, mode);
-  }, [mode]);
+    const storedMode = readStoredThemeMode();
+    if (storedMode !== null) {
+      setModeState(storedMode);
+    }
+  }, []);
+
+  const setMode = useCallback((nextMode: ThemeMode) => {
+    setModeState(nextMode);
+    window.localStorage.setItem(THEME_MODE_STORAGE_KEY, nextMode);
+  }, []);
 
   const contextValue = useMemo(
     () => ({
@@ -202,7 +215,7 @@ export function MuiThemeProvider({
       resolvedMode,
       setMode,
     }),
-    [mode, resolvedMode],
+    [mode, resolvedMode, setMode],
   );
 
   return (
