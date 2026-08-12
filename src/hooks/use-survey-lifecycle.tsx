@@ -34,6 +34,8 @@ const SurveyLifecycleDialogs = dynamic(
 
 export interface UseSurveyLifecycleOptions {
   authenticated: boolean;
+  /** True once the members directory query has settled (success or error). */
+  directoryReady: boolean;
   onError: (message: string) => void;
   onClearError: () => void;
 }
@@ -47,6 +49,7 @@ export interface UseSurveyLifecycleResult {
 
 export function useSurveyLifecycle({
   authenticated,
+  directoryReady,
   onError,
   onClearError,
 }: UseSurveyLifecycleOptions): UseSurveyLifecycleResult {
@@ -68,7 +71,14 @@ export function useSurveyLifecycle({
   const [surveyResultsDialogOpen, setSurveyResultsDialogOpen] = useState(false);
   const autoOpenedSurveySlugRef = useRef<SurveySlug | null>(null);
 
-  const surveysQuery = useSurveysQuery(authenticated);
+  // Keep the post-login critical path on /api/members. Surveys load after the
+  // directory settles, or immediately when already on a survey route.
+  const surveysEnabled =
+    authenticated &&
+    (directoryReady ||
+      Boolean(routeSurveySlug) ||
+      Boolean(routeSurveyResultsSlug));
+  const surveysQuery = useSurveysQuery(surveysEnabled);
   const surveyResultsQuery = useSurveyResultsQuery(
     authenticated,
     routeSurveyResultsSlug,

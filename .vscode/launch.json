@@ -3,7 +3,7 @@
     {
       "command": "npm run dev",
       "env": {
-        "AWS_PROFILE": "mcpeak-family"
+        "AWS_PROFILE": "mcpeak-family-admin"
       },
       "name": "Dev (DynamoDB)",
       "request": "launch",

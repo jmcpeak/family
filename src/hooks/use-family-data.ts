@@ -57,8 +57,9 @@ export function useSessionQuery(
     ...(initialAuthenticated === undefined
       ? {}
       : {
+          // Keep the SSR auth hint fresh for the provider default staleTime
+          // instead of immediately refetching on mount.
           initialData: { authenticated: initialAuthenticated },
-          staleTime: 0,
         }),
   });
 }
@@ -183,7 +184,7 @@ export function useDeleteMemberMutation(): UseMutationResult<
 }
 
 export function useSurveysQuery(
-  authenticated: boolean,
+  enabled: boolean,
 ): UseQueryResult<SurveysResponse, ApiError> {
   const queryClient = useQueryClient();
 
@@ -201,7 +202,7 @@ export function useSurveysQuery(
         throw error;
       }
     },
-    enabled: authenticated,
+    enabled,
     throwOnError: false,
     retry: false,
   });

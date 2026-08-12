@@ -1,7 +1,7 @@
 "use client";
 
 import Box from "@mui/material/Box";
-import { memo, useMemo } from "react";
+import { memo, useDeferredValue, useMemo } from "react";
 import { useBrowseSearch } from "@/components/family/browse-search-context";
 import { MemberBrowser } from "@/components/member-browser";
 import { filterVisibleMembers } from "@/lib/family-editor";
@@ -27,9 +27,10 @@ export const BrowseShell = memo(function BrowseShell({
   onEditMemberDesktop,
 }: BrowseShellProps): React.JSX.Element {
   const { search } = useBrowseSearch();
+  const deferredSearch = useDeferredValue(search);
   const visibleMembers = useMemo(
-    () => filterVisibleMembers(members, search),
-    [members, search],
+    () => filterVisibleMembers(members, deferredSearch),
+    [members, deferredSearch],
   );
 
   return (
