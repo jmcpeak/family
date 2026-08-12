@@ -259,6 +259,9 @@ export function FamilyApp({
   const logoutMutation = useLogoutMutation();
   const saveMemberMutation = useSaveMemberMutation();
   const deleteMemberMutation = useDeleteMemberMutation();
+  const directoryReady =
+    authenticated &&
+    (membersQuery.isSuccess || membersQuery.isError || membersQuery.isFetched);
   const {
     openSurvey,
     activeSurveys,
@@ -266,6 +269,7 @@ export function FamilyApp({
     dialogs: surveyDialogs,
   } = useSurveyLifecycle({
     authenticated,
+    directoryReady,
     onError: reportError,
     onClearError: clearError,
   });

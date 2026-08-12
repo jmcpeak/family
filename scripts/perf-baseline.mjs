@@ -12,7 +12,7 @@
 const POST_LOGIN_NETWORK = [
   {
     path: "SSR session hint → useSessionQuery(initialData)",
-    when: "HTML render + app mount (parallel revalidate)",
+    when: "HTML render + app mount (uses provider staleTime; no forced remount refetch)",
     source: "(family)/layout getIsAuthenticated + useSessionQuery",
   },
   {
@@ -22,8 +22,8 @@ const POST_LOGIN_NETWORK = [
   },
   {
     path: "/api/surveys",
-    when: "after authenticated",
-    source: "useSurveysQuery",
+    when: "after directory settles (or immediately on survey routes)",
+    source: "useSurveyLifecycle → useSurveysQuery(surveysEnabled)",
   },
 ];
 

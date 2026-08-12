@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useHoverReveal } from "@/hooks/use-hover-reveal";
+import { memo, useCallback, useState } from "react";
 import { formatLocation, formatMemberName } from "@/lib/member-utils";
 import type { FamilyMemberRecord } from "@/lib/types";
 
@@ -28,13 +28,149 @@ const MEMBER_ROW_SKELETON_IDS = [
 const MEMBER_ROW_MIN_HEIGHT = 112;
 const SKELETON_FADE_TIMEOUT_MS = 260;
 
+interface MemberRowProps {
+  member: FamilyMemberRecord;
+  lastUpdated: boolean;
+  onEditMember: (member: FamilyMemberRecord) => void;
+}
+
+const MemberRow = memo(function MemberRow({
+  member,
+  lastUpdated,
+  onEditMember,
+}: MemberRowProps): React.JSX.Element {
+  const [revealed, setRevealed] = useState(false);
+  const name = formatMemberName(member);
+  const location = formatLocation(member);
+
+  const reveal = useCallback((): void => {
+    setRevealed(true);
+  }, []);
+  const clear = useCallback((): void => {
+    setRevealed(false);
+  }, []);
+
+  return (
+    <Box
+      data-testid={`member-row-${member.id}`}
+      role="button"
+      tabIndex={0}
+      onMouseEnter={reveal}
+      onMouseOver={reveal}
+      onMouseLeave={clear}
+      onPointerEnter={reveal}
+      onPointerOver={reveal}
+      onPointerLeave={clear}
+      onFocus={reveal}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          clear();
+        }
+      }}
+      onClick={() => onEditMember(member)}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onEditMember(member);
+        }
+      }}
+      sx={{
+        position: "relative",
+        border: "1px solid",
+        borderColor: "divider",
+        borderRadius: 2,
+        bgcolor: "background.paper",
+        p: 2,
+        minHeight: MEMBER_ROW_MIN_HEIGHT,
+        cursor: "pointer",
+        overflow: "hidden",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: "0 auto 0 0",
+          width: 4,
+          bgcolor: revealed ? "secondary.main" : "primary.main",
+          transition: (theme) =>
+            theme.transitions.create(["width", "background-color"], {
+              duration: theme.transitions.duration.shortest,
+            }),
+        },
+        transition: (theme) =>
+          theme.transitions.create(
+            ["transform", "box-shadow", "border-color"],
+            {
+              duration: theme.transitions.duration.shortest,
+            },
+          ),
+        transform: revealed ? "translateY(-4px)" : "translateY(0)",
+        boxShadow: revealed
+          ? "0 12px 28px rgba(11, 79, 45, 0.14)"
+          : "0 3px 12px rgba(11, 79, 45, 0.05)",
+        "&:hover, &:focus-within": {
+          transform: "translateY(-4px)",
+          borderColor: "primary.light",
+          boxShadow: "0 12px 28px rgba(11, 79, 45, 0.14)",
+        },
+      }}
+    >
+      <Fade in={revealed} timeout={SKELETON_FADE_TIMEOUT_MS}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 16,
+            transform: "translateY(-50%)",
+            zIndex: 1,
+            pointerEvents: revealed ? "auto" : "none",
+          }}
+        >
+          <Button
+            startIcon={<EditIcon />}
+            onClick={(event) => {
+              event.stopPropagation();
+              onEditMember(member);
+            }}
+            variant="contained"
+            size="small"
+            aria-label={`Edit ${name}`}
+          >
+            Edit
+          </Button>
+        </Box>
+      </Fade>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          pr: 13,
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography sx={{ fontWeight: 600 }}>{name}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {location}
+          </Typography>
+          {member.email ? (
+            <Typography variant="body2" color="primary">
+              {member.email}
+            </Typography>
+          ) : null}
+        </Box>
+        {lastUpdated ? (
+          <Chip label="Last Updated" size="small" color="secondary" />
+        ) : null}
+      </Box>
+    </Box>
+  );
+});
+
 export function MemberBrowser({
   members,
   lastUpdatedMemberId,
   loading = false,
   onEditMember,
 }: MemberBrowserProps): React.JSX.Element {
-  const editReveal = useHoverReveal();
   const content =
     members.length === 0 ? (
       <Typography color="text.secondary">
@@ -46,117 +182,14 @@ export function MemberBrowser({
         sx={{ p: 1, border: "none", bgcolor: "transparent" }}
       >
         <Stack spacing={1}>
-          {members.map((member) => {
-            const name = formatMemberName(member);
-            const location = formatLocation(member);
-            const revealed = editReveal.isRevealed(member.id);
-
-            return (
-              <Box
-                key={member.id}
-                data-testid={`member-row-${member.id}`}
-                role="button"
-                tabIndex={0}
-                {...editReveal.getRevealProps(member.id)}
-                onClick={() => onEditMember(member)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    onEditMember(member);
-                  }
-                }}
-                sx={{
-                  position: "relative",
-                  border: "1px solid",
-                  borderColor: "divider",
-                  borderRadius: 2,
-                  bgcolor: "background.paper",
-                  p: 2,
-                  minHeight: MEMBER_ROW_MIN_HEIGHT,
-                  cursor: "pointer",
-                  overflow: "hidden",
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    inset: "0 auto 0 0",
-                    width: 4,
-                    bgcolor: revealed ? "secondary.main" : "primary.main",
-                    transition: (theme) =>
-                      theme.transitions.create(["width", "background-color"], {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                  },
-                  transition: (theme) =>
-                    theme.transitions.create(
-                      ["transform", "box-shadow", "border-color"],
-                      {
-                        duration: theme.transitions.duration.shortest,
-                      },
-                    ),
-                  transform: revealed ? "translateY(-4px)" : "translateY(0)",
-                  boxShadow: revealed
-                    ? "0 12px 28px rgba(11, 79, 45, 0.14)"
-                    : "0 3px 12px rgba(11, 79, 45, 0.05)",
-                  "&:hover, &:focus-within": {
-                    transform: "translateY(-4px)",
-                    borderColor: "primary.light",
-                    boxShadow: "0 12px 28px rgba(11, 79, 45, 0.14)",
-                  },
-                }}
-              >
-                <Fade in={revealed} timeout={SKELETON_FADE_TIMEOUT_MS}>
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: "50%",
-                      right: 16,
-                      transform: "translateY(-50%)",
-                      zIndex: 1,
-                      pointerEvents: revealed ? "auto" : "none",
-                    }}
-                  >
-                    <Button
-                      startIcon={<EditIcon />}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        onEditMember(member);
-                      }}
-                      variant="contained"
-                      size="small"
-                      aria-label={`Edit ${name}`}
-                    >
-                      Edit
-                    </Button>
-                  </Box>
-                </Fade>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    pr: 13,
-                  }}
-                >
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}
-                  >
-                    <Typography sx={{ fontWeight: 600 }}>{name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {location}
-                    </Typography>
-                    {member.email ? (
-                      <Typography variant="body2" color="primary">
-                        {member.email}
-                      </Typography>
-                    ) : null}
-                  </Box>
-                  {lastUpdatedMemberId === member.id ? (
-                    <Chip label="Last Updated" size="small" color="secondary" />
-                  ) : null}
-                </Box>
-              </Box>
-            );
-          })}
+          {members.map((member) => (
+            <MemberRow
+              key={member.id}
+              member={member}
+              lastUpdated={lastUpdatedMemberId === member.id}
+              onEditMember={onEditMember}
+            />
+          ))}
         </Stack>
       </Paper>
     );

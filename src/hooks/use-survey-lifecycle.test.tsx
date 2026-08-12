@@ -107,6 +107,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError,
           onClearError,
         }),
@@ -129,6 +130,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError: vi.fn(),
           onClearError: vi.fn(),
         }),
@@ -150,6 +152,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError: vi.fn(),
           onClearError: vi.fn(),
         }),
@@ -173,6 +176,7 @@ describe("useSurveyLifecycle", () => {
     function Harness(): React.JSX.Element {
       const { dialogs } = useSurveyLifecycle({
         authenticated: true,
+        directoryReady: true,
         onError: vi.fn(),
         onClearError: vi.fn(),
       });
@@ -214,6 +218,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError,
           onClearError: vi.fn(),
         }),
@@ -253,6 +258,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError,
           onClearError: vi.fn(),
         }),
@@ -302,6 +308,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError,
           onClearError,
         }),
@@ -354,6 +361,7 @@ describe("useSurveyLifecycle", () => {
       () =>
         useSurveyLifecycle({
           authenticated: true,
+          directoryReady: true,
           onError,
           onClearError: vi.fn(),
         }),

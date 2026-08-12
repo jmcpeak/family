@@ -7,6 +7,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import dynamic from "next/dynamic";
 import {
   EDITOR_SKELETON_FIELD_COUNT,
   EDITOR_SKELETON_FIELD_IDS,
@@ -16,11 +17,39 @@ import {
 } from "@/lib/family-editor";
 import type { FamilyMemberRecord } from "@/lib/types";
 import { TabGrid } from "./editor-fields";
-import { AddressTab } from "./tabs/address-tab";
-import { ChildrenTab } from "./tabs/children-tab";
-import { DatesTab } from "./tabs/dates-tab";
 import { FamilyTab } from "./tabs/family-tab";
-import { SpouseTab } from "./tabs/spouse-tab";
+
+const AddressTab = dynamic(
+  () =>
+    import("./tabs/address-tab").then((module) => ({
+      default: module.AddressTab,
+    })),
+  { ssr: false },
+);
+
+const SpouseTab = dynamic(
+  () =>
+    import("./tabs/spouse-tab").then((module) => ({
+      default: module.SpouseTab,
+    })),
+  { ssr: false },
+);
+
+const DatesTab = dynamic(
+  () =>
+    import("./tabs/dates-tab").then((module) => ({
+      default: module.DatesTab,
+    })),
+  { ssr: false },
+);
+
+const ChildrenTab = dynamic(
+  () =>
+    import("./tabs/children-tab").then((module) => ({
+      default: module.ChildrenTab,
+    })),
+  { ssr: false },
+);
 
 export function EditorLoadingSkeleton({
   activeTab,

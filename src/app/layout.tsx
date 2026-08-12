@@ -5,7 +5,8 @@ import { MuiThemeProvider } from "@/components/mui-theme-provider";
 import { QueryProvider } from "@/components/query-provider";
 
 const roboto = Roboto({
-  weight: ["400", "500", "700"],
+  // UI uses 400 plus 600/700; omit unused 500 to shrink the font payload.
+  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
 });
