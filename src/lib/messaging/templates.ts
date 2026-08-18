@@ -57,5 +57,5 @@ export function siteLinkEmailContent(siteUrl?: string): {
 
 export function siteLinkSmsContent(siteUrl?: string): string {
   const url = resolveSiteUrl(siteUrl);
-  return `McPeak family site: ${url} — sign in to update info / reunion survey.`;
+  return `McPeak family site: ${url} — sign in to update info / reunion survey. Reply STOP to opt out, HELP for help.`;
 }

@@ -10,7 +10,7 @@ interface FieldInputProps {
   label: string;
   value?: string | number;
   type?: string;
-  helperText?: string;
+  helperText?: React.ReactNode;
   onChange: (value: string) => void;
 }
 

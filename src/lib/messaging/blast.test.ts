@@ -31,6 +31,7 @@ describe("site link templates", () => {
   it("builds a short SMS body", () => {
     const text = siteLinkSmsContent("https://mcpeakfamily.org/");
     expect(text).toContain("https://mcpeakfamily.org");
+    expect(text).toContain("Reply STOP to opt out, HELP for help.");
     expect(text.length).toBeLessThanOrEqual(160);
   });
 });

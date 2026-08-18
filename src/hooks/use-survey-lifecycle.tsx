@@ -156,6 +156,7 @@ export function useSurveyLifecycle({
     }
 
     if (
+      pathname !== "/" ||
       routeSurveySlug ||
       routeSurveyResultsSlug ||
       surveysQuery.isPending ||
@@ -184,6 +185,7 @@ export function useSurveyLifecycle({
     activeSurveys,
     authenticated,
     openSurvey,
+    pathname,
     routeSurveyResultsSlug,
     routeSurveySlug,
     surveysQuery.isPending,
