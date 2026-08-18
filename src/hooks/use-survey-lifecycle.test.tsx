@@ -121,6 +121,29 @@ describe("useSurveyLifecycle", () => {
     });
   });
 
+  it("does not auto-open when the Member is not on the default route", async () => {
+    mockPathname = "/user-abc123";
+    const queryClient = createTestClient();
+    queryClient.setQueryData(familyKeys.surveys(), createSurveysResponse());
+
+    renderHook(
+      () =>
+        useSurveyLifecycle({
+          authenticated: true,
+          directoryReady: true,
+          onError: vi.fn(),
+          onClearError: vi.fn(),
+        }),
+      { wrapper: createWrapper(queryClient) },
+    );
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
   it("does not auto-open when Survey Lifecycle dismiss is set", async () => {
     dismissSurveyAutoOpen("2027-reunion-interest");
     const queryClient = createTestClient();

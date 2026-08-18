@@ -6,6 +6,7 @@ import { STATE_OPTIONS } from "@/lib/constants";
 import { getGoogleMapsUrl, hasValidAddress } from "@/lib/member-utils";
 import type { FamilyMemberRecord } from "@/lib/types";
 import { FieldInput, FieldSelect, TabGrid } from "../editor-fields";
+import { SmsConsentNotice } from "../sms-consent-notice";
 
 interface AddressTabProps {
   selectedUser: FamilyMemberRecord;
@@ -24,12 +25,15 @@ export function AddressTab({
         value={String(selectedUser.email ?? "")}
         onChange={(value) => updateField("email", value)}
       />
-      <FieldInput
-        label="Phone"
-        type="tel"
-        value={String(selectedUser.phone ?? "")}
-        onChange={(value) => updateField("phone", value)}
-      />
+      <Box sx={{ gridColumn: "1 / -1" }}>
+        <FieldInput
+          label="Phone"
+          type="tel"
+          value={String(selectedUser.phone ?? "")}
+          onChange={(value) => updateField("phone", value)}
+          helperText={<SmsConsentNotice />}
+        />
+      </Box>
       <FieldInput
         label="Address"
         value={String(selectedUser.address ?? "")}
