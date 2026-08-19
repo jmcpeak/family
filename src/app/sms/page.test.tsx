@@ -17,13 +17,11 @@ describe("SMS public info page", () => {
     expect(
       screen.getByText(SMS_CONSENT_SUMMARY, { exact: false }),
     ).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: "SMS terms" })[0]).toHaveAttribute(
-      "href",
-      "/sms-terms",
-    );
-    expect(screen.getAllByRole("link", { name: "SMS privacy" })[0]).toHaveAttribute(
-      "href",
-      "/sms-privacy",
-    );
+    expect(
+      screen.getAllByRole("link", { name: "SMS terms" })[0],
+    ).toHaveAttribute("href", "/sms-terms");
+    expect(
+      screen.getAllByRole("link", { name: "SMS privacy" })[0],
+    ).toHaveAttribute("href", "/sms-privacy");
   });
 });
