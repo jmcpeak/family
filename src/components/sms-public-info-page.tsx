@@ -4,7 +4,6 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import NextLink from "next/link";
 import {
   SMS_CONSENT_SUMMARY,
   SMS_PRIVACY_PATH,
@@ -59,11 +58,11 @@ export function SmsPublicInfoPage(): React.JSX.Element {
           helperText={
             <>
               {SMS_CONSENT_SUMMARY}{" "}
-              <Link component={NextLink} href={SMS_TERMS_PATH}>
+              <Link href={SMS_TERMS_PATH}>
                 SMS terms
               </Link>
               {" · "}
-              <Link component={NextLink} href={SMS_PRIVACY_PATH}>
+              <Link href={SMS_PRIVACY_PATH}>
                 SMS privacy
               </Link>
             </>
@@ -71,15 +70,15 @@ export function SmsPublicInfoPage(): React.JSX.Element {
           sx={{ mb: 2 }}
         />
         <Typography>
-          <Link component={NextLink} href={SMS_TERMS_PATH}>
+          <Link href={SMS_TERMS_PATH}>
             SMS terms
           </Link>
           {" · "}
-          <Link component={NextLink} href={SMS_PRIVACY_PATH}>
+          <Link href={SMS_PRIVACY_PATH}>
             SMS privacy
           </Link>
           {" · "}
-          <Link component={NextLink} href="/">
+          <Link href="/">
             Family directory home
           </Link>
         </Typography>
