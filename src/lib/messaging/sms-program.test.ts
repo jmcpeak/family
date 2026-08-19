@@ -5,8 +5,10 @@ import {
   SMS_PRIVACY_PARAGRAPHS,
   SMS_PRIVACY_PATH,
   SMS_PROGRAM_NAME,
+  SMS_PUBLIC_INFO_PATH,
   SMS_TERMS_PARAGRAPHS,
   SMS_TERMS_PATH,
+  smsPublicInfoUrl,
 } from "./sms-program";
 
 describe("SMS program copy", () => {
@@ -19,8 +21,12 @@ describe("SMS program copy", () => {
   });
 
   it("exposes public terms and privacy paths", () => {
+    expect(SMS_PUBLIC_INFO_PATH).toBe("/sms");
     expect(SMS_TERMS_PATH).toBe("/sms-terms");
     expect(SMS_PRIVACY_PATH).toBe("/sms-privacy");
+    expect(smsPublicInfoUrl("https://mcpeakfamily.org")).toBe(
+      "https://mcpeakfamily.org/sms",
+    );
     expect(SMS_TERMS_PARAGRAPHS.join(" ")).toContain("STOP");
     expect(SMS_PRIVACY_PARAGRAPHS.join(" ")).toContain("STOP");
   });
