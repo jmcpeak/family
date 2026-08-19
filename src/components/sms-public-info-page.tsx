@@ -57,30 +57,19 @@ export function SmsPublicInfoPage(): React.JSX.Element {
           slotProps={{ input: { readOnly: true } }}
           helperText={
             <>
-              {SMS_CONSENT_SUMMARY}{" "}
-              <Link href={SMS_TERMS_PATH}>
-                SMS terms
-              </Link>
+              {SMS_CONSENT_SUMMARY} <Link href={SMS_TERMS_PATH}>SMS terms</Link>
               {" · "}
-              <Link href={SMS_PRIVACY_PATH}>
-                SMS privacy
-              </Link>
+              <Link href={SMS_PRIVACY_PATH}>SMS privacy</Link>
             </>
           }
           sx={{ mb: 2 }}
         />
         <Typography>
-          <Link href={SMS_TERMS_PATH}>
-            SMS terms
-          </Link>
+          <Link href={SMS_TERMS_PATH}>SMS terms</Link>
           {" · "}
-          <Link href={SMS_PRIVACY_PATH}>
-            SMS privacy
-          </Link>
+          <Link href={SMS_PRIVACY_PATH}>SMS privacy</Link>
           {" · "}
-          <Link href="/">
-            Family directory home
-          </Link>
+          <Link href="/">Family directory home</Link>
         </Typography>
       </Paper>
     </Box>
